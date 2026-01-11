@@ -275,22 +275,24 @@ const ServicesSection = () => {
                   {selectedService.beforeAfterImages ? (
                     <div className="w-full h-full flex flex-col" style={{ height: '100%' }}>
                       {/* Before Image */}
-                      <div className="relative flex-1 bg-[#1a1a1a]" style={{ height: '50%' }}>
+                      <div className="relative flex-1 bg-[#1a1a1a] overflow-hidden" style={{ height: '50%' }}>
                         <img
                           src={selectedService.beforeAfterImages.before}
                           alt="Before"
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover object-center"
+                          style={{ objectPosition: 'center 40%' }}
                         />
                         <div className="absolute top-3 left-3 bg-black/70 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
                           {selectedService.beforeAfterImages.beforeLabel || 'Before'}
                         </div>
                       </div>
                       {/* After Image */}
-                      <div className="relative flex-1 bg-[#1a1a1a]" style={{ height: '50%' }}>
+                      <div className="relative flex-1 bg-[#1a1a1a] overflow-hidden" style={{ height: '50%' }}>
                         <img
                           src={selectedService.beforeAfterImages.after}
                           alt="After"
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover object-center"
+                          style={{ objectPosition: 'center 40%' }}
                         />
                         <div
                           className="absolute top-3 left-3 text-white text-xs font-semibold px-3 py-1.5 rounded-full"
