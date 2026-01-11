@@ -271,28 +271,28 @@ const ServicesSection = () => {
             <div className={`flex flex-col ${(selectedService.modalImage || selectedService.beforeAfterImages) ? 'lg:grid lg:grid-cols-2' : ''}`} style={{ maxHeight: '90vh' }}>
               {/* Left - Image or Before/After (only if image exists) */}
               {(selectedService.modalImage || selectedService.beforeAfterImages) && (
-                <div className="relative shrink-0 bg-[#f5f5f5] lg:rounded-l-2xl overflow-hidden" style={{ minHeight: '500px' }}>
+                <div className="relative shrink-0 bg-[#f5f5f5] lg:rounded-l-2xl overflow-hidden" style={{ height: '500px' }}>
                   {selectedService.beforeAfterImages ? (
-                    <div className="w-full h-full flex flex-col" style={{ height: '100%' }}>
+                    <div className="w-full grid grid-rows-2" style={{ height: '500px' }}>
                       {/* Before Image */}
-                      <div className="relative flex-1 bg-[#1a1a1a] overflow-hidden" style={{ height: '50%' }}>
+                      <div className="relative bg-[#1a1a1a] overflow-hidden">
                         <img
                           src={selectedService.beforeAfterImages.before}
                           alt="Before"
-                          className="w-full h-full object-cover object-center"
-                          style={{ objectPosition: 'center 40%' }}
+                          className="w-full h-full object-cover"
+                          style={{ objectPosition: 'center 30%' }}
                         />
                         <div className="absolute top-3 left-3 bg-black/70 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
                           {selectedService.beforeAfterImages.beforeLabel || 'Before'}
                         </div>
                       </div>
                       {/* After Image */}
-                      <div className="relative flex-1 bg-[#1a1a1a] overflow-hidden" style={{ height: '50%' }}>
+                      <div className="relative bg-[#1a1a1a] overflow-hidden">
                         <img
                           src={selectedService.beforeAfterImages.after}
                           alt="After"
-                          className="w-full h-full object-cover object-center"
-                          style={{ objectPosition: 'center 40%' }}
+                          className="w-full h-full object-cover"
+                          style={{ objectPosition: 'center 30%' }}
                         />
                         <div
                           className="absolute top-3 left-3 text-white text-xs font-semibold px-3 py-1.5 rounded-full"
