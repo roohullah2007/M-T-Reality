@@ -72,7 +72,7 @@ const ServicesSection = () => {
       icon: Box,
       color: '#8B5CF6',
       modalTitle: 'Matterport 3D Tour',
-      modalImage: '/images/matterpor-3d-tours.jpg',
+      modalImage: '/images/matterport.jpg',
       modalDescription: 'Fully immersive virtual tours are becoming increasingly popular. Matterport 3D tours feature a unique "Dollhouse View" that lets buyers explore every room at their own pace from anywhere in the world.',
       features: [
         'Dollhouse view of entire property',
