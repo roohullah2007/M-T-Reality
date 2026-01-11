@@ -51,7 +51,9 @@ const ServicesSection = () => {
       icon: Video,
       color: '#EF4444',
       modalTitle: 'HD Video Walkthrough',
-      modalImage: 'https://images.pexels.com/photos/7031406/pexels-photo-7031406.jpeg?auto=compress&cs=tinysrgb&w=800',
+      modalImage: '/images/property-1.jpg',
+      showPhoneVideo: true,
+      phoneVideo: '/videos/matterport-video.mp4',
       modalDescription: 'HD video tours can be an incredible benefit to your listings. Videos are set to music of your choice and showcase your home\'s greatest features, allowing potential buyers to view from afar without meeting in person.',
       features: [
         'Professional HD videography',
@@ -71,8 +73,6 @@ const ServicesSection = () => {
       color: '#8B5CF6',
       modalTitle: 'Matterport 3D Tour',
       modalImage: '/images/matterpor-3d-tours.jpg',
-      showPhoneVideo: true,
-      phoneVideo: '/videos/matterport-video.mp4',
       modalDescription: 'Fully immersive virtual tours are becoming increasingly popular. Matterport 3D tours feature a unique "Dollhouse View" that lets buyers explore every room at their own pace from anywhere in the world.',
       features: [
         'Dollhouse view of entire property',
