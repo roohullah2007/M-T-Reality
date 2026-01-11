@@ -271,26 +271,26 @@ const ServicesSection = () => {
             <div className={`flex flex-col ${(selectedService.modalImage || selectedService.beforeAfterImages) ? 'lg:grid lg:grid-cols-2' : ''}`} style={{ maxHeight: '90vh' }}>
               {/* Left - Image or Before/After (only if image exists) */}
               {(selectedService.modalImage || selectedService.beforeAfterImages) && (
-                <div className="relative shrink-0 bg-[#f5f5f5] lg:rounded-l-2xl overflow-hidden">
+                <div className="relative shrink-0 bg-[#f5f5f5] lg:rounded-l-2xl overflow-hidden" style={{ minHeight: '500px' }}>
                   {selectedService.beforeAfterImages ? (
-                    <div className="w-full h-full flex flex-col">
+                    <div className="w-full h-full flex flex-col" style={{ height: '100%' }}>
                       {/* Before Image */}
-                      <div className="relative h-1/2 bg-[#1a1a1a]">
+                      <div className="relative flex-1 bg-[#1a1a1a]" style={{ height: '50%' }}>
                         <img
                           src={selectedService.beforeAfterImages.before}
                           alt="Before"
-                          className="w-full h-full object-contain"
+                          className="w-full h-full object-cover"
                         />
                         <div className="absolute top-3 left-3 bg-black/70 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
                           {selectedService.beforeAfterImages.beforeLabel || 'Before'}
                         </div>
                       </div>
                       {/* After Image */}
-                      <div className="relative h-1/2 bg-[#1a1a1a]">
+                      <div className="relative flex-1 bg-[#1a1a1a]" style={{ height: '50%' }}>
                         <img
                           src={selectedService.beforeAfterImages.after}
                           alt="After"
-                          className="w-full h-full object-contain"
+                          className="w-full h-full object-cover"
                         />
                         <div
                           className="absolute top-3 left-3 text-white text-xs font-semibold px-3 py-1.5 rounded-full"
