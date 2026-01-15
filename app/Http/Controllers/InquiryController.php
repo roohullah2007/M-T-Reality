@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewInquiryNotification;
 use App\Models\Inquiry;
+use App\Models\Property;
+use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class InquiryController extends Controller
 {
@@ -20,7 +24,9 @@ class InquiryController extends Controller
             'message' => 'required|string',
         ]);
 
-        Inquiry::create([
+        $property = Property::findOrFail($validated['property_id']);
+
+        $inquiry = Inquiry::create([
             'property_id' => $validated['property_id'],
             'user_id' => auth()->check() ? auth()->id() : null,
             'name' => $validated['name'],
@@ -30,6 +36,12 @@ class InquiryController extends Controller
             'type' => 'property_inquiry',
             'status' => 'new',
         ]);
+
+        // Send email notification to property owner
+        $emailNotificationsEnabled = Setting::get('email_notifications', '1') === '1';
+        if ($emailNotificationsEnabled && $property->contact_email) {
+            Mail::to($property->contact_email)->send(new NewInquiryNotification($inquiry, $property));
+        }
 
         return redirect()->back()->with('success', 'Your message has been sent! The seller will contact you soon.');
     }

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PropertyUpdatedNotification;
 use App\Models\Property;
 use App\Models\Inquiry;
 use App\Models\Favorite;
 use App\Models\ServiceRequest;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class UserDashboardController extends Controller
@@ -148,6 +151,12 @@ class UserDashboardController extends Controller
         ]);
 
         $property->update($validated);
+
+        // Send update notification email
+        $emailNotificationsEnabled = Setting::get('email_notifications', '1') === '1';
+        if ($emailNotificationsEnabled && $property->contact_email) {
+            Mail::to($property->contact_email)->send(new PropertyUpdatedNotification($property));
+        }
 
         return redirect()->route('dashboard.listings')->with('success', 'Property updated successfully!');
     }

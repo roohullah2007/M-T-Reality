@@ -76,12 +76,14 @@ Route::get('/our-packages', [MediaOrderController::class, 'index'])->name('packa
 Route::get('/packages', [MediaOrderController::class, 'index']); // Alias
 Route::post('/media-order', [MediaOrderController::class, 'store'])->name('media-order.store');
 
-Route::get('/list-property', function () {
-    return Inertia::render('ListProperty');
-})->name('list-property');
+// Property listing routes - require authentication
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/list-property', function () {
+        return Inertia::render('ListProperty');
+    })->name('list-property');
 
-// Property submission route (public)
-Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
+    Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
+});
 
 // Buyer inquiry submission route (public)
 Route::post('/buyer-inquiry', [BuyerInquiryController::class, 'store'])->name('buyer-inquiry.store');
@@ -99,6 +101,9 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard')-
 
     // Listings Management
     Route::get('/listings', [UserDashboardController::class, 'listings'])->name('.listings');
+    Route::get('/listings/create', function () {
+        return Inertia::render('ListProperty');
+    })->name('.listings.create');
     Route::get('/listings/{property}/edit', [UserDashboardController::class, 'editListing'])->name('.listings.edit');
     Route::put('/listings/{property}', [UserDashboardController::class, 'updateListing'])->name('.listings.update');
     Route::delete('/listings/{property}', [UserDashboardController::class, 'destroyListing'])->name('.listings.destroy');

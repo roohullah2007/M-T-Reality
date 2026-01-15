@@ -20,10 +20,13 @@ import {
     Download,
     X,
     Sticker,
-    SignpostBig,
     Package,
     Check,
-    Loader2
+    Loader2,
+    Sparkles,
+    Video,
+    Building2,
+    ArrowRight
 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
@@ -38,9 +41,13 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
 
     // Order modals
     const [showOrderModal, setShowOrderModal] = useState(false);
-    const [orderType, setOrderType] = useState(null); // 'stickers' or 'yard_sign'
+    const [orderType, setOrderType] = useState(null); // 'stickers' only now
     const [orderListing, setOrderListing] = useState(null);
     const [orderSuccess, setOrderSuccess] = useState(false);
+
+    // Upgrade modal
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+    const [upgradeListing, setUpgradeListing] = useState(null);
 
     const orderForm = useForm({
         service_type: '',
@@ -312,11 +319,14 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                 Free Stickers
                                             </button>
                                             <button
-                                                onClick={() => openOrderModal(listing, 'yard_sign')}
-                                                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
+                                                onClick={() => {
+                                                    setUpgradeListing(listing);
+                                                    setShowUpgradeModal(true);
+                                                }}
+                                                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-purple-700 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors"
                                             >
-                                                <SignpostBig className="w-3.5 h-3.5" />
-                                                Free Yard Sign
+                                                <Sparkles className="w-3.5 h-3.5" />
+                                                Upgrades
                                             </button>
                                             <Link
                                                 href={route('dashboard.listings.edit', listing.id)}
@@ -490,7 +500,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                         <div className="p-6">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                                    {orderType === 'qr_stickers' ? 'Order Free QR Stickers' : 'Order Free Yard Sign'}
+                                    Order Free QR Stickers
                                 </h3>
                                 <button
                                     onClick={closeOrderModal}
@@ -507,10 +517,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                     </div>
                                     <h4 className="text-xl font-semibold text-gray-900 mb-2">Order Submitted!</h4>
                                     <p className="text-gray-500 mb-6">
-                                        {orderType === 'qr_stickers'
-                                            ? 'Your free QR stickers will be mailed to you within 3-5 business days.'
-                                            : 'Your free yard sign will be mailed to you within 5-7 business days.'
-                                        }
+                                        Your free QR stickers will be mailed to you within 3-5 business days.
                                     </p>
                                     <button
                                         onClick={closeOrderModal}
@@ -529,29 +536,17 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                     </div>
 
                                     {/* What You Get */}
-                                    <div className={`rounded-xl p-4 mb-6 ${orderType === 'qr_stickers' ? 'bg-orange-50' : 'bg-green-50'}`}>
-                                        <h5 className={`font-medium mb-2 flex items-center gap-2 ${orderType === 'qr_stickers' ? 'text-orange-900' : 'text-green-900'}`}>
-                                            {orderType === 'qr_stickers' ? <Sticker className="w-4 h-4" /> : <SignpostBig className="w-4 h-4" />}
+                                    <div className="rounded-xl p-4 mb-6 bg-orange-50">
+                                        <h5 className="font-medium mb-2 flex items-center gap-2 text-orange-900">
+                                            <Sticker className="w-4 h-4" />
                                             What You'll Receive (FREE)
                                         </h5>
-                                        <ul className={`text-sm space-y-1 ${orderType === 'qr_stickers' ? 'text-orange-800' : 'text-green-800'}`}>
-                                            {orderType === 'qr_stickers' ? (
-                                                <>
-                                                    <li>• Waterproof vinyl QR code stickers</li>
-                                                    <li>• 4" x 4" size - fits FSBO yard signs</li>
-                                                    <li>• Weather resistant for outdoor use</li>
-                                                    <li>• "Scan to View Listing" text included</li>
-                                                    <li>• Links directly to your listing</li>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <li>• Professional 18" x 24" yard sign</li>
-                                                    <li>• Durable corrugated plastic</li>
-                                                    <li>• Metal H-frame stake included</li>
-                                                    <li>• QR code printed on sign</li>
-                                                    <li>• OKByOwner branding</li>
-                                                </>
-                                            )}
+                                        <ul className="text-sm space-y-1 text-orange-800">
+                                            <li>• Waterproof vinyl QR code stickers</li>
+                                            <li>• 4" x 4" size - fits FSBO yard signs</li>
+                                            <li>• Weather resistant for outdoor use</li>
+                                            <li>• "Scan to View Listing" text included</li>
+                                            <li>• Links directly to your listing</li>
                                         </ul>
                                     </div>
 
@@ -628,22 +623,20 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                             />
                                         </div>
 
-                                        {orderType === 'qr_stickers' && (
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                    Quantity
-                                                </label>
-                                                <select
-                                                    value={orderForm.data.quantity}
-                                                    onChange={(e) => orderForm.setData('quantity', parseInt(e.target.value))}
-                                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
-                                                >
-                                                    <option value={2}>2 stickers</option>
-                                                    <option value={4}>4 stickers</option>
-                                                    <option value={6}>6 stickers</option>
-                                                </select>
-                                            </div>
-                                        )}
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                Quantity
+                                            </label>
+                                            <select
+                                                value={orderForm.data.quantity}
+                                                onChange={(e) => orderForm.setData('quantity', parseInt(e.target.value))}
+                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                            >
+                                                <option value={2}>2 stickers</option>
+                                                <option value={4}>4 stickers</option>
+                                                <option value={6}>6 stickers</option>
+                                            </select>
+                                        </div>
 
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -687,6 +680,91 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                     </form>
                                 </>
                             )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Upgrade Modal */}
+            {showUpgradeModal && upgradeListing && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+                        <div className="p-6">
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                                    Upgrade Your Listing
+                                </h3>
+                                <button
+                                    onClick={() => {
+                                        setShowUpgradeModal(false);
+                                        setUpgradeListing(null);
+                                    }}
+                                    className="p-2 hover:bg-gray-100 rounded-lg"
+                                >
+                                    <X className="w-5 h-5 text-gray-400" />
+                                </button>
+                            </div>
+
+                            {/* Property Info */}
+                            <div className="bg-gray-50 rounded-xl p-4 mb-6">
+                                <p className="text-sm text-gray-500">Upgrading:</p>
+                                <p className="font-medium text-gray-900">{upgradeListing.property_title}</p>
+                                <p className="text-sm text-gray-600">{upgradeListing.address}, {upgradeListing.city}</p>
+                            </div>
+
+                            <div className="space-y-4">
+                                {/* Order Multimedia Option */}
+                                <div className="border border-gray-200 rounded-xl p-4 hover:border-purple-300 hover:bg-purple-50/50 transition-colors cursor-pointer group">
+                                    <div className="flex items-start gap-4">
+                                        <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-purple-200 transition-colors">
+                                            <Video className="w-6 h-6 text-purple-600" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="flex items-center justify-between">
+                                                <h4 className="font-semibold text-gray-900">Order Multimedia</h4>
+                                                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-purple-600 transition-colors" />
+                                            </div>
+                                            <p className="text-sm text-gray-600 mt-1">
+                                                Professional photography, video tours, drone footage, and virtual staging
+                                            </p>
+                                            <div className="flex flex-wrap gap-2 mt-3">
+                                                <span className="px-2 py-1 text-xs bg-white rounded-full text-gray-600 border">HD Photos</span>
+                                                <span className="px-2 py-1 text-xs bg-white rounded-full text-gray-600 border">Video Tour</span>
+                                                <span className="px-2 py-1 text-xs bg-white rounded-full text-gray-600 border">Drone</span>
+                                                <span className="px-2 py-1 text-xs bg-white rounded-full text-gray-600 border">3D Tour</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Upgrade to MLS Option */}
+                                <div className="border border-gray-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50/50 transition-colors cursor-pointer group">
+                                    <div className="flex items-start gap-4">
+                                        <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-blue-200 transition-colors">
+                                            <Building2 className="w-6 h-6 text-blue-600" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="flex items-center justify-between">
+                                                <h4 className="font-semibold text-gray-900">Upgrade to MLS Listing</h4>
+                                                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                                            </div>
+                                            <p className="text-sm text-gray-600 mt-1">
+                                                Get your listing on the MLS and syndicated to Zillow, Realtor.com, Redfin & more
+                                            </p>
+                                            <div className="flex flex-wrap gap-2 mt-3">
+                                                <span className="px-2 py-1 text-xs bg-white rounded-full text-gray-600 border">MLS Access</span>
+                                                <span className="px-2 py-1 text-xs bg-white rounded-full text-gray-600 border">Zillow</span>
+                                                <span className="px-2 py-1 text-xs bg-white rounded-full text-gray-600 border">Realtor.com</span>
+                                                <span className="px-2 py-1 text-xs bg-white rounded-full text-gray-600 border">Redfin</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p className="text-xs text-gray-500 text-center mt-6">
+                                Reach more buyers and sell faster with premium upgrades
+                            </p>
                         </div>
                     </div>
                 </div>

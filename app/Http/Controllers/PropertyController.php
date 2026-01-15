@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PropertySubmittedToAdmin;
+use App\Mail\PropertySubmittedToOwner;
+use App\Mail\PropertyUpdatedNotification;
 use App\Models\Property;
 use App\Models\QrScan;
+use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class PropertyController extends Controller
@@ -81,12 +86,12 @@ class PropertyController extends Controller
             }
         }
 
-        // Get authenticated user ID if available
-        $userId = auth()->check() ? auth()->id() : null;
+        // Get authenticated user (required)
+        $user = auth()->user();
 
         // Convert camelCase to snake_case for database
         $property = Property::create([
-            'user_id' => $userId,
+            'user_id' => $user->id,
             'property_title' => $validated['propertyTitle'],
             'developer' => $validated['developer'] ?? null,
             'property_type' => $validated['propertyType'],
@@ -109,10 +114,14 @@ class PropertyController extends Controller
             'contact_phone' => $validated['contactPhone'],
             'status' => 'for-sale',
             'is_active' => true,
-            'approval_status' => 'pending',
+            'approval_status' => 'approved',
+            'approved_at' => now(),
         ]);
 
-        return redirect()->back()->with('success', 'Property listed successfully! Your listing is pending approval.');
+        // Send email notifications
+        $this->sendPropertySubmissionEmails($property);
+
+        return redirect()->route('dashboard.listings')->with('success', 'Property listed successfully! Your listing is now live.');
     }
 
     /**
@@ -188,6 +197,9 @@ class PropertyController extends Controller
         ]);
 
         $property->update($validated);
+
+        // Send update notification email
+        $this->sendPropertyUpdateEmails($property);
 
         return redirect()->route('admin.properties.index')->with('success', 'Property updated successfully!');
     }
@@ -282,5 +294,45 @@ class PropertyController extends Controller
             'properties' => $properties,
             'filters' => $request->only(['keyword', 'location', 'status', 'propertyType', 'priceMin', 'priceMax', 'bedrooms', 'bathrooms', 'sort']),
         ]);
+    }
+
+    /**
+     * Send email notifications when a property is submitted.
+     */
+    protected function sendPropertySubmissionEmails(Property $property): void
+    {
+        $emailNotificationsEnabled = Setting::get('email_notifications', '1') === '1';
+
+        if (!$emailNotificationsEnabled) {
+            return;
+        }
+
+        // Send confirmation email to property owner
+        if ($property->contact_email) {
+            Mail::to($property->contact_email)->send(new PropertySubmittedToOwner($property));
+        }
+
+        // Send notification email to admin
+        $adminEmail = Setting::get('admin_email', 'admin@okbyowner.com');
+        if ($adminEmail) {
+            Mail::to($adminEmail)->send(new PropertySubmittedToAdmin($property));
+        }
+    }
+
+    /**
+     * Send email notification when a property is updated.
+     */
+    protected function sendPropertyUpdateEmails(Property $property): void
+    {
+        $emailNotificationsEnabled = Setting::get('email_notifications', '1') === '1';
+
+        if (!$emailNotificationsEnabled) {
+            return;
+        }
+
+        // Send update notification to property owner
+        if ($property->contact_email) {
+            Mail::to($property->contact_email)->send(new PropertyUpdatedNotification($property));
+        }
     }
 }

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewContactMessageToAdmin;
 use App\Models\ContactMessage;
+use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -20,7 +23,7 @@ class ContactController extends Controller
             'message' => 'required|string',
         ]);
 
-        ContactMessage::create([
+        $contactMessage = ContactMessage::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'] ?? null,
@@ -28,6 +31,13 @@ class ContactController extends Controller
             'message' => $validated['message'],
             'status' => 'new',
         ]);
+
+        // Send notification email to admin
+        $emailNotificationsEnabled = Setting::get('email_notifications', '1') === '1';
+        $adminEmail = Setting::get('admin_email', 'admin@okbyowner.com');
+        if ($emailNotificationsEnabled && $adminEmail) {
+            Mail::to($adminEmail)->send(new NewContactMessageToAdmin($contactMessage));
+        }
 
         return redirect()->back()->with('success', 'Thank you for your message! We\'ll get back to you within 24 hours.');
     }
