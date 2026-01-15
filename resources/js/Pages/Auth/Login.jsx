@@ -1,8 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
-import Header from '@/Components/Header';
-import Footer from '@/Components/Footer';
 
 function Login({ status, canResetPassword }) {
     const [showPassword, setShowPassword] = useState(false);
@@ -22,232 +20,169 @@ function Login({ status, canResetPassword }) {
     return (
         <>
             <Head title="Login" />
-            <Header />
 
-            <main className="min-h-screen bg-[#F8F7F5] pt-[77px]">
-                <div className="flex min-h-[calc(100vh-77px)]">
-                    {/* Left Side - Image */}
-                    <div className="hidden lg:flex lg:w-1/2 relative">
-                        <div
-                            className="absolute inset-0 bg-cover bg-center"
-                            style={{
-                                backgroundImage: 'url(/images/hero-1.avif)',
-                            }}
+            <div className="min-h-screen bg-white flex flex-col">
+                {/* Logo Header */}
+                <div className="flex justify-center items-center px-8 py-8">
+                    <Link href="/">
+                        <img
+                            src="/images/okbyowner-logo.png"
+                            alt="OKByOwner"
+                            className="h-10"
+                        />
+                    </Link>
+                </div>
+
+                {/* Main Content */}
+                <div className="flex-1 flex items-start justify-center px-4 py-8">
+                    <div className="w-full max-w-[400px]">
+                        <h1
+                            className="text-[28px] font-bold text-[#111111] mb-2 text-center"
+                            style={{ fontFamily: '"Instrument Sans", sans-serif' }}
                         >
-                            <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/40" />
-                        </div>
-                        <div className="relative z-10 flex flex-col justify-center px-12 xl:px-20">
-                            <h2
-                                className="text-4xl xl:text-5xl font-bold text-white leading-tight mb-6"
-                                style={{ fontFamily: '"Instrument Sans", sans-serif' }}
-                            >
-                                Welcome Back to<br />
-                                <span className="text-[#A41E34]">OKByOwner</span>
-                            </h2>
-                            <p className="text-white/80 text-lg max-w-md" style={{ fontFamily: '"Poppins", sans-serif' }}>
-                                Sign in to manage your property listings, connect with buyers, and take control of your real estate journey.
-                            </p>
-                        </div>
-                    </div>
+                            Sign in to OKByOwner
+                        </h1>
+                        <p className="text-gray-500 text-center mb-8" style={{ fontFamily: '"Poppins", sans-serif' }}>
+                            Welcome back! Sign in to continue
+                        </p>
 
-                    {/* Right Side - Form */}
-                    <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
-                        <div className="w-full max-w-md">
-                            {/* Mobile Logo */}
-                            <div className="lg:hidden text-center mb-8">
-                                <Link href="/">
-                                    <img
-                                        src="/images/okbyowner-logo.png"
-                                        alt="OKByOwner"
-                                        className="h-10 mx-auto"
-                                    />
-                                </Link>
+                        {/* Google Sign In Button */}
+                        <a
+                            href={route('auth.google')}
+                            className="w-full flex items-center justify-center gap-3 py-3 px-4 border-2 border-gray-300 rounded-full text-sm font-medium text-[#111111] bg-white hover:bg-gray-50 hover:border-gray-400 transition-colors mb-6"
+                        >
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"></path>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"></path>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"></path>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"></path>
+                            </svg>
+                            Continue with Google
+                        </a>
+
+                        {/* Divider */}
+                        <div className="relative mb-6">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-gray-200"></div>
+                            </div>
+                            <div className="relative flex justify-center text-sm">
+                                <span className="px-4 bg-white text-gray-500">or</span>
+                            </div>
+                        </div>
+
+                        {status && (
+                            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-sm font-medium text-green-700">
+                                {status}
+                            </div>
+                        )}
+
+                        <form onSubmit={submit} className="space-y-5">
+                            {/* Email Field */}
+                            <div>
+                                <label
+                                    htmlFor="email"
+                                    className="block text-sm font-bold text-[#111111] mb-2"
+                                >
+                                    Email
+                                </label>
+                                <input
+                                    id="email"
+                                    type="email"
+                                    name="email"
+                                    value={data.email}
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#A41E34] focus:ring-2 focus:ring-[#A41E34]/20 transition-all"
+                                    placeholder="you@example.com"
+                                    autoComplete="username"
+                                    autoFocus
+                                    onChange={(e) => setData('email', e.target.value)}
+                                    required
+                                />
+                                {errors.email && (
+                                    <p className="mt-2 text-sm text-red-600">{errors.email}</p>
+                                )}
                             </div>
 
-                            <div className="bg-white rounded-2xl shadow-xl p-8 sm:p-10">
-                                <div className="text-center mb-8">
-                                    <h1
-                                        className="text-3xl font-bold text-[#111111] mb-2"
-                                        style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+                            {/* Password Field */}
+                            <div>
+                                <div className="flex items-center justify-between mb-2">
+                                    <label
+                                        htmlFor="password"
+                                        className="block text-sm font-bold text-[#111111]"
                                     >
-                                        Sign In
-                                    </h1>
-                                    <p className="text-gray-500" style={{ fontFamily: '"Poppins", sans-serif' }}>
-                                        Enter your credentials to access your account
-                                    </p>
+                                        Password
+                                    </label>
+                                    {canResetPassword && (
+                                        <Link
+                                            href={route('password.request')}
+                                            className="text-xs text-[#A41E34] hover:underline"
+                                        >
+                                            Forgot password?
+                                        </Link>
+                                    )}
                                 </div>
-
-                                {status && (
-                                    <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-sm font-medium text-green-700">
-                                        {status}
-                                    </div>
-                                )}
-
-                                <form onSubmit={submit} className="space-y-5">
-                                    {/* Email Field */}
-                                    <div>
-                                        <label
-                                            htmlFor="email"
-                                            className="block text-sm font-semibold text-[#111111] mb-2"
-                                            style={{ fontFamily: '"Instrument Sans", sans-serif' }}
-                                        >
-                                            Email Address
-                                        </label>
-                                        <div className="relative">
-                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                                <Mail className="h-5 w-5 text-gray-400" />
-                                            </div>
-                                            <input
-                                                id="email"
-                                                type="email"
-                                                name="email"
-                                                value={data.email}
-                                                className="w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-xl text-[#111111] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] transition-all duration-300"
-                                                style={{ fontFamily: '"Poppins", sans-serif' }}
-                                                placeholder="you@example.com"
-                                                autoComplete="username"
-                                                autoFocus
-                                                onChange={(e) => setData('email', e.target.value)}
-                                            />
-                                        </div>
-                                        {errors.email && (
-                                            <p className="mt-2 text-sm text-red-600">{errors.email}</p>
-                                        )}
-                                    </div>
-
-                                    {/* Password Field */}
-                                    <div>
-                                        <label
-                                            htmlFor="password"
-                                            className="block text-sm font-semibold text-[#111111] mb-2"
-                                            style={{ fontFamily: '"Instrument Sans", sans-serif' }}
-                                        >
-                                            Password
-                                        </label>
-                                        <div className="relative">
-                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                                <Lock className="h-5 w-5 text-gray-400" />
-                                            </div>
-                                            <input
-                                                id="password"
-                                                type={showPassword ? 'text' : 'password'}
-                                                name="password"
-                                                value={data.password}
-                                                className="w-full pl-12 pr-12 py-3.5 border border-gray-200 rounded-xl text-[#111111] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] transition-all duration-300"
-                                                style={{ fontFamily: '"Poppins", sans-serif' }}
-                                                placeholder="Enter your password"
-                                                autoComplete="current-password"
-                                                onChange={(e) => setData('password', e.target.value)}
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
-                                            >
-                                                {showPassword ? (
-                                                    <EyeOff className="h-5 w-5" />
-                                                ) : (
-                                                    <Eye className="h-5 w-5" />
-                                                )}
-                                            </button>
-                                        </div>
-                                        {errors.password && (
-                                            <p className="mt-2 text-sm text-red-600">{errors.password}</p>
-                                        )}
-                                    </div>
-
-                                    {/* Remember Me & Forgot Password */}
-                                    <div className="flex items-center justify-between">
-                                        <label className="flex items-center cursor-pointer">
-                                            <input
-                                                type="checkbox"
-                                                name="remember"
-                                                checked={data.remember}
-                                                onChange={(e) => setData('remember', e.target.checked)}
-                                                className="w-4 h-4 text-[#A41E34] border-gray-300 rounded focus:ring-[#A41E34]/20 cursor-pointer"
-                                            />
-                                            <span
-                                                className="ml-2 text-sm text-gray-600"
-                                                style={{ fontFamily: '"Poppins", sans-serif' }}
-                                            >
-                                                Remember me
-                                            </span>
-                                        </label>
-
-                                        {canResetPassword && (
-                                            <Link
-                                                href={route('password.request')}
-                                                className="text-sm text-[#A41E34] hover:text-[#8B1A2C] font-medium transition-colors"
-                                                style={{ fontFamily: '"Poppins", sans-serif' }}
-                                            >
-                                                Forgot password?
-                                            </Link>
-                                        )}
-                                    </div>
-
-                                    {/* Submit Button */}
+                                <div className="relative">
+                                    <input
+                                        id="password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        name="password"
+                                        value={data.password}
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#A41E34] focus:ring-2 focus:ring-[#A41E34]/20 transition-all pr-12"
+                                        placeholder="Enter your password"
+                                        autoComplete="current-password"
+                                        onChange={(e) => setData('password', e.target.value)}
+                                        required
+                                    />
                                     <button
-                                        type="submit"
-                                        disabled={processing}
-                                        className="w-full bg-[#A41E34] text-white rounded-full py-4 font-semibold text-base transition-all duration-300 hover:bg-[#8B1A2C] focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed"
-                                        style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                                     >
-                                        {processing ? (
-                                            <span className="flex items-center justify-center gap-2">
-                                                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                                </svg>
-                                                Signing in...
-                                            </span>
+                                        {showPassword ? (
+                                            <EyeOff className="w-5 h-5" />
                                         ) : (
-                                            'Sign In'
+                                            <Eye className="w-5 h-5" />
                                         )}
                                     </button>
-                                </form>
-
-                                {/* Divider */}
-                                <div className="relative my-8">
-                                    <div className="absolute inset-0 flex items-center">
-                                        <div className="w-full border-t border-gray-200"></div>
-                                    </div>
-                                    <div className="relative flex justify-center text-sm">
-                                        <span className="px-4 bg-white text-gray-500" style={{ fontFamily: '"Poppins", sans-serif' }}>
-                                            New to OKByOwner?
-                                        </span>
-                                    </div>
                                 </div>
-
-                                {/* Register Link */}
-                                <Link
-                                    href={route('register')}
-                                    className="w-full flex items-center justify-center border-2 border-[#111111] text-[#111111] rounded-full py-4 font-semibold text-base transition-all duration-300 hover:bg-[#111111] hover:text-white"
-                                    style={{ fontFamily: '"Instrument Sans", sans-serif' }}
-                                >
-                                    Create an Account
-                                </Link>
+                                {errors.password && (
+                                    <p className="mt-2 text-sm text-red-600">{errors.password}</p>
+                                )}
                             </div>
 
-                            {/* Terms */}
-                            <p
-                                className="mt-6 text-center text-sm text-gray-500"
-                                style={{ fontFamily: '"Poppins", sans-serif' }}
+                            {/* Remember Me */}
+                            <div className="flex items-center">
+                                <input
+                                    id="remember"
+                                    type="checkbox"
+                                    name="remember"
+                                    checked={data.remember}
+                                    onChange={(e) => setData('remember', e.target.checked)}
+                                    className="w-4 h-4 text-[#A41E34] border-gray-300 rounded focus:ring-[#A41E34]"
+                                />
+                                <label htmlFor="remember" className="ml-2 text-sm text-gray-600">
+                                    Remember me
+                                </label>
+                            </div>
+
+                            {/* Submit Button */}
+                            <button
+                                type="submit"
+                                disabled={processing}
+                                className="w-full py-3 px-4 bg-[#111111] text-white rounded-full text-sm font-semibold hover:bg-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                By signing in, you agree to our{' '}
-                                <Link href="/terms" className="text-[#A41E34] hover:underline">
-                                    Terms of Service
-                                </Link>{' '}
-                                and{' '}
-                                <Link href="/privacy" className="text-[#A41E34] hover:underline">
-                                    Privacy Policy
-                                </Link>
-                            </p>
-                        </div>
+                                {processing ? 'Signing in...' : 'Sign In'}
+                            </button>
+                        </form>
+
+                        <p className="mt-8 text-center text-sm text-gray-600">
+                            Don't have an account?{' '}
+                            <Link href={route('register')} className="text-[#A41E34] font-medium hover:underline">
+                                Sign up
+                            </Link>
+                        </p>
                     </div>
                 </div>
-            </main>
-
-            <Footer />
+            </div>
         </>
     );
 }

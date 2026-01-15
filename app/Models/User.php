@@ -25,6 +25,8 @@ class User extends Authenticatable
         'profile_photo',
         'is_active',
         'last_login_at',
+        'google_id',
+        'avatar',
     ];
 
     protected $hidden = [
