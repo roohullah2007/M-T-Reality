@@ -393,7 +393,7 @@ function Buyers() {
                   </li>
                 </ul>
                 <a
-                  href="https://tandmmortgages.morty.com/"
+                  href="https://tandmmortgages.morty.com/get-started/mortgage?loan_officer=terry-hassell"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-white text-[#A41E34] rounded-full px-8 py-4 font-semibold hover:bg-gray-100 transition-all duration-300"

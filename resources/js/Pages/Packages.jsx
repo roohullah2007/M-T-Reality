@@ -731,6 +731,29 @@ function Packages({ userListings = [] }) {
     if (!selectedService) return null;
     const IconComponent = selectedService.icon;
 
+    const howItWorksSteps = [
+      {
+        number: '1',
+        title: 'Create Your Free Listing',
+        description: 'List your property on OKByOwner for free. It only takes a few minutes.'
+      },
+      {
+        number: '2',
+        title: 'Select Your Services',
+        description: 'Choose from professional photos, drone, 2D floor plan, HD video walkthrough, Matterport 3D tour, and more.'
+      },
+      {
+        number: '3',
+        title: 'Order from Your Dashboard',
+        description: 'Access your seller dashboard to order multimedia services for your listing.'
+      },
+      {
+        number: '4',
+        title: 'We Come to You',
+        description: 'Our photographer will contact you to schedule a convenient time to capture your property.'
+      }
+    ];
+
     return (
       <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setSelectedService(null)}>
         <div
@@ -739,8 +762,8 @@ function Packages({ userListings = [] }) {
         >
           <div className="p-6 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white z-10">
             <div className="flex items-center gap-3">
-              <div className="bg-[#E5E1DC] p-3 rounded-xl">
-                <IconComponent className="w-6 h-6 text-[#3D3D3D]" />
+              <div className="bg-[#A41E34] p-3 rounded-xl">
+                <IconComponent className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-2xl font-medium text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                 {selectedService.title}
@@ -836,19 +859,66 @@ function Packages({ userListings = [] }) {
               </div>
             )}
 
-            {/* Action Button */}
-            <button
-              onClick={() => {
-                setSelectedService(null);
-                goToOrderForm();
-              }}
-              className="w-full flex items-center justify-center gap-2 bg-[#A41E34] text-white rounded-full px-6 py-4 font-medium text-lg transition-all duration-300 hover:bg-[#8B1A2C]"
-              style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-            >
-              <Camera className="w-5 h-5" />
-              Order This Service
-              <ChevronRight className="w-5 h-5" />
-            </button>
+            {/* How It Works Section */}
+            <div className="mb-6 bg-[#EEEDEA] rounded-xl p-5">
+              <h4 className="text-lg font-medium text-[#111] mb-4" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                How It Works
+              </h4>
+              <div className="space-y-4">
+                {howItWorksSteps.map((step, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-7 h-7 bg-[#A41E34] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                      {step.number}
+                    </div>
+                    <div>
+                      <h5 className="font-medium text-[#111] text-sm" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                        {step.title}
+                      </h5>
+                      <p className="text-xs text-[#666] mt-0.5" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Note about ordering */}
+            <div className="mb-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm text-amber-800" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                    <strong>Note:</strong> Multimedia services are ordered from your seller dashboard after creating your free listing. Our photographer will schedule a visit once you place your order.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="space-y-3">
+              {auth?.user ? (
+                <Link
+                  href="/dashboard/listings"
+                  className="w-full flex items-center justify-center gap-2 bg-[#A41E34] text-white rounded-full px-6 py-4 font-medium text-lg transition-all duration-300 hover:bg-[#8B1A2C]"
+                  style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                >
+                  <Home className="w-5 h-5" />
+                  Go to My Listings
+                  <ChevronRight className="w-5 h-5" />
+                </Link>
+              ) : (
+                <Link
+                  href="/list-property"
+                  className="w-full flex items-center justify-center gap-2 bg-[#A41E34] text-white rounded-full px-6 py-4 font-medium text-lg transition-all duration-300 hover:bg-[#8B1A2C]"
+                  style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                >
+                  <Home className="w-5 h-5" />
+                  List Your Property Free
+                  <ChevronRight className="w-5 h-5" />
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -2524,7 +2594,7 @@ function Packages({ userListings = [] }) {
                   />
                 </div>
                 <h4 className="text-lg font-semibold text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Your OKByOwner Listing
+                  Your MLS Listing
                 </h4>
                 <p className="text-sm text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   Syndicates to 100+ sites automatically

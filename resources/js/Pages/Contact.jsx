@@ -46,7 +46,7 @@ function Contact() {
     },
     {
       icon: MapPin,
-      title: 'Visit Us',
+      title: 'Mail Us',
       info: '1611 S Utica Avenue #515, Tulsa, OK 74104',
       link: 'https://maps.google.com/?q=1611+S+Utica+Avenue+%23515,+Tulsa,+OK+74104'
     },
@@ -65,7 +65,7 @@ function Contact() {
     },
     {
       question: 'Is there a fee to list?',
-      answer: 'Our basic listing is completely FREE forever. We also offer premium packages starting at $179 for additional exposure and marketing tools.'
+      answer: 'Our basic listing is completely FREE forever. We also offer premium packages starting at $250 for additional exposure and marketing tools.'
     },
     {
       question: 'How long does my listing stay active?',

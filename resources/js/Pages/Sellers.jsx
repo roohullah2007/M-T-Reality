@@ -126,7 +126,7 @@ function Sellers() {
   const faqs = [
     {
       question: "How much does it cost to list my property?",
-      answer: "Our basic listing is completely FREE forever. We also offer premium packages starting at $179 for additional exposure and marketing tools."
+      answer: "Our basic listing is completely FREE forever. We also offer premium packages starting at $250 for additional exposure and marketing tools."
     },
     {
       question: "Do I need a real estate license to sell my own home?",
@@ -219,7 +219,7 @@ function Sellers() {
                   className="button inline-flex items-center gap-[0.4rem] bg-[#A41E34] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#8B1A2C]"
                   style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                 >
-                  <span>Start Listing Free</span>
+                  <span>List Your Property</span>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <mask id="mask0_56_2205" style={{ maskType: 'alpha' }} maskUnits="userSpaceOnUse" x="0" y="0" width="20" height="20">
                       <rect width="20" height="20" transform="matrix(-1 0 0 1 20 0)" fill="#D9D9D9"/>
@@ -509,14 +509,65 @@ function Sellers() {
       <section className="bg-[#EEEDEA] py-20">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Side - Image */}
+            {/* Left Side - Syndication Card */}
             <div className="order-2 lg:order-1">
-              <div className="overflow-hidden rounded-2xl">
-                <img
-                  src="https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=800"
-                  alt="MLS listing exposure on multiple real estate websites"
-                  className="w-full h-[400px] object-cover"
-                />
+              <div className="relative bg-white rounded-2xl p-8 shadow-lg">
+                <div className="text-center mb-6">
+                  <div className="bg-[#F5F3F0] rounded-2xl p-4 mb-4 inline-block">
+                    <img src="/images/okbyowner-logo.png" alt="OKByOwner" className="h-12 w-auto" />
+                  </div>
+                  <h4 className="text-lg font-semibold text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                    Your MLS Listing
+                  </h4>
+                  <p className="text-sm text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                    Syndicates to 100+ sites automatically
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-3 gap-3">
+                  {/* Zillow */}
+                  <div className="bg-white border border-[#E5E1DC] rounded-xl p-4 text-center hover:shadow-md hover:border-[#006AFF] transition-all">
+                    <div className="h-12 flex items-center justify-center">
+                      <img src="/images/zillow.png" alt="Zillow" className="h-10 w-auto object-contain" />
+                    </div>
+                  </div>
+                  {/* Realtor.com */}
+                  <div className="bg-white border border-[#E5E1DC] rounded-xl p-4 text-center hover:shadow-md hover:border-[#D92228] transition-all">
+                    <div className="h-12 flex items-center justify-center">
+                      <img src="/images/realtor.png" alt="Realtor.com" className="h-10 w-auto object-contain" />
+                    </div>
+                  </div>
+                  {/* Trulia */}
+                  <div className="bg-white border border-[#E5E1DC] rounded-xl p-4 text-center hover:shadow-md hover:border-[#00ADBB] transition-all">
+                    <div className="h-12 flex items-center justify-center">
+                      <img src="/images/trulia.png" alt="Trulia" className="h-10 w-auto object-contain" />
+                    </div>
+                  </div>
+                  {/* Redfin */}
+                  <div className="bg-white border border-[#E5E1DC] rounded-xl p-4 text-center hover:shadow-md hover:border-[#A02021] transition-all">
+                    <div className="h-12 flex items-center justify-center">
+                      <img src="/images/redfin.png" alt="Redfin" className="h-10 w-auto object-contain" />
+                    </div>
+                  </div>
+                  {/* Homes.com */}
+                  <div className="bg-white border border-[#E5E1DC] rounded-xl p-4 text-center hover:shadow-md hover:border-[#FF6B00] transition-all">
+                    <div className="h-12 flex items-center justify-center">
+                      <span className="text-[#FF6B00] font-bold text-lg tracking-tight" style={{ fontFamily: 'system-ui' }}>homes.com</span>
+                    </div>
+                  </div>
+                  {/* MLS */}
+                  <div className="bg-white border border-[#E5E1DC] rounded-xl p-4 text-center hover:shadow-md hover:border-[#1a365d] transition-all">
+                    <div className="h-12 flex items-center justify-center">
+                      <span className="text-[#1a365d] font-bold text-xl tracking-tight" style={{ fontFamily: 'system-ui' }}>MLS</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-6 border-t border-[#E5E1DC] text-center">
+                  <p className="text-sm text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                    <span className="font-semibold text-[#A41E34]">+100 more</span> real estate websites
+                  </p>
+                </div>
               </div>
             </div>
 

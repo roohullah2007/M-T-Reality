@@ -55,7 +55,7 @@ function About() {
     'Virtual tour integration',
     'Direct buyer connections',
     'Legal document templates',
-    'Customer Support (not 24/7)',
+    'Customer Support',
     'Mobile-friendly platform'
   ];
 

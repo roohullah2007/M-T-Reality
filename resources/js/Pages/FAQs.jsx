@@ -75,7 +75,7 @@ function FAQs() {
       faqs: [
         {
           question: "How much does it cost to list my property?",
-          answer: "Our basic listing is completely FREE forever. We also offer premium packages starting at $179 for additional exposure and marketing tools."
+          answer: "Our basic listing is completely FREE forever. We also offer premium packages starting at $250 for additional exposure and marketing tools."
         },
         {
           question: "Are there any hidden fees?",
@@ -186,7 +186,7 @@ function FAQs() {
                 className="text-white text-[14px] md:text-[16px] font-medium mb-8 leading-relaxed max-w-2xl drop-shadow-lg"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                Find answers to common questions about selling your home by owner, MLS listings, pricing, and the entire FSBO process. Can't find what you're looking for? Contact our support team.
+                Find answers to common questions about selling your home by owner. Can't find what you're looking for? Contact our support team.
               </p>
 
               {/* CTA Button */}

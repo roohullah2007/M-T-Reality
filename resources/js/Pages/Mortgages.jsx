@@ -154,7 +154,7 @@ function Mortgages() {
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-[0.4rem] mb-12">
                 <a
-                  href="https://tandmmortgages.com/"
+                  href="https://tandmmortgages.morty.com/get-started/mortgage?loan_officer=terry-hassell"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="button inline-flex items-center gap-[0.4rem] bg-[#A41E34] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#8B1A2C]"
@@ -335,7 +335,7 @@ function Mortgages() {
               </div>
 
               <a
-                href="https://tandmmortgages.com/"
+                href="https://tandmmortgages.morty.com/get-started/mortgage?loan_officer=terry-hassell"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full bg-white text-[#A41E34] text-center py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300"
@@ -430,7 +430,7 @@ function Mortgages() {
           {/* CTA */}
           <div className="text-center mt-12">
             <a
-              href="https://tandmmortgages.com/"
+              href="https://tandmmortgages.morty.com/get-started/mortgage?loan_officer=terry-hassell"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-[#A41E34] text-white rounded-full px-8 py-4 font-medium hover:bg-[#8B1A2C] transition-all duration-300"

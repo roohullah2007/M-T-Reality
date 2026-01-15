@@ -304,7 +304,7 @@ const ServicesSection = () => {
                     </div>
                   ) : selectedService.showPhoneVideo ? (
                     <div className="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-[#1a1a2e] to-[#16213e]">
-                      <div className="flex items-center gap-8">
+                      <div className="flex items-center justify-center">
                         {/* Phone Mockup with Video */}
                         <div className="relative">
                           {/* Phone Frame */}
@@ -320,19 +320,18 @@ const ServicesSection = () => {
                                 playsInline
                                 className="w-full h-full object-cover"
                               />
-                              {/* Matterport-style UI overlay */}
+                              {/* Video Tour UI overlay */}
                               <div className="absolute bottom-4 left-3 right-3">
                                 <div className="bg-black/50 backdrop-blur-sm rounded-lg px-3 py-2">
-                                  <p className="text-white text-[10px] font-medium">3D Virtual Tour</p>
-                                  <p className="text-white/70 text-[8px]">Tap to explore rooms</p>
+                                  <p className="text-white text-[10px] font-medium">HD Video Tour</p>
+                                  <p className="text-white/70 text-[8px]">Professional walkthrough</p>
                                 </div>
                               </div>
-                              {/* Dollhouse icon */}
+                              {/* Play icon */}
                               <div className="absolute top-12 right-2">
                                 <div className="w-8 h-8 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                                  <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-                                    <polyline points="9 22 9 12 15 12 15 22"/>
+                                  <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M8 5v14l11-7z"/>
                                   </svg>
                                 </div>
                               </div>
@@ -340,16 +339,6 @@ const ServicesSection = () => {
                               <div className="absolute top-2 left-1/2 -translate-x-1/2 w-16 h-5 bg-black rounded-full"></div>
                             </div>
                           </div>
-                        </div>
-
-                        {/* Matterport Logo */}
-                        <div className="flex flex-col items-center gap-3">
-                          <div className="w-20 h-20 bg-[#E5007D] rounded-2xl flex items-center justify-center shadow-xl">
-                            <svg viewBox="0 0 24 24" className="w-10 h-10" fill="white">
-                              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                            </svg>
-                          </div>
-                          <span className="text-white text-sm font-semibold">Matterport</span>
                         </div>
                       </div>
                     </div>
