@@ -2829,15 +2829,18 @@ function Packages({ userListings = [] }) {
                       </button>
 
                       {currentStep < 4 ? (
-                        <button
-                          type="button"
-                          onClick={nextStep}
-                          className="inline-flex items-center gap-2 bg-[#A41E34] text-white rounded-full px-6 py-3 font-medium transition-all duration-300 hover:bg-[#8B1A2C]"
-                          style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                        >
-                          {currentStep === 3 ? 'Continue to MLS & Scheduling' : 'Continue'}
-                          <ChevronRight className="w-5 h-5" />
-                        </button>
+                        // On step 1, only show Continue if user is logged in, has listings, and selected one
+                        currentStep === 1 && (!auth?.user || userListings.length === 0 || !selectedListing) ? null : (
+                          <button
+                            type="button"
+                            onClick={nextStep}
+                            className="inline-flex items-center gap-2 bg-[#A41E34] text-white rounded-full px-6 py-3 font-medium transition-all duration-300 hover:bg-[#8B1A2C]"
+                            style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                          >
+                            {currentStep === 3 ? 'Continue to MLS & Scheduling' : 'Continue'}
+                            <ChevronRight className="w-5 h-5" />
+                          </button>
+                        )
                       ) : (
                         <button
                           type="submit"

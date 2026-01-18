@@ -22,7 +22,7 @@ export default function EditListing({ property }) {
     const { data, setData, put, processing, errors } = useForm({
         property_title: property.property_title || '',
         property_type: property.property_type || 'single_family',
-        status: property.status || 'for_sale',
+        status: property.status || 'for-sale',
         price: property.price || '',
         address: property.address || '',
         city: property.city || '',
@@ -50,9 +50,8 @@ export default function EditListing({ property }) {
     ];
 
     const statusOptions = [
-        { value: 'for_sale', label: 'For Sale' },
-        { value: 'for_rent', label: 'For Rent' },
-        { value: 'pending', label: 'Pending' },
+        { value: 'for-sale', label: 'Active (For Sale)' },
+        { value: 'pending', label: 'Pending (Under Contract)' },
         { value: 'sold', label: 'Sold' },
     ];
 

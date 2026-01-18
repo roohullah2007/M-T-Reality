@@ -1,9 +1,12 @@
 import React, { useRef, useState } from 'react';
-import { Head, useForm, router } from '@inertiajs/react';
-import { Upload, Home, MapPin, DollarSign, Image, FileText, CheckCircle, ChevronRight, X, AlertCircle } from 'lucide-react';
+import { Head, useForm, router, usePage } from '@inertiajs/react';
+import { Upload, Home, MapPin, DollarSign, Image, FileText, CheckCircle, ChevronRight, X, AlertCircle, Loader2 } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
 
 function ListProperty() {
+  const { auth } = usePage().props;
+  const user = auth?.user;
+
   const fileInputRef = useRef(null);
   const [photoFiles, setPhotoFiles] = useState([]);
   const [photoPreviews, setPhotoPreviews] = useState([]);
@@ -41,10 +44,10 @@ function ListProperty() {
     // Photos
     photos: [],
 
-    // Contact
-    contactName: '',
-    contactEmail: '',
-    contactPhone: '',
+    // Contact - Pre-fill from logged-in user
+    contactName: user?.name || '',
+    contactEmail: user?.email || '',
+    contactPhone: user?.phone || '',
   });
 
   const propertyTypes = [
@@ -688,7 +691,7 @@ function ListProperty() {
 
             {/* Contact Information */}
             <div className="bg-white rounded-xl p-6 md:p-8">
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-4">
                 <div className="bg-[#E5E1DC] p-3 rounded-lg">
                   <Home className="w-6 h-6 text-[#3D3D3D]" />
                 </div>
@@ -696,6 +699,10 @@ function ListProperty() {
                   Contact Information
                 </h2>
               </div>
+
+              <p className="text-sm text-[#666] mb-6" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                This information is used for buyer inquiries only and will be sent to your account email. Your email address is not displayed publicly on the listing.
+              </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
@@ -715,17 +722,18 @@ function ListProperty() {
 
                 <div>
                   <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                    Email *
+                    Email
                   </label>
                   <input
                     type="email"
-                    placeholder="john@example.com"
-                    className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg bg-gray-50 text-[#666] cursor-not-allowed"
                     style={{ fontFamily: '"Instrument Sans", sans-serif' }}
                     value={data.contactEmail}
-                    onChange={(e) => handleInputChange('contactEmail', e.target.value)}
-                    required
+                    readOnly
                   />
+                  <p className="text-xs text-[#888] mt-1" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                    Inquiries will be sent to your account email
+                  </p>
                 </div>
 
                 <div>
@@ -753,13 +761,43 @@ function ListProperty() {
                 className="inline-flex items-center gap-3 bg-[#A41E34] hover:bg-[#8B1829] text-white px-8 py-4 rounded-full font-medium text-lg transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ fontFamily: '"Instrument Sans", sans-serif' }}
               >
-                <span>{processing ? 'Submitting...' : 'Submit Property Listing'}</span>
-                <ChevronRight className="w-5 h-5" />
+                {processing ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>Uploading...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Submit Property Listing</span>
+                    <ChevronRight className="w-5 h-5" />
+                  </>
+                )}
               </button>
             </div>
           </form>
         </div>
       </div>
+
+      {/* Loading Overlay */}
+      {processing && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-8 max-w-md mx-4 text-center shadow-2xl">
+            <div className="w-16 h-16 bg-[#A41E34]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Loader2 className="w-8 h-8 text-[#A41E34] animate-spin" />
+            </div>
+            <h3 className="text-xl font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+              Uploading Your Listing
+            </h3>
+            <p className="text-[#666] mb-4" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+              Please wait while we upload your photos and submit your listing. This may take a moment depending on your connection speed.
+            </p>
+            <div className="flex items-center justify-center gap-2 text-sm text-[#888]">
+              <div className="w-2 h-2 bg-[#A41E34] rounded-full animate-pulse"></div>
+              <span style={{ fontFamily: '"Instrument Sans", sans-serif' }}>Do not close or refresh this page</span>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

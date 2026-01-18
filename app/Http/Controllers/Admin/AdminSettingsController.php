@@ -95,7 +95,7 @@ class AdminSettingsController extends Controller
 
             // Email Settings
             ['key' => 'email_notifications', 'value' => '1', 'type' => 'boolean', 'group' => 'email', 'label' => 'Enable Email Notifications'],
-            ['key' => 'admin_email', 'value' => 'admin@okbyowner.com', 'type' => 'string', 'group' => 'email', 'label' => 'Admin Email'],
+            ['key' => 'admin_email', 'value' => 'hello@okbyowner.com', 'type' => 'string', 'group' => 'email', 'label' => 'Admin Email'],
 
             // SEO Settings
             ['key' => 'meta_title', 'value' => 'OK BY OWNER - For Sale By Owner Real Estate in Oklahoma', 'type' => 'string', 'group' => 'seo', 'label' => 'Meta Title'],

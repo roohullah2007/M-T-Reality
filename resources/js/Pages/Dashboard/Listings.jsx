@@ -26,7 +26,9 @@ import {
     Sparkles,
     Video,
     Building2,
-    ArrowRight
+    ArrowRight,
+    Camera,
+    Globe
 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
@@ -325,8 +327,18 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                 }}
                                                 className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-purple-700 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors"
                                             >
-                                                <Sparkles className="w-3.5 h-3.5" />
-                                                Upgrades
+                                                <Camera className="w-3.5 h-3.5" />
+                                                Order Multimedia
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    setUpgradeListing(listing);
+                                                    setShowUpgradeModal(true);
+                                                }}
+                                                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+                                            >
+                                                <Globe className="w-3.5 h-3.5" />
+                                                Upgrade to MLS
                                             </button>
                                             <Link
                                                 href={route('dashboard.listings.edit', listing.id)}

@@ -313,7 +313,7 @@ class PropertyController extends Controller
         }
 
         // Send notification email to admin
-        $adminEmail = Setting::get('admin_email', 'admin@okbyowner.com');
+        $adminEmail = Setting::get('admin_email', 'hello@okbyowner.com');
         if ($adminEmail) {
             Mail::to($adminEmail)->send(new PropertySubmittedToAdmin($property));
         }

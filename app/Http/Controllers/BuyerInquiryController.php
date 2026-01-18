@@ -31,7 +31,7 @@ class BuyerInquiryController extends Controller
 
         // Send notification email to admin
         $emailNotificationsEnabled = Setting::get('email_notifications', '1') === '1';
-        $adminEmail = Setting::get('admin_email', 'admin@okbyowner.com');
+        $adminEmail = Setting::get('admin_email', 'hello@okbyowner.com');
         if ($emailNotificationsEnabled && $adminEmail) {
             Mail::to($adminEmail)->send(new NewBuyerInquiryToAdmin($inquiry));
         }
