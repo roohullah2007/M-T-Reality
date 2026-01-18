@@ -220,14 +220,14 @@ function ListProperty() {
               </div>
 
               <h1 className="text-white text-[40px] sm:text-[50px] md:text-[60px] font-medium leading-[1.1] mb-5 drop-shadow-2xl" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                Sell Your Home Fast & Easy
+                Create Your Free Listing
               </h1>
 
               <p className="text-white/90 text-lg md:text-xl leading-relaxed mb-4 drop-shadow-lg" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                List your property for free and reach thousands of potential buyers across Oklahoma
+                Congratulations on taking the first step to selling your home! Fill out the form below to create your free listing.
               </p>
               <p className="text-white/80 text-base md:text-lg leading-relaxed mb-8 drop-shadow-lg" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                After you create your listing, you can order professional photos, other multimedia products, or upgrade to a flat-fee MLS listing.
+                Once your listing is live, you can order professional photos, multimedia packages, or request to be listed on your local MLS.
               </p>
             </div>
           </div>
