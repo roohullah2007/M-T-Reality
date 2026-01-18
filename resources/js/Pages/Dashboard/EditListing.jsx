@@ -29,7 +29,8 @@ export default function EditListing({ property }) {
         state: property.state || '',
         zip_code: property.zip_code || '',
         bedrooms: property.bedrooms || '',
-        bathrooms: property.bathrooms || '',
+        full_bathrooms: property.full_bathrooms || '',
+        half_bathrooms: property.half_bathrooms || '',
         sqft: property.sqft || '',
         lot_size: property.lot_size || '',
         year_built: property.year_built || '',
@@ -330,20 +331,38 @@ export default function EditListing({ property }) {
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 <Bath className="w-4 h-4 inline-block mr-1" />
-                                Bathrooms *
+                                Full Baths *
                             </label>
                             <input
                                 type="number"
-                                step="0.5"
-                                value={data.bathrooms}
-                                onChange={(e) => setData('bathrooms', e.target.value)}
+                                value={data.full_bathrooms}
+                                onChange={(e) => setData('full_bathrooms', e.target.value)}
                                 className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
-                                    errors.bathrooms ? 'border-red-500' : 'border-gray-200'
+                                    errors.full_bathrooms ? 'border-red-500' : 'border-gray-200'
                                 }`}
                                 min="0"
                             />
-                            {errors.bathrooms && (
-                                <p className="text-red-500 text-sm mt-1">{errors.bathrooms}</p>
+                            {errors.full_bathrooms && (
+                                <p className="text-red-500 text-sm mt-1">{errors.full_bathrooms}</p>
+                            )}
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <Bath className="w-4 h-4 inline-block mr-1" />
+                                Half Baths
+                            </label>
+                            <input
+                                type="number"
+                                value={data.half_bathrooms}
+                                onChange={(e) => setData('half_bathrooms', e.target.value)}
+                                className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
+                                    errors.half_bathrooms ? 'border-red-500' : 'border-gray-200'
+                                }`}
+                                min="0"
+                            />
+                            {errors.half_bathrooms && (
+                                <p className="text-red-500 text-sm mt-1">{errors.half_bathrooms}</p>
                             )}
                         </div>
 

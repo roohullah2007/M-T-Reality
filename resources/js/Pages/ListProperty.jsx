@@ -30,7 +30,8 @@ function ListProperty() {
 
     // Property Details
     bedrooms: '',
-    bathrooms: '',
+    fullBathrooms: '',
+    halfBathrooms: '',
     sqft: '',
     lotSize: '',
     yearBuilt: '',
@@ -159,7 +160,8 @@ function ListProperty() {
     formData.append('zipCode', data.zipCode);
     formData.append('subdivision', data.subdivision || '');
     formData.append('bedrooms', data.bedrooms);
-    formData.append('bathrooms', data.bathrooms);
+    formData.append('fullBathrooms', data.fullBathrooms);
+    formData.append('halfBathrooms', data.halfBathrooms);
     formData.append('sqft', data.sqft);
     formData.append('lotSize', data.lotSize || '');
     formData.append('yearBuilt', data.yearBuilt || '');
@@ -498,18 +500,32 @@ function ListProperty() {
 
                 <div>
                   <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                    Bathrooms *
+                    Full Bathrooms *
                   </label>
                   <input
                     type="number"
                     placeholder="2"
                     min="0"
-                    step="0.5"
                     className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
                     style={{ fontFamily: '"Instrument Sans", sans-serif' }}
-                    value={data.bathrooms}
-                    onChange={(e) => handleInputChange('bathrooms', e.target.value)}
+                    value={data.fullBathrooms}
+                    onChange={(e) => handleInputChange('fullBathrooms', e.target.value)}
                     required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                    Half Bathrooms
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="1"
+                    min="0"
+                    className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
+                    style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+                    value={data.halfBathrooms}
+                    onChange={(e) => handleInputChange('halfBathrooms', e.target.value)}
                   />
                 </div>
 

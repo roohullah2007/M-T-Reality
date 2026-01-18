@@ -27,6 +27,8 @@ class Property extends Model
         'subdivision',
         'bedrooms',
         'bathrooms',
+        'full_bathrooms',
+        'half_bathrooms',
         'sqft',
         'lot_size',
         'year_built',

@@ -181,7 +181,7 @@ export default function Favorites({ favorites, filters = {} }) {
                                     </span>
                                     <span className="flex items-center gap-1">
                                         <Bath className="w-4 h-4" />
-                                        {property.bathrooms}
+                                        {(property.full_bathrooms || 0) + (property.half_bathrooms ? property.half_bathrooms * 0.5 : 0)}
                                     </span>
                                     {property.sqft && (
                                         <span className="flex items-center gap-1">
@@ -260,7 +260,7 @@ export default function Favorites({ favorites, filters = {} }) {
                                         </span>
                                         <span className="flex items-center gap-1">
                                             <Bath className="w-4 h-4" />
-                                            {property.bathrooms} bath
+                                            {(property.full_bathrooms || 0) + (property.half_bathrooms ? property.half_bathrooms * 0.5 : 0)} bath
                                         </span>
                                         {property.sqft && (
                                             <span className="flex items-center gap-1">

@@ -279,7 +279,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                             </span>
                                             <span className="flex items-center gap-1">
                                                 <Bath className="w-3 h-3" />
-                                                {listing.bathrooms}
+                                                {(listing.full_bathrooms || 0) + (listing.half_bathrooms ? listing.half_bathrooms * 0.5 : 0)}
                                             </span>
                                             {listing.sqft && (
                                                 <span className="hidden sm:flex items-center gap-1">

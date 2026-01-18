@@ -136,7 +136,7 @@ const PropertyCard = ({ property, onAuthRequired }) => {
           {/* Property Stats */}
           <div>
             <p className="text-sm text-[#293056]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-              {property.bedrooms}BD | {property.bathrooms}BA | {property.sqft ? `${Number(property.sqft).toLocaleString()} sqft` : 'Area N/A'}
+              {property.bedrooms}BD | {(property.full_bathrooms || 0) + (property.half_bathrooms ? property.half_bathrooms * 0.5 : 0)}BA | {property.sqft ? `${Number(property.sqft).toLocaleString()} sqft` : 'Area N/A'}
             </p>
           </div>
         </div>

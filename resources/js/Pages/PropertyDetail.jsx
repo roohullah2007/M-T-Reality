@@ -151,7 +151,7 @@ function PropertyDetail({ property }) {
           </div>
           <div class="detail-box">
             <div class="detail-label">Bathrooms</div>
-            <div class="detail-value">${property.bathrooms}</div>
+            <div class="detail-value">${property.full_bathrooms || 0} Full${property.half_bathrooms > 0 ? `, ${property.half_bathrooms} Half` : ''}</div>
           </div>
           <div class="detail-box">
             <div class="detail-label">Sq. Ft.</div>
@@ -466,7 +466,9 @@ function PropertyDetail({ property }) {
                     </div>
                     <div>
                       <p className="text-sm text-[#666]">Bathrooms</p>
-                      <p className="font-semibold text-[#111]">{property.bathrooms}</p>
+                      <p className="font-semibold text-[#111]">
+                        {property.full_bathrooms || 0} Full{property.half_bathrooms > 0 ? `, ${property.half_bathrooms} Half` : ''}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">

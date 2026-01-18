@@ -312,7 +312,7 @@ export default function PropertiesShow({ property }) {
                             </div>
                             <div className="bg-gray-50 rounded-lg p-4 text-center">
                                 <Bath className="w-5 h-5 text-[#A41E34] mx-auto mb-2" />
-                                <p className="text-2xl font-bold text-gray-900">{property.bathrooms}</p>
+                                <p className="text-2xl font-bold text-gray-900">{property.full_bathrooms || 0}{property.half_bathrooms > 0 ? `.${property.half_bathrooms > 1 ? property.half_bathrooms : '5'}` : ''}</p>
                                 <p className="text-sm text-gray-500">Bathrooms</p>
                             </div>
                             <div className="bg-gray-50 rounded-lg p-4 text-center">
