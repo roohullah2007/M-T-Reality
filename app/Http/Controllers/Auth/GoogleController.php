@@ -111,10 +111,15 @@ class GoogleController extends Controller
         // Clear session
         session()->forget('google_user');
 
-        // Send welcome email
-        $emailNotificationsEnabled = Setting::get('email_notifications', '1') === '1';
-        if ($emailNotificationsEnabled) {
-            Mail::to($user->email)->send(new WelcomeEmail($user));
+        // Send welcome email (don't let email failure break login)
+        try {
+            $emailNotificationsEnabled = Setting::get('email_notifications', '1') === '1';
+            if ($emailNotificationsEnabled) {
+                Mail::to($user->email)->send(new WelcomeEmail($user));
+            }
+        } catch (\Exception $e) {
+            // Log error but don't break login flow
+            \Log::error('Failed to send welcome email: ' . $e->getMessage());
         }
 
         Auth::login($user, true);

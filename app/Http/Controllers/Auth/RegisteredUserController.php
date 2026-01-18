@@ -49,10 +49,15 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        // Send welcome email
-        $emailNotificationsEnabled = Setting::get('email_notifications', '1') === '1';
-        if ($emailNotificationsEnabled) {
-            Mail::to($user->email)->send(new WelcomeEmail($user));
+        // Send welcome email (don't let email failure break registration)
+        try {
+            $emailNotificationsEnabled = Setting::get('email_notifications', '1') === '1';
+            if ($emailNotificationsEnabled) {
+                Mail::to($user->email)->send(new WelcomeEmail($user));
+            }
+        } catch (\Exception $e) {
+            // Log error but don't break registration flow
+            \Log::error('Failed to send welcome email: ' . $e->getMessage());
         }
 
         Auth::login($user);
