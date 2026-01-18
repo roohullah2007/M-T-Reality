@@ -17,3 +17,5 @@ yarn-error.log
 /.idea
 /.vscode
 nul
+env live.txt
+*.env.live*
