@@ -21,7 +21,7 @@ import {
 export default function EditListing({ property }) {
     const { data, setData, put, processing, errors } = useForm({
         property_title: property.property_title || '',
-        property_type: property.property_type || 'single_family',
+        property_type: property.property_type || 'single-family-home',
         status: property.status || 'for-sale',
         price: property.price || '',
         address: property.address || '',
@@ -42,12 +42,13 @@ export default function EditListing({ property }) {
     });
 
     const propertyTypes = [
-        { value: 'single_family', label: 'Single Family Home' },
-        { value: 'condo', label: 'Condo/Townhouse' },
-        { value: 'multi_family', label: 'Multi-Family' },
-        { value: 'land', label: 'Land/Lot' },
-        { value: 'commercial', label: 'Commercial' },
-        { value: 'other', label: 'Other' },
+        { value: 'single-family-home', label: 'Single Family Home' },
+        { value: 'condos-townhomes-co-ops', label: 'Condos/Townhomes/Co-Ops' },
+        { value: 'multi-family', label: 'Multi-Family' },
+        { value: 'land', label: 'Lot/Land' },
+        { value: 'farms-ranches', label: 'Farms/Ranches' },
+        { value: 'mfd-mobile-homes', label: 'Manufactured/Mobile Homes' },
+        { value: 'factory-built', label: 'Factory Built' },
     ];
 
     const statusOptions = [
@@ -57,22 +58,32 @@ export default function EditListing({ property }) {
     ];
 
     const featureOptions = [
-        'Central Air',
-        'Heating',
-        'Garage',
-        'Pool',
+        'Central AC',
+        'Central Heat',
         'Fireplace',
+        'Swimming Pool',
+        'Hot Tub',
+        'Garage',
+        'Covered Patio',
+        'Deck',
+        'Balcony',
+        'Walk-In Closet',
         'Hardwood Floors',
-        'Washer/Dryer',
-        'Dishwasher',
-        'Fenced Yard',
-        'Basement',
-        'Attic',
-        'Patio/Deck',
-        'Smart Home',
+        'Carpet',
+        'Tile Floors',
+        'Granite Countertops',
+        'Stainless Steel Appliances',
+        'Updated Kitchen',
+        'Updated Bathroom',
         'Security System',
-        'Solar Panels',
-        'Water Heater',
+        'Sprinkler System',
+        'Fenced Yard',
+        'Mature Trees',
+        'Mountain View',
+        'Lakefront',
+        'Waterfront',
+        'Golf Course',
+        'Guest Quarters',
     ];
 
     const handleSubmit = (e) => {

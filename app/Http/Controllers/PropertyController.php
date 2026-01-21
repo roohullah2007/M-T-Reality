@@ -266,9 +266,9 @@ class PropertyController extends Controller
             $query->where('bedrooms', '>=', $request->bedrooms);
         }
 
-        // Filter by bathrooms
+        // Filter by bathrooms (use full_bathrooms field)
         if ($request->bathrooms) {
-            $query->where('bathrooms', '>=', $request->bathrooms);
+            $query->where('full_bathrooms', '>=', $request->bathrooms);
         }
 
         // Sorting

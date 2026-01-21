@@ -47,7 +47,11 @@
       "Bash(git fetch:*)",
       "Bash(gh run list:*)",
       "Bash(git branch:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(grep:*)",
+      "Bash(for file in \"app/Http/Controllers/Auth/RegisteredUserController.php\" \"app/Http/Controllers/Auth/GoogleController.php\" \"app/Http/Controllers/UserDashboardController.php\" \"app/Http/Controllers/PropertyController.php\" \"app/Models/User.php\" \"app/Models/Property.php\" \"app/Mail/EmailVerificationCode.php\")",
+      "Bash(do echo \"Checking: $file\")",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

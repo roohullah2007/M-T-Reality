@@ -27,6 +27,8 @@ class User extends Authenticatable
         'last_login_at',
         'google_id',
         'avatar',
+        'verification_code',
+        'verification_code_expires_at',
     ];
 
     protected $hidden = [
@@ -41,7 +43,41 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_active' => 'boolean',
             'last_login_at' => 'datetime',
+            'verification_code_expires_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Generate a new verification code
+     */
+    public function generateVerificationCode(): string
+    {
+        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        $this->verification_code = $code;
+        $this->verification_code_expires_at = now()->addMinutes(15);
+        $this->save();
+        return $code;
+    }
+
+    /**
+     * Check if verification code is valid
+     */
+    public function isVerificationCodeValid(string $code): bool
+    {
+        return $this->verification_code === $code
+            && $this->verification_code_expires_at
+            && $this->verification_code_expires_at->isFuture();
+    }
+
+    /**
+     * Mark email as verified and clear verification code
+     */
+    public function markEmailAsVerified(): bool
+    {
+        $this->email_verified_at = now();
+        $this->verification_code = null;
+        $this->verification_code_expires_at = null;
+        return $this->save();
     }
 
     /**

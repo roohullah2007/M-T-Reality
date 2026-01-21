@@ -86,7 +86,7 @@ function ListProperty() {
     fileInputRef.current?.click();
   };
 
-  const handlePhotoChange = (e) => {
+  const handlePhotoChange = async (e) => {
     const files = Array.from(e.target.files);
     setUploadError('');
 
@@ -98,7 +98,6 @@ function ListProperty() {
 
     // Validate each file
     const validFiles = [];
-    const newPreviews = [];
 
     for (const file of files) {
       // Check file type
@@ -114,20 +113,27 @@ function ListProperty() {
       }
 
       validFiles.push(file);
-
-      // Create preview
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setPhotoPreviews(prev => [...prev, {
-          id: Date.now() + Math.random(),
-          url: event.target.result,
-          name: file.name
-        }]);
-      };
-      reader.readAsDataURL(file);
     }
 
     if (validFiles.length > 0) {
+      // Create previews in order using Promise.all to preserve upload order
+      const previewPromises = validFiles.map((file, index) => {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            resolve({
+              id: Date.now() + index,
+              url: event.target.result,
+              name: file.name
+            });
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+
+      const newPreviews = await Promise.all(previewPromises);
+
+      setPhotoPreviews(prev => [...prev, ...newPreviews]);
       const updatedFiles = [...photoFiles, ...validFiles];
       setPhotoFiles(updatedFiles);
       setData('photos', updatedFiles);

@@ -43,6 +43,18 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    // Code-based email verification (for regular signup)
+    Route::get('verify-code', [RegisteredUserController::class, 'showVerifyCode'])
+        ->name('verification.code');
+
+    Route::post('verify-code', [RegisteredUserController::class, 'verifyCode'])
+        ->name('verification.code.verify');
+
+    Route::post('verify-code/resend', [RegisteredUserController::class, 'resendCode'])
+        ->middleware('throttle:3,1')
+        ->name('verification.code.resend');
+
+    // Legacy link-based verification (kept for backwards compatibility)
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
 
