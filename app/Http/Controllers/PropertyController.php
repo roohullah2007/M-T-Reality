@@ -9,6 +9,7 @@ use App\Models\Property;
 use App\Models\QrScan;
 use App\Models\Setting;
 use App\Services\EmailService;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
@@ -60,8 +61,8 @@ class PropertyController extends Controller
             'contactName' => 'required|string',
             'contactEmail' => 'required|email',
             'contactPhone' => 'required|string',
-            'photos' => 'nullable|array',
-            'photos.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:20480', // 20MB max per image
+            'photos' => 'nullable|array|max:' . ImageService::MAX_INITIAL_PHOTOS, // Up to 50 photos on initial listing
+            'photos.*' => 'file|max:20480', // 20MB max per image (HEIC, etc handled by ImageService)
         ]);
 
         // Parse features - handle both JSON string and array formats
@@ -79,13 +80,15 @@ class PropertyController extends Controller
             }
         }
 
-        // Handle photo uploads
+        // Handle photo uploads - process, resize, and convert to WebP
+        // Allow up to MAX_INITIAL_PHOTOS (50) on initial listing
         $photoPaths = [];
         if ($request->hasFile('photos')) {
-            foreach ($request->file('photos') as $photo) {
-                $path = $photo->store('properties', 'public');
-                $photoPaths[] = '/storage/' . $path;
-            }
+            $photoPaths = ImageService::processMultiple(
+                $request->file('photos'),
+                'properties',
+                ImageService::MAX_INITIAL_PHOTOS
+            );
         }
 
         // Get authenticated user (required)

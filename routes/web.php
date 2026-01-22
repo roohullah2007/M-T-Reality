@@ -107,6 +107,9 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard')-
     Route::get('/listings/{property}/edit', [UserDashboardController::class, 'editListing'])->name('.listings.edit');
     Route::put('/listings/{property}', [UserDashboardController::class, 'updateListing'])->name('.listings.update');
     Route::delete('/listings/{property}', [UserDashboardController::class, 'destroyListing'])->name('.listings.destroy');
+    Route::post('/listings/{property}/photos', [UserDashboardController::class, 'addPhotos'])->name('.listings.photos.add');
+    Route::post('/listings/{property}/photos/remove', [UserDashboardController::class, 'removePhoto'])->name('.listings.photos.remove');
+    Route::post('/listings/{property}/photos/reorder', [UserDashboardController::class, 'reorderPhotos'])->name('.listings.photos.reorder');
 
     // Messages (Inquiries)
     Route::get('/messages', [UserDashboardController::class, 'messages'])->name('.messages');
@@ -172,6 +175,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/properties/{property}/toggle-featured', [AdminPropertyController::class, 'toggleFeatured'])->name('properties.toggle-featured');
     Route::post('/properties/{property}/toggle-active', [AdminPropertyController::class, 'toggleActive'])->name('properties.toggle-active');
     Route::post('/properties/bulk-action', [AdminPropertyController::class, 'bulkAction'])->name('properties.bulk-action');
+    Route::get('/properties/{property}/download-photos', [AdminPropertyController::class, 'downloadPhotos'])->name('properties.download-photos');
+    Route::post('/properties/{property}/add-photos', [AdminPropertyController::class, 'addPhotos'])->name('properties.add-photos');
+    Route::post('/properties/{property}/remove-photo', [AdminPropertyController::class, 'removePhoto'])->name('properties.remove-photo');
 
     // Inquiries Management
     Route::get('/inquiries', [AdminInquiryController::class, 'index'])->name('inquiries.index');

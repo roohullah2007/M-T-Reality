@@ -22,20 +22,33 @@ import {
     Building,
     DollarSign,
     FileText,
-    AlertCircle
+    AlertCircle,
+    Download,
+    Upload,
+    Trash2,
+    Image,
+    Loader2
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 export default function PropertiesShow({ property }) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [showApproveModal, setShowApproveModal] = useState(false);
     const [showRejectModal, setShowRejectModal] = useState(false);
+    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [showDeletePhotoModal, setShowDeletePhotoModal] = useState(false);
+    const [photoToDelete, setPhotoToDelete] = useState(null);
     const [rejectionReason, setRejectionReason] = useState('');
     const [processing, setProcessing] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const [downloadingZip, setDownloadingZip] = useState(false);
+    const fileInputRef = useRef(null);
 
     const photos = property.photos && property.photos.length > 0
         ? property.photos
         : ['https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=800'];
+
+    const hasRealPhotos = property.photos && property.photos.length > 0;
 
     const handlePrevImage = () => {
         setCurrentImageIndex((prev) => (prev === 0 ? photos.length - 1 : prev - 1));
@@ -76,6 +89,63 @@ export default function PropertiesShow({ property }) {
     const handleToggleFeatured = () => {
         router.post(route('admin.properties.toggle-featured', property.id), {}, {
             preserveScroll: true,
+        });
+    };
+
+    const handleDownloadPhotos = () => {
+        if (!hasRealPhotos) return;
+        setDownloadingZip(true);
+        // Use window.location for file download
+        window.location.href = route('admin.properties.download-photos', property.id);
+        // Reset after a delay (download starts immediately)
+        setTimeout(() => setDownloadingZip(false), 2000);
+    };
+
+    const handleUploadPhotos = (e) => {
+        const files = e.target.files;
+        if (!files || files.length === 0) return;
+
+        setUploading(true);
+        const formData = new FormData();
+        Array.from(files).forEach((file, index) => {
+            formData.append(`photos[${index}]`, file);
+        });
+
+        router.post(route('admin.properties.add-photos', property.id), formData, {
+            forceFormData: true,
+            preserveScroll: true,
+            onFinish: () => {
+                setUploading(false);
+                setShowUploadModal(false);
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                }
+            },
+        });
+    };
+
+    const handleDeletePhoto = (index) => {
+        setPhotoToDelete(index);
+        setShowDeletePhotoModal(true);
+    };
+
+    const confirmDeletePhoto = () => {
+        if (photoToDelete === null) return;
+
+        setProcessing(true);
+        router.post(route('admin.properties.remove-photo', property.id), {
+            photo_index: photoToDelete,
+        }, {
+            preserveScroll: true,
+            onFinish: () => {
+                setProcessing(false);
+                setShowDeletePhotoModal(false);
+                setPhotoToDelete(null);
+                // Reset image index if needed
+                if (currentImageIndex >= (property.photos?.length || 1) - 1) {
+                    setCurrentImageIndex(Math.max(0, currentImageIndex - 1));
+                }
+            },
         });
     };
 
@@ -233,6 +303,54 @@ export default function PropertiesShow({ property }) {
                 <div className="lg:col-span-2 space-y-6">
                     {/* Image Gallery */}
                     <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                        {/* Photo Management Header */}
+                        <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <Image className="w-5 h-5 text-gray-400" />
+                                <span className="font-medium text-gray-900">
+                                    Photos ({hasRealPhotos ? property.photos.length : 0}/50)
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                {/* Upload Button */}
+                                <button
+                                    onClick={() => fileInputRef.current?.click()}
+                                    disabled={uploading}
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors disabled:opacity-50"
+                                >
+                                    {uploading ? (
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                    ) : (
+                                        <Upload className="w-4 h-4" />
+                                    )}
+                                    {uploading ? 'Uploading...' : 'Add Photos'}
+                                </button>
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    multiple
+                                    accept="image/*,.heic,.heif"
+                                    onChange={handleUploadPhotos}
+                                    className="hidden"
+                                />
+                                {/* Download ZIP Button */}
+                                {hasRealPhotos && (
+                                    <button
+                                        onClick={handleDownloadPhotos}
+                                        disabled={downloadingZip}
+                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-sm font-medium hover:bg-green-100 transition-colors disabled:opacity-50"
+                                    >
+                                        {downloadingZip ? (
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                        ) : (
+                                            <Download className="w-4 h-4" />
+                                        )}
+                                        {downloadingZip ? 'Preparing...' : 'Download ZIP'}
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+
                         <div className="relative">
                             <img
                                 src={photos[currentImageIndex]}
@@ -261,6 +379,17 @@ export default function PropertiesShow({ property }) {
                                 </>
                             )}
 
+                            {/* Delete Photo Button (only for real photos) */}
+                            {hasRealPhotos && (
+                                <button
+                                    onClick={() => handleDeletePhoto(currentImageIndex)}
+                                    className="absolute top-4 right-4 bg-red-500/90 hover:bg-red-600 text-white p-2 rounded-full transition-all"
+                                    title="Delete this photo"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </button>
+                            )}
+
                             {/* Badges */}
                             <div className="absolute top-4 left-4 flex gap-2">
                                 <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusBadge(property.approval_status)}`}>
@@ -274,25 +403,44 @@ export default function PropertiesShow({ property }) {
                             </div>
                         </div>
 
-                        {/* Thumbnails */}
+                        {/* Thumbnails with delete buttons */}
                         {photos.length > 1 && (
                             <div className="p-4 flex gap-2 overflow-x-auto">
                                 {photos.map((photo, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => setCurrentImageIndex(index)}
-                                        className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                                            index === currentImageIndex ? 'border-[#A41E34]' : 'border-transparent'
-                                        }`}
-                                    >
-                                        <img
-                                            src={photo}
-                                            alt={`Thumbnail ${index + 1}`}
-                                            className="w-full h-full object-cover"
-                                            onError={(e) => e.target.src = 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=800'}
-                                        />
-                                    </button>
+                                    <div key={index} className="relative flex-shrink-0 group">
+                                        <button
+                                            onClick={() => setCurrentImageIndex(index)}
+                                            className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                                                index === currentImageIndex ? 'border-[#A41E34]' : 'border-transparent'
+                                            }`}
+                                        >
+                                            <img
+                                                src={photo}
+                                                alt={`Thumbnail ${index + 1}`}
+                                                className="w-full h-full object-cover"
+                                                onError={(e) => e.target.src = 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=800'}
+                                            />
+                                        </button>
+                                        {hasRealPhotos && (
+                                            <button
+                                                onClick={() => handleDeletePhoto(index)}
+                                                className="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                                                title="Delete photo"
+                                            >
+                                                <Trash2 className="w-3 h-3" />
+                                            </button>
+                                        )}
+                                    </div>
                                 ))}
+                            </div>
+                        )}
+
+                        {/* No photos message */}
+                        {!hasRealPhotos && (
+                            <div className="p-4 bg-gray-50 border-t border-gray-100">
+                                <p className="text-sm text-gray-500 text-center">
+                                    No photos uploaded yet. Click "Add Photos" to upload.
+                                </p>
                             </div>
                         )}
                     </div>
@@ -572,6 +720,51 @@ export default function PropertiesShow({ property }) {
                                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
                             >
                                 {processing ? 'Rejecting...' : 'Reject Property'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Photo Modal */}
+            {showDeletePhotoModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-2xl max-w-md w-full p-6">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="bg-red-100 p-2 rounded-lg">
+                                <Trash2 className="w-5 h-5 text-red-600" />
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-900">Delete Photo</h3>
+                        </div>
+                        <p className="text-gray-600 mb-6">
+                            Are you sure you want to delete this photo? This action cannot be undone.
+                        </p>
+                        {photoToDelete !== null && property.photos && property.photos[photoToDelete] && (
+                            <div className="mb-6 rounded-lg overflow-hidden">
+                                <img
+                                    src={property.photos[photoToDelete]}
+                                    alt="Photo to delete"
+                                    className="w-full h-40 object-cover"
+                                />
+                            </div>
+                        )}
+                        <div className="flex justify-end gap-3">
+                            <button
+                                onClick={() => {
+                                    setShowDeletePhotoModal(false);
+                                    setPhotoToDelete(null);
+                                }}
+                                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                                disabled={processing}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmDeletePhoto}
+                                disabled={processing}
+                                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
+                            >
+                                {processing ? 'Deleting...' : 'Delete Photo'}
                             </button>
                         </div>
                     </div>

@@ -11,6 +11,7 @@ use App\Models\Favorite;
 use App\Models\ServiceRequest;
 use App\Models\Setting;
 use App\Services\EmailService;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -529,5 +530,114 @@ class UserDashboardController extends Controller
 
         $itemName = $validated['service_type'] === 'qr_stickers' ? 'QR stickers' : 'yard sign';
         return back()->with('success', "Your free {$itemName} order has been submitted!");
+    }
+
+    /**
+     * Add photos to a listing
+     */
+    public function addPhotos(Request $request, Property $property)
+    {
+        // Check ownership
+        if ($property->user_id !== Auth::id()) {
+            abort(403, 'You do not own this property.');
+        }
+
+        $request->validate([
+            'photos' => 'required|array|min:1',
+            'photos.*' => 'file|max:20480', // 20MB max per image
+        ]);
+
+        $currentPhotos = $property->photos ?? [];
+        $remainingSlots = ImageService::MAX_TOTAL_PHOTOS - count($currentPhotos);
+
+        if ($remainingSlots <= 0) {
+            return back()->with('error', 'Your listing has reached the maximum number of photos (' . ImageService::MAX_TOTAL_PHOTOS . ').');
+        }
+
+        // Process new photos (limited by remaining slots)
+        $newPhotoPaths = ImageService::processMultiple(
+            $request->file('photos'),
+            'properties',
+            $remainingSlots
+        );
+
+        if (empty($newPhotoPaths)) {
+            return back()->with('error', 'Failed to process uploaded photos. Please try again.');
+        }
+
+        // Merge with existing photos
+        $updatedPhotos = array_merge($currentPhotos, $newPhotoPaths);
+        $property->update(['photos' => $updatedPhotos]);
+
+        $uploadedCount = count($newPhotoPaths);
+        return back()->with('success', "{$uploadedCount} photo(s) added successfully!");
+    }
+
+    /**
+     * Remove a photo from a listing
+     */
+    public function removePhoto(Request $request, Property $property)
+    {
+        // Check ownership
+        if ($property->user_id !== Auth::id()) {
+            abort(403, 'You do not own this property.');
+        }
+
+        $request->validate([
+            'photo_index' => 'required|integer|min:0',
+        ]);
+
+        $photos = $property->photos ?? [];
+        $photoIndex = $request->photo_index;
+
+        if (!isset($photos[$photoIndex])) {
+            return back()->with('error', 'Photo not found.');
+        }
+
+        // Delete the actual file
+        $photoPath = $photos[$photoIndex];
+        ImageService::delete($photoPath);
+
+        // Remove from array
+        array_splice($photos, $photoIndex, 1);
+        $property->update(['photos' => $photos]);
+
+        return back()->with('success', 'Photo removed successfully.');
+    }
+
+    /**
+     * Reorder photos (set main photo)
+     */
+    public function reorderPhotos(Request $request, Property $property)
+    {
+        // Check ownership
+        if ($property->user_id !== Auth::id()) {
+            abort(403, 'You do not own this property.');
+        }
+
+        $request->validate([
+            'photo_order' => 'required|array',
+            'photo_order.*' => 'integer|min:0',
+        ]);
+
+        $currentPhotos = $property->photos ?? [];
+        $newOrder = $request->photo_order;
+
+        // Validate that all indices are valid
+        foreach ($newOrder as $index) {
+            if (!isset($currentPhotos[$index])) {
+                return back()->with('error', 'Invalid photo order.');
+            }
+        }
+
+        // Reorder the photos
+        $reorderedPhotos = [];
+        foreach ($newOrder as $index) {
+            $reorderedPhotos[] = $currentPhotos[$index];
+        }
+
+        $property->update(['photos' => $reorderedPhotos]);
+
+        return back()->with('success', 'Photos reordered successfully.');
     }
 }

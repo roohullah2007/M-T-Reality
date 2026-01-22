@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Head, useForm, router, usePage } from '@inertiajs/react';
-import { Upload, Home, MapPin, DollarSign, Image, FileText, CheckCircle, ChevronRight, X, AlertCircle, Loader2 } from 'lucide-react';
+import { Upload, Home, MapPin, DollarSign, Image, FileText, CheckCircle, ChevronRight, X, AlertCircle, Loader2, Star } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
 
 function ListProperty() {
@@ -10,8 +10,10 @@ function ListProperty() {
   const fileInputRef = useRef(null);
   const [photoFiles, setPhotoFiles] = useState([]);
   const [photoPreviews, setPhotoPreviews] = useState([]);
+  const [mainPhotoIndex, setMainPhotoIndex] = useState(0); // Track which photo is the main/front photo
   const [uploadError, setUploadError] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
+  const maxPhotos = 50;
 
   const { data, setData, post, processing, errors, reset } = useForm({
     // Basic Info
@@ -90,25 +92,34 @@ function ListProperty() {
     const files = Array.from(e.target.files);
     setUploadError('');
 
-    // Validate file count
-    if (photoFiles.length + files.length > 25) {
-      setUploadError('Maximum 25 photos allowed');
+    // Calculate remaining slots
+    const remainingSlots = maxPhotos - photoFiles.length;
+
+    if (remainingSlots <= 0) {
+      setUploadError(`Maximum ${maxPhotos} photos allowed. Remove some photos to add more.`);
       return;
     }
 
+    // Limit files to remaining slots
+    const filesToProcess = files.slice(0, remainingSlots);
+
     // Validate each file
     const validFiles = [];
+    const supportedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/heic', 'image/heif'];
+    const supportedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'];
 
-    for (const file of files) {
-      // Check file type
-      if (!file.type.startsWith('image/')) {
-        setUploadError('Only image files are allowed');
+    for (const file of filesToProcess) {
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+
+      // Check file type (including HEIC from iPhones)
+      if (!supportedTypes.includes(file.type.toLowerCase()) && !supportedExtensions.includes(fileExtension)) {
+        setUploadError('Some files skipped. Supported formats: JPG, PNG, GIF, WebP, HEIC (iPhone)');
         continue;
       }
 
       // Check file size (20MB max)
       if (file.size > 20 * 1024 * 1024) {
-        setUploadError('Each file must be less than 20MB');
+        setUploadError('Some files skipped. Maximum file size is 20MB per photo.');
         continue;
       }
 
@@ -119,15 +130,27 @@ function ListProperty() {
       // Create previews in order using Promise.all to preserve upload order
       const previewPromises = validFiles.map((file, index) => {
         return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = (event) => {
+          // For HEIC files, we can't preview them directly in browser, show placeholder
+          const fileExtension = file.name.split('.').pop().toLowerCase();
+          if (fileExtension === 'heic' || fileExtension === 'heif') {
             resolve({
-              id: Date.now() + index,
-              url: event.target.result,
-              name: file.name
+              id: Date.now() + index + Math.random(),
+              url: null, // Will show placeholder
+              name: file.name,
+              isHeic: true
             });
-          };
-          reader.readAsDataURL(file);
+          } else {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              resolve({
+                id: Date.now() + index + Math.random(),
+                url: event.target.result,
+                name: file.name,
+                isHeic: false
+              });
+            };
+            reader.readAsDataURL(file);
+          }
         });
       });
 
@@ -146,6 +169,17 @@ function ListProperty() {
     setPhotoFiles(updatedFiles);
     setPhotoPreviews(updatedPreviews);
     setData('photos', updatedFiles);
+
+    // Adjust main photo index if needed
+    if (index === mainPhotoIndex) {
+      setMainPhotoIndex(0); // Reset to first photo
+    } else if (index < mainPhotoIndex) {
+      setMainPhotoIndex(mainPhotoIndex - 1); // Shift index down
+    }
+  };
+
+  const setAsMainPhoto = (index) => {
+    setMainPhotoIndex(index);
   };
 
   const handleSubmit = (e) => {
@@ -179,8 +213,15 @@ function ListProperty() {
     // Add features as JSON
     formData.append('features', JSON.stringify(data.features));
 
-    // Add photos
-    photoFiles.forEach((file, index) => {
+    // Reorder photos so main photo is first
+    const reorderedFiles = [...photoFiles];
+    if (mainPhotoIndex > 0 && mainPhotoIndex < reorderedFiles.length) {
+      const mainPhoto = reorderedFiles.splice(mainPhotoIndex, 1)[0];
+      reorderedFiles.unshift(mainPhoto);
+    }
+
+    // Add photos (main photo will be first)
+    reorderedFiles.forEach((file, index) => {
       formData.append(`photos[${index}]`, file);
     });
 
@@ -637,7 +678,7 @@ function ListProperty() {
 
             {/* Photos */}
             <div className="bg-white rounded-xl p-6 md:p-8">
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="bg-[#E5E1DC] p-3 rounded-lg">
                     <Image className="w-6 h-6 text-[#3D3D3D]" />
@@ -646,73 +687,148 @@ function ListProperty() {
                     Photos
                   </h2>
                 </div>
-                {photoPreviews.length > 0 && (
-                  <span className="text-sm text-[#666]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                    {photoPreviews.length} / 25 photos
-                  </span>
-                )}
+                <span className="text-sm text-gray-500 font-medium" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                  {photoPreviews.length} / {maxPhotos} photos
+                </span>
+              </div>
+
+              {/* Photo Instructions */}
+              <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                <div className="flex items-start gap-3">
+                  <div className="bg-amber-100 p-2 rounded-lg flex-shrink-0">
+                    <Star className="w-5 h-5 text-amber-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-amber-800" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                      Upload up to {maxPhotos} photos and select your main (front) photo
+                    </p>
+                    <p className="text-sm text-amber-700 mt-1" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                      Click the star icon on any photo to set it as your main listing photo. The main photo will be shown first in search results.
+                    </p>
+                  </div>
+                </div>
               </div>
 
               {/* Upload Error */}
               {uploadError && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
-                  <AlertCircle className="w-5 h-5 text-red-600" />
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                   <span className="text-sm text-red-700" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>{uploadError}</span>
                 </div>
               )}
 
-              {/* Photo Previews */}
+              {/* Photo Grid */}
               {photoPreviews.length > 0 && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6">
-                  {photoPreviews.map((preview, index) => (
-                    <div key={preview.id} className="relative group aspect-square rounded-xl overflow-hidden bg-gray-100">
-                      <img
-                        src={preview.url}
-                        alt={preview.name}
-                        className="w-full h-full object-cover"
-                      />
-                      {/* Remove button - visible on hover on desktop, always visible on mobile */}
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRemovePhoto(index);
-                        }}
-                        className="absolute top-2 right-2 bg-black/70 hover:bg-red-600 text-white p-1.5 rounded-full opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-200 shadow-lg"
-                        title="Remove photo"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                      {index === 0 && (
-                        <span className="absolute bottom-2 left-2 bg-[#A41E34] text-white text-xs px-2 py-1 rounded-full">
-                          Main Photo
-                        </span>
-                      )}
-                    </div>
-                  ))}
+                <div className="mb-6">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                    {photoPreviews.map((preview, index) => (
+                      <div key={preview.id} className="relative group aspect-square rounded-xl overflow-hidden bg-gray-100 shadow-md">
+                        {preview.isHeic ? (
+                          // HEIC placeholder
+                          <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-2">
+                            <div className="bg-white p-2 rounded-full shadow-sm mb-2">
+                              <Image className="w-6 h-6 text-gray-400" />
+                            </div>
+                            <span className="text-xs text-gray-500 text-center truncate w-full px-1">{preview.name}</span>
+                            <span className="text-[10px] text-green-600 mt-1">HEIC</span>
+                          </div>
+                        ) : (
+                          <img
+                            src={preview.url}
+                            alt={preview.name}
+                            className="w-full h-full object-cover"
+                          />
+                        )}
+
+                        {/* Main Photo Badge */}
+                        {index === mainPhotoIndex && (
+                          <span className="absolute top-2 left-2 bg-[#A41E34] text-white text-[10px] px-2 py-1 rounded-full font-medium">
+                            Main Photo
+                          </span>
+                        )}
+
+                        {/* Hover Actions */}
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                          {/* Set as Main Photo button */}
+                          {index !== mainPhotoIndex && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setAsMainPhoto(index);
+                              }}
+                              className="bg-white hover:bg-yellow-50 text-gray-700 p-2 rounded-full transition-colors shadow-lg"
+                              title="Set as main photo"
+                            >
+                              <Star className="w-4 h-4" />
+                            </button>
+                          )}
+                          {/* Remove button */}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleRemovePhoto(index);
+                            }}
+                            className="bg-white hover:bg-red-50 text-red-600 p-2 rounded-full transition-colors shadow-lg"
+                            title="Remove photo"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 
               {/* Upload Area */}
               <div
                 onClick={handlePhotoClick}
-                className="border-2 border-dashed border-[#D0CCC7] rounded-xl p-12 text-center hover:border-[#A41E34] transition-colors cursor-pointer"
+                className={`border-2 border-dashed border-[#D0CCC7] rounded-xl p-6 md:p-8 text-center hover:border-[#A41E34] hover:bg-[#A41E34]/5 transition-all cursor-pointer ${photoPreviews.length >= maxPhotos ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
-                <Upload className="w-12 h-12 text-[#666] mx-auto mb-4" />
-                <p className="text-lg font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                  Click to upload photos
+                <Upload className="w-10 h-10 text-[#666] mx-auto mb-3" />
+                <p className="text-base font-semibold text-[#111] mb-1" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                  {photoPreviews.length === 0 ? 'Click to upload photos' : 'Add more photos'}
                 </p>
-                <p className="text-sm text-[#666]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                  Upload up to 25 photos (JPG, PNG, max 20MB each)
+                <p className="text-sm text-[#666] mb-1" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                  JPG, PNG, GIF, WebP, or HEIC (iPhone) - max 20MB each
+                </p>
+                <p className="text-xs text-[#888]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                  Photos are automatically optimized for fast loading
                 </p>
                 <input
                   ref={fileInputRef}
                   type="file"
                   multiple
-                  accept="image/*"
+                  accept="image/*,.heic,.heif"
                   onChange={handlePhotoChange}
                   className="hidden"
+                  disabled={photoPreviews.length >= maxPhotos}
                 />
+              </div>
+
+              {/* Email Photos Option */}
+              <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                <div className="flex items-start gap-3">
+                  <div className="bg-blue-100 p-2 rounded-lg flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-blue-800" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                      Having trouble uploading? Email your photos instead!
+                    </p>
+                    <p className="text-sm text-blue-700 mt-1" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                      Send up to 50 photos to{' '}
+                      <a href="mailto:photos@okbyowner.com" className="font-semibold underline hover:text-blue-900">
+                        photos@okbyowner.com
+                      </a>{' '}
+                      with your property address in the subject line.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 

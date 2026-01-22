@@ -8,6 +8,7 @@ use App\Mail\PropertyRejected;
 use App\Models\Property;
 use App\Models\ActivityLog;
 use App\Services\EmailService;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -237,5 +238,98 @@ class AdminPropertyController extends Controller
         ActivityLog::log("bulk_{$request->action}", null, null, ['count' => count($request->ids)], "Bulk action: {$request->action} on " . count($request->ids) . " properties");
 
         return back()->with('success', 'Bulk action completed successfully.');
+    }
+
+    /**
+     * Download all photos for a property as a ZIP file
+     */
+    public function downloadPhotos(Property $property)
+    {
+        $photos = $property->photos ?? [];
+
+        if (empty($photos)) {
+            return back()->with('error', 'No photos available for download.');
+        }
+
+        // Create ZIP file
+        $zipPath = ImageService::createPhotosZip($photos, $property->property_title);
+
+        if (!$zipPath || !file_exists($zipPath)) {
+            return back()->with('error', 'Failed to create ZIP file.');
+        }
+
+        // Log the action
+        ActivityLog::log('photos_downloaded', $property, null, ['photo_count' => count($photos)], "Downloaded photos for property: {$property->property_title}");
+
+        // Return the file as a download and delete after sending
+        $filename = basename($zipPath);
+        return response()->download($zipPath, $filename)->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Add photos to a property (admin upload)
+     */
+    public function addPhotos(Request $request, Property $property)
+    {
+        $request->validate([
+            'photos' => 'required|array|min:1',
+            'photos.*' => 'file|max:20480', // 20MB max per image
+        ]);
+
+        $currentPhotos = $property->photos ?? [];
+        $remainingSlots = ImageService::MAX_TOTAL_PHOTOS - count($currentPhotos);
+
+        if ($remainingSlots <= 0) {
+            return back()->with('error', 'Property has reached the maximum number of photos (' . ImageService::MAX_TOTAL_PHOTOS . ').');
+        }
+
+        // Process new photos (limited by remaining slots)
+        $newPhotoPaths = ImageService::processMultiple(
+            $request->file('photos'),
+            'properties',
+            $remainingSlots
+        );
+
+        if (empty($newPhotoPaths)) {
+            return back()->with('error', 'Failed to process uploaded photos.');
+        }
+
+        // Merge with existing photos
+        $updatedPhotos = array_merge($currentPhotos, $newPhotoPaths);
+        $property->update(['photos' => $updatedPhotos]);
+
+        $uploadedCount = count($newPhotoPaths);
+        ActivityLog::log('photos_added', $property, null, ['added_count' => $uploadedCount], "Added {$uploadedCount} photos to property: {$property->property_title}");
+
+        return back()->with('success', "{$uploadedCount} photo(s) added successfully.");
+    }
+
+    /**
+     * Remove a photo from a property
+     */
+    public function removePhoto(Request $request, Property $property)
+    {
+        $request->validate([
+            'photo_index' => 'required|integer|min:0',
+        ]);
+
+        $photos = $property->photos ?? [];
+        $photoIndex = $request->photo_index;
+
+        if (!isset($photos[$photoIndex])) {
+            return back()->with('error', 'Photo not found.');
+        }
+
+        // Delete the actual file
+        $photoPath = $photos[$photoIndex];
+        ImageService::delete($photoPath);
+
+        // Remove from array
+        array_splice($photos, $photoIndex, 1);
+        $property->update(['photos' => $photos]);
+
+        ActivityLog::log('photo_removed', $property, null, ['removed_path' => $photoPath], "Removed photo from property: {$property->property_title}");
+
+        return back()->with('success', 'Photo removed successfully.');
     }
 }

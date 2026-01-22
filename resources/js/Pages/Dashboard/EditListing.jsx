@@ -1,5 +1,6 @@
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, router } from '@inertiajs/react';
 import UserDashboardLayout from '@/Layouts/UserDashboardLayout';
+import { useState, useRef } from 'react';
 import {
     ArrowLeft,
     Save,
@@ -15,7 +16,12 @@ import {
     Mail,
     Phone,
     Image,
-    AlertCircle
+    AlertCircle,
+    Upload,
+    X,
+    Trash2,
+    Star,
+    Loader2
 } from 'lucide-react';
 
 export default function EditListing({ property }) {
@@ -40,6 +46,100 @@ export default function EditListing({ property }) {
         contact_email: property.contact_email || '',
         contact_phone: property.contact_phone || '',
     });
+
+    // Photo management state
+    const [uploading, setUploading] = useState(false);
+    const [uploadError, setUploadError] = useState('');
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [photoToDelete, setPhotoToDelete] = useState(null);
+    const [deleting, setDeleting] = useState(false);
+    const fileInputRef = useRef(null);
+
+    const photos = property.photos || [];
+    const maxPhotos = 50;
+
+    const handlePhotoUpload = (e) => {
+        const files = e.target.files;
+        if (!files || files.length === 0) return;
+
+        // Validate
+        const remainingSlots = maxPhotos - photos.length;
+        if (remainingSlots <= 0) {
+            setUploadError(`Maximum ${maxPhotos} photos allowed per listing.`);
+            return;
+        }
+
+        // Check file sizes
+        const validFiles = [];
+        for (const file of files) {
+            if (file.size > 20 * 1024 * 1024) {
+                setUploadError('Each file must be less than 20MB.');
+                continue;
+            }
+            validFiles.push(file);
+        }
+
+        if (validFiles.length === 0) return;
+
+        setUploading(true);
+        setUploadError('');
+
+        const formData = new FormData();
+        validFiles.slice(0, remainingSlots).forEach((file, index) => {
+            formData.append(`photos[${index}]`, file);
+        });
+
+        router.post(route('dashboard.listings.photos.add', property.id), formData, {
+            forceFormData: true,
+            preserveScroll: true,
+            onFinish: () => {
+                setUploading(false);
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                }
+            },
+            onError: (errors) => {
+                setUploadError('Failed to upload photos. Please try again.');
+            },
+        });
+    };
+
+    const handleDeletePhoto = (index) => {
+        setPhotoToDelete(index);
+        setShowDeleteModal(true);
+    };
+
+    const confirmDeletePhoto = () => {
+        if (photoToDelete === null) return;
+
+        setDeleting(true);
+        router.post(route('dashboard.listings.photos.remove', property.id), {
+            photo_index: photoToDelete,
+        }, {
+            preserveScroll: true,
+            onFinish: () => {
+                setDeleting(false);
+                setShowDeleteModal(false);
+                setPhotoToDelete(null);
+            },
+        });
+    };
+
+    const setAsMainPhoto = (index) => {
+        if (index === 0) return; // Already main
+
+        // Reorder to put this photo first
+        const newOrder = [index];
+        for (let i = 0; i < photos.length; i++) {
+            if (i !== index) newOrder.push(i);
+        }
+
+        router.post(route('dashboard.listings.photos.reorder', property.id), {
+            photo_order: newOrder,
+        }, {
+            preserveScroll: true,
+        });
+    };
 
     const propertyTypes = [
         { value: 'single-family-home', label: 'Single Family Home' },
@@ -547,31 +647,119 @@ export default function EditListing({ property }) {
                     </div>
                 </div>
 
-                {/* Current Images */}
-                {property.images && property.images.length > 0 && (
-                    <div className="bg-white rounded-2xl shadow-sm p-6">
-                        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                {/* Photo Management */}
+                <div className="bg-white rounded-2xl shadow-sm p-6">
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
                             <Image className="w-5 h-5 text-[#A41E34]" />
-                            Current Images
+                            Photos ({photos.length}/{maxPhotos})
                         </h2>
+                        <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={uploading || photos.length >= maxPhotos}
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-[#A41E34] text-white rounded-xl text-sm font-medium hover:bg-[#8B1A2C] transition-colors disabled:opacity-50"
+                        >
+                            {uploading ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                                <Upload className="w-4 h-4" />
+                            )}
+                            {uploading ? 'Uploading...' : 'Add Photos'}
+                        </button>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            multiple
+                            accept="image/*,.heic,.heif"
+                            onChange={handlePhotoUpload}
+                            className="hidden"
+                        />
+                    </div>
 
+                    {/* Upload Error */}
+                    {uploadError && (
+                        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+                            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                            <span className="text-sm text-red-700">{uploadError}</span>
+                        </div>
+                    )}
+
+                    {/* Photos Grid */}
+                    {photos.length > 0 ? (
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                            {property.images.map((image, index) => (
-                                <div key={index} className="relative aspect-video rounded-lg overflow-hidden bg-gray-100">
+                            {photos.map((photo, index) => (
+                                <div key={index} className="relative aspect-video rounded-xl overflow-hidden bg-gray-100 group">
                                     <img
-                                        src={image.url || image}
-                                        alt={`Property image ${index + 1}`}
+                                        src={photo}
+                                        alt={`Property photo ${index + 1}`}
                                         className="w-full h-full object-cover"
                                         onError={(e) => e.target.src = '/images/property-placeholder.jpg'}
                                     />
+                                    {/* Main Photo Badge */}
+                                    {index === 0 && (
+                                        <span className="absolute top-2 left-2 bg-[#A41E34] text-white text-xs px-2 py-1 rounded-full font-medium">
+                                            Main Photo
+                                        </span>
+                                    )}
+                                    {/* Action Buttons - visible on hover */}
+                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                        {index !== 0 && (
+                                            <button
+                                                type="button"
+                                                onClick={() => setAsMainPhoto(index)}
+                                                className="bg-white hover:bg-yellow-50 text-gray-700 p-2 rounded-full transition-colors"
+                                                title="Set as main photo"
+                                            >
+                                                <Star className="w-4 h-4" />
+                                            </button>
+                                        )}
+                                        <button
+                                            type="button"
+                                            onClick={() => handleDeletePhoto(index)}
+                                            className="bg-white hover:bg-red-50 text-red-600 p-2 rounded-full transition-colors"
+                                            title="Delete photo"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                    </div>
                                 </div>
                             ))}
                         </div>
-                        <p className="text-sm text-gray-500 mt-3">
-                            To update images, please contact support.
-                        </p>
+                    ) : (
+                        <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center">
+                            <Image className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                            <p className="text-gray-500 mb-2">No photos uploaded yet</p>
+                            <p className="text-sm text-gray-400">Click "Add Photos" to upload images for your listing</p>
+                        </div>
+                    )}
+
+                    {/* Email Photos Option */}
+                    <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                        <div className="flex items-start gap-3">
+                            <div className="bg-blue-100 p-2 rounded-lg flex-shrink-0">
+                                <Mail className="w-5 h-5 text-blue-600" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-semibold text-blue-800" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                                    Have many photos or large files?
+                                </p>
+                                <p className="text-sm text-blue-700 mt-1" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                                    Email up to 50 photos to{' '}
+                                    <a href="mailto:photos@okbyowner.com" className="font-medium underline hover:text-blue-900">
+                                        photos@okbyowner.com
+                                    </a>{' '}
+                                    with your property address in the subject line and we'll add them for you.
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                )}
+
+                    {/* Supported Formats */}
+                    <p className="text-xs text-gray-400 mt-3">
+                        Supported formats: JPG, PNG, GIF, WebP, HEIC (iPhone). Max 20MB per file. Photos are automatically optimized.
+                    </p>
+                </div>
 
                 {/* Submit */}
                 <div className="flex items-center justify-between bg-white rounded-2xl shadow-sm p-6">
@@ -591,6 +779,60 @@ export default function EditListing({ property }) {
                     </button>
                 </div>
             </form>
+
+            {/* Delete Photo Modal */}
+            {showDeleteModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-2xl max-w-md w-full p-6">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="bg-red-100 p-2 rounded-lg">
+                                <Trash2 className="w-5 h-5 text-red-600" />
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-900">Delete Photo</h3>
+                        </div>
+                        <p className="text-gray-600 mb-6">
+                            Are you sure you want to delete this photo? This action cannot be undone.
+                        </p>
+                        {photoToDelete !== null && photos[photoToDelete] && (
+                            <div className="mb-6 rounded-lg overflow-hidden">
+                                <img
+                                    src={photos[photoToDelete]}
+                                    alt="Photo to delete"
+                                    className="w-full h-40 object-cover"
+                                />
+                            </div>
+                        )}
+                        <div className="flex justify-end gap-3">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setShowDeleteModal(false);
+                                    setPhotoToDelete(null);
+                                }}
+                                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
+                                disabled={deleting}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                onClick={confirmDeletePhoto}
+                                disabled={deleting}
+                                className="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors disabled:opacity-50 inline-flex items-center gap-2"
+                            >
+                                {deleting ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        Deleting...
+                                    </>
+                                ) : (
+                                    'Delete Photo'
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </UserDashboardLayout>
     );
 }
