@@ -106,9 +106,9 @@ function ListProperty() {
         continue;
       }
 
-      // Check file size (10MB max)
-      if (file.size > 10 * 1024 * 1024) {
-        setUploadError('Each file must be less than 10MB');
+      // Check file size (20MB max)
+      if (file.size > 20 * 1024 * 1024) {
+        setUploadError('Each file must be less than 20MB');
         continue;
       }
 
@@ -671,10 +671,15 @@ function ListProperty() {
                         alt={preview.name}
                         className="w-full h-full object-cover"
                       />
+                      {/* Remove button - visible on hover on desktop, always visible on mobile */}
                       <button
                         type="button"
-                        onClick={() => handleRemovePhoto(index)}
-                        className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemovePhoto(index);
+                        }}
+                        className="absolute top-2 right-2 bg-black/70 hover:bg-red-600 text-white p-1.5 rounded-full opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-200 shadow-lg"
+                        title="Remove photo"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -698,7 +703,7 @@ function ListProperty() {
                   Click to upload photos
                 </p>
                 <p className="text-sm text-[#666]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                  Upload up to 25 photos (JPG, PNG, max 10MB each)
+                  Upload up to 25 photos (JPG, PNG, max 20MB each)
                 </p>
                 <input
                   ref={fileInputRef}

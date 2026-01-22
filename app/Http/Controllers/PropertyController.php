@@ -61,7 +61,7 @@ class PropertyController extends Controller
             'contactEmail' => 'required|email',
             'contactPhone' => 'required|string',
             'photos' => 'nullable|array',
-            'photos.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:10240', // 10MB max per image
+            'photos.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:20480', // 20MB max per image
         ]);
 
         // Parse features - handle both JSON string and array formats
