@@ -41,6 +41,12 @@ Route::get('/', function () {
 Route::get('/properties', [PropertyController::class, 'publicIndex'])->name('properties');
 Route::get('/properties/{property}', [PropertyController::class, 'show'])->name('properties.show');
 
+// Photo upload endpoints (require auth)
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/upload-photo', [PropertyController::class, 'uploadPhoto'])->name('upload.photo');
+    Route::post('/delete-uploaded-photo', [PropertyController::class, 'deleteUploadedPhoto'])->name('delete.uploaded.photo');
+});
+
 Route::get('/buyers', function () {
     return Inertia::render('Buyers');
 })->name('buyers');

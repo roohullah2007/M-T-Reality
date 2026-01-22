@@ -61,8 +61,8 @@ class PropertyController extends Controller
             'contactName' => 'required|string',
             'contactEmail' => 'required|email',
             'contactPhone' => 'required|string',
-            'photos' => 'nullable|array|max:' . ImageService::MAX_INITIAL_PHOTOS, // Up to 50 photos on initial listing
-            'photos.*' => 'file|max:20480', // 20MB max per image (HEIC, etc handled by ImageService)
+            'photoPaths' => 'nullable|array|max:' . ImageService::MAX_INITIAL_PHOTOS, // Pre-uploaded photo paths
+            'photoPaths.*' => 'string', // Each path is a string
         ]);
 
         // Parse features - handle both JSON string and array formats
@@ -80,16 +80,8 @@ class PropertyController extends Controller
             }
         }
 
-        // Handle photo uploads - process, resize, and convert to WebP
-        // Allow up to MAX_INITIAL_PHOTOS (50) on initial listing
-        $photoPaths = [];
-        if ($request->hasFile('photos')) {
-            $photoPaths = ImageService::processMultiple(
-                $request->file('photos'),
-                'properties',
-                ImageService::MAX_INITIAL_PHOTOS
-            );
-        }
+        // Get pre-uploaded photo paths (photos are uploaded one by one before form submission)
+        $photoPaths = $validated['photoPaths'] ?? [];
 
         // Get authenticated user (required)
         $user = auth()->user();
@@ -299,6 +291,47 @@ class PropertyController extends Controller
         return Inertia::render('Properties', [
             'properties' => $properties,
             'filters' => $request->only(['keyword', 'location', 'status', 'propertyType', 'priceMin', 'priceMax', 'bedrooms', 'bathrooms', 'sort']),
+        ]);
+    }
+
+    /**
+     * Upload a single photo and return the path.
+     * Used for progressive uploads to avoid large request issues.
+     */
+    public function uploadPhoto(Request $request)
+    {
+        $request->validate([
+            'photo' => 'required|file|max:20480', // 20MB max
+        ]);
+
+        $path = ImageService::processAndStore($request->file('photo'), 'properties');
+
+        if (!$path) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to process image. Please try a different file.',
+            ], 422);
+        }
+
+        return response()->json([
+            'success' => true,
+            'path' => $path,
+        ]);
+    }
+
+    /**
+     * Delete a temporarily uploaded photo (before property is created).
+     */
+    public function deleteUploadedPhoto(Request $request)
+    {
+        $request->validate([
+            'path' => 'required|string',
+        ]);
+
+        $deleted = ImageService::delete($request->path);
+
+        return response()->json([
+            'success' => $deleted,
         ]);
     }
 
