@@ -25,10 +25,12 @@ Route::get('/p/{code}', [QrCodeController::class, 'handleScan'])->name('qr.scan'
 
 // Public routes
 Route::get('/', function () {
+    // Get featured properties first, then fill with latest approved properties
     $featuredProperties = \App\Models\Property::where('is_active', true)
         ->where('approval_status', 'approved')
+        ->orderByDesc('is_featured') // Featured properties first
         ->latest()
-        ->take(6)
+        ->take(8)
         ->get();
 
     return Inertia::render('Home', [
