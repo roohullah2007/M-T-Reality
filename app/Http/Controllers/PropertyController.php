@@ -8,6 +8,7 @@ use App\Mail\PropertyUpdatedNotification;
 use App\Models\Property;
 use App\Models\QrScan;
 use App\Models\Setting;
+use App\Services\EmailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
@@ -303,21 +304,20 @@ class PropertyController extends Controller
      */
     protected function sendPropertySubmissionEmails(Property $property): void
     {
-        $emailNotificationsEnabled = Setting::get('email_notifications', '1') === '1';
-
-        if (!$emailNotificationsEnabled) {
+        if (!EmailService::isEnabled()) {
             return;
         }
 
-        // Send confirmation email to property owner
+        // Send to user and admin with delay between them
         if ($property->contact_email) {
-            Mail::to($property->contact_email)->send(new PropertySubmittedToOwner($property));
-        }
-
-        // Send notification email to admin
-        $adminEmail = Setting::get('admin_email', 'hello@okbyowner.com');
-        if ($adminEmail) {
-            Mail::to($adminEmail)->send(new PropertySubmittedToAdmin($property));
+            EmailService::sendToUserAndAdmin(
+                $property->contact_email,
+                new PropertySubmittedToOwner($property),
+                new PropertySubmittedToAdmin($property)
+            );
+        } else {
+            // No user email, just send to admin
+            EmailService::sendToAdmin(new PropertySubmittedToAdmin($property));
         }
     }
 
@@ -326,15 +326,13 @@ class PropertyController extends Controller
      */
     protected function sendPropertyUpdateEmails(Property $property): void
     {
-        $emailNotificationsEnabled = Setting::get('email_notifications', '1') === '1';
-
-        if (!$emailNotificationsEnabled) {
+        if (!EmailService::isEnabled()) {
             return;
         }
 
         // Send update notification to property owner
         if ($property->contact_email) {
-            Mail::to($property->contact_email)->send(new PropertyUpdatedNotification($property));
+            EmailService::sendToUser($property->contact_email, new PropertyUpdatedNotification($property));
         }
     }
 }

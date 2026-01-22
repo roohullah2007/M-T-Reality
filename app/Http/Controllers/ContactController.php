@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContactFormConfirmation;
 use App\Mail\NewContactMessageToAdmin;
 use App\Models\ContactMessage;
-use App\Models\Setting;
+use App\Services\EmailService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -32,12 +32,12 @@ class ContactController extends Controller
             'status' => 'new',
         ]);
 
-        // Send notification email to admin
-        $emailNotificationsEnabled = Setting::get('email_notifications', '1') === '1';
-        $adminEmail = Setting::get('admin_email', 'hello@okbyowner.com');
-        if ($emailNotificationsEnabled && $adminEmail) {
-            Mail::to($adminEmail)->send(new NewContactMessageToAdmin($contactMessage));
-        }
+        // Send confirmation to user and notification to admin (with delay between)
+        EmailService::sendToUserAndAdmin(
+            $contactMessage->email,
+            new ContactFormConfirmation($contactMessage),
+            new NewContactMessageToAdmin($contactMessage)
+        );
 
         return redirect()->back()->with('success', 'Thank you for your message! We\'ll get back to you within 24 hours.');
     }

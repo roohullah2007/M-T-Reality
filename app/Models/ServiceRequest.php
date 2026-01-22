@@ -114,7 +114,9 @@ class ServiceRequest extends Model
             'virtual_tour' => 'Virtual Tour',
             'video' => 'Video Walkthrough',
             'mls' => 'MLS Listing',
-            default => ucfirst($this->service_type),
+            'qr_stickers' => 'QR Code Stickers',
+            'yard_sign' => 'Yard Sign',
+            default => ucfirst(str_replace('_', ' ', $this->service_type)),
         };
     }
 

@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Mail\PropertyUpdatedNotification;
+use App\Mail\ServiceRequestReceived;
+use App\Mail\ServiceRequestToAdmin;
 use App\Models\Property;
 use App\Models\Inquiry;
 use App\Models\Favorite;
 use App\Models\ServiceRequest;
 use App\Models\Setting;
+use App\Services\EmailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -154,9 +157,8 @@ class UserDashboardController extends Controller
         $property->update($validated);
 
         // Send update notification email
-        $emailNotificationsEnabled = Setting::get('email_notifications', '1') === '1';
-        if ($emailNotificationsEnabled && $property->contact_email) {
-            Mail::to($property->contact_email)->send(new PropertyUpdatedNotification($property));
+        if ($property->contact_email) {
+            EmailService::sendToUser($property->contact_email, new PropertyUpdatedNotification($property));
         }
 
         return redirect()->route('dashboard.listings')->with('success', 'Property updated successfully!');
@@ -409,7 +411,7 @@ class UserDashboardController extends Controller
         }
 
         // Create the service request
-        ServiceRequest::create([
+        $serviceRequest = ServiceRequest::create([
             'user_id' => Auth::id(),
             'property_id' => $property->id,
             'service_type' => $validated['service_type'],
@@ -418,6 +420,19 @@ class UserDashboardController extends Controller
             'preferred_time' => $validated['preferred_time'] ?? null,
             'status' => 'pending',
         ]);
+
+        // Load relationships for emails
+        $serviceRequest->load(['user', 'property']);
+
+        // Send emails with delay to user and admin
+        $user = Auth::user();
+        if ($user && $user->email) {
+            EmailService::sendToUserAndAdmin(
+                $user->email,
+                new ServiceRequestReceived($serviceRequest),
+                new ServiceRequestToAdmin($serviceRequest)
+            );
+        }
 
         return redirect()->route('dashboard.listings')
             ->with('success', 'Your upgrade request has been submitted! We will contact you shortly.');
@@ -491,13 +506,26 @@ class UserDashboardController extends Controller
         }
 
         // Create the service request
-        ServiceRequest::create([
+        $serviceRequest = ServiceRequest::create([
             'user_id' => Auth::id(),
             'property_id' => $property->id,
             'service_type' => $validated['service_type'],
             'notes' => $shippingInfo,
             'status' => 'pending',
         ]);
+
+        // Load relationships for emails
+        $serviceRequest->load(['user', 'property']);
+
+        // Send emails with delay to user and admin
+        $user = Auth::user();
+        if ($user && $user->email) {
+            EmailService::sendToUserAndAdmin(
+                $user->email,
+                new ServiceRequestReceived($serviceRequest),
+                new ServiceRequestToAdmin($serviceRequest)
+            );
+        }
 
         $itemName = $validated['service_type'] === 'qr_stickers' ? 'QR stickers' : 'yard sign';
         return back()->with('success', "Your free {$itemName} order has been submitted!");

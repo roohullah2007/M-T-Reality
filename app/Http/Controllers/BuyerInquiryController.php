@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Mail\NewBuyerInquiryToAdmin;
 use App\Models\BuyerInquiry;
-use App\Models\Setting;
+use App\Services\EmailService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class BuyerInquiryController extends Controller
@@ -30,11 +29,7 @@ class BuyerInquiryController extends Controller
         $inquiry = BuyerInquiry::create($validated);
 
         // Send notification email to admin
-        $emailNotificationsEnabled = Setting::get('email_notifications', '1') === '1';
-        $adminEmail = Setting::get('admin_email', 'hello@okbyowner.com');
-        if ($emailNotificationsEnabled && $adminEmail) {
-            Mail::to($adminEmail)->send(new NewBuyerInquiryToAdmin($inquiry));
-        }
+        EmailService::sendToAdmin(new NewBuyerInquiryToAdmin($inquiry));
 
         return back()->with('success', 'Thank you! We\'ll be in touch soon with property alerts matching your criteria.');
     }

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PropertyApproved;
+use App\Mail\PropertyRejected;
 use App\Models\Property;
 use App\Models\ActivityLog;
+use App\Services\EmailService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -138,6 +141,11 @@ class AdminPropertyController extends Controller
 
         ActivityLog::log('property_approved', $property, null, null, "Approved property: {$property->property_title}");
 
+        // Send approval email to property owner
+        if ($property->contact_email) {
+            EmailService::sendToUser($property->contact_email, new PropertyApproved($property));
+        }
+
         return back()->with('success', 'Property approved successfully.');
     }
 
@@ -155,6 +163,11 @@ class AdminPropertyController extends Controller
         ]);
 
         ActivityLog::log('property_rejected', $property, null, ['reason' => $request->rejection_reason], "Rejected property: {$property->property_title}");
+
+        // Send rejection email to property owner
+        if ($property->contact_email) {
+            EmailService::sendToUser($property->contact_email, new PropertyRejected($property, $request->rejection_reason));
+        }
 
         return back()->with('success', 'Property rejected.');
     }

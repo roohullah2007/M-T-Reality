@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Mail\EmailVerificationCode;
+use App\Mail\NewUserRegisteredToAdmin;
 use App\Mail\WelcomeEmail;
 use App\Models\Setting;
 use App\Models\User;
+use App\Services\EmailService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -58,6 +60,10 @@ class RegisteredUserController extends Controller
         } catch (\Exception $e) {
             \Log::error('Failed to send verification code email: ' . $e->getMessage());
         }
+
+        // Send notification to admin about new user registration (with delay)
+        sleep(2);
+        EmailService::sendToAdmin(new NewUserRegisteredToAdmin($user));
 
         Auth::login($user);
 
