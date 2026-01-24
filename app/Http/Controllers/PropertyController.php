@@ -99,6 +99,7 @@ class PropertyController extends Controller
             'zip_code' => $validated['zipCode'],
             'subdivision' => $validated['subdivision'] ?? null,
             'bedrooms' => $validated['bedrooms'],
+            'bathrooms' => $validated['fullBathrooms'] + (($validated['halfBathrooms'] ?? 0) * 0.5),
             'full_bathrooms' => $validated['fullBathrooms'],
             'half_bathrooms' => $validated['halfBathrooms'] ?? 0,
             'sqft' => $validated['sqft'],
