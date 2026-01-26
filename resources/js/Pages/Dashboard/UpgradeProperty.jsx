@@ -151,10 +151,10 @@ export default function UpgradeProperty({ property, existingRequests = [] }) {
                 <div className="flex items-center gap-4">
                     <div className="w-20 h-20 bg-gray-200 rounded-xl overflow-hidden flex-shrink-0">
                         <img
-                            src={property.photos?.[0] || '/images/property-placeholder.jpg'}
+                            src={property.photos?.[0] || '/images/property-placeholder.svg'}
                             alt={property.property_title}
                             className="w-full h-full object-cover"
-                            onError={(e) => e.target.src = '/images/property-placeholder.jpg'}
+                            onError={(e) => e.target.src = '/images/property-placeholder.svg'}
                         />
                     </div>
                     <div>
