@@ -726,7 +726,10 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
 
                             <div className="space-y-4">
                                 {/* Order Multimedia Option */}
-                                <div className="border border-gray-200 rounded-xl p-4 hover:border-purple-300 hover:bg-purple-50/50 transition-colors cursor-pointer group">
+                                <Link
+                                    href={route('dashboard.listings.upgrade', upgradeListing.id)}
+                                    className="block border border-gray-200 rounded-xl p-4 hover:border-purple-300 hover:bg-purple-50/50 transition-colors cursor-pointer group"
+                                >
                                     <div className="flex items-start gap-4">
                                         <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-purple-200 transition-colors">
                                             <Video className="w-6 h-6 text-purple-600" />
@@ -747,10 +750,13 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </Link>
 
                                 {/* Upgrade to MLS Option */}
-                                <div className="border border-gray-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50/50 transition-colors cursor-pointer group">
+                                <Link
+                                    href={route('dashboard.listings.upgrade', upgradeListing.id)}
+                                    className="block border border-gray-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50/50 transition-colors cursor-pointer group"
+                                >
                                     <div className="flex items-start gap-4">
                                         <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-blue-200 transition-colors">
                                             <Building2 className="w-6 h-6 text-blue-600" />
@@ -771,7 +777,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </Link>
                             </div>
 
                             <p className="text-xs text-gray-500 text-center mt-6">
