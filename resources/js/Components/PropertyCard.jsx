@@ -15,7 +15,7 @@ const PropertyCard = ({ property, onAuthRequired }) => {
   // Get the first photo or use placeholder
   const propertyImage = property.photos && property.photos.length > 0
     ? property.photos[0]
-    : 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=800';
+    : '/images/property-placeholder.svg';
 
   const getStatusLabel = () => {
     switch (property.status) {
@@ -77,7 +77,7 @@ const PropertyCard = ({ property, onAuthRequired }) => {
             src={propertyImage}
             alt={property.property_title || property.address}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            onError={(e) => e.target.src = 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=800'}
+            onError={(e) => e.target.src = '/images/property-placeholder.svg'}
           />
           {/* Status Badge */}
           <div className="absolute top-4 right-4 bg-[#A41E34] text-white px-3 py-1.5 text-xs font-semibold rounded-full" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>

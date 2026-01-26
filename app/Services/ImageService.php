@@ -200,16 +200,12 @@ class ImageService
      * @param array $files Array of UploadedFile objects
      * @param string $directory The storage directory
      * @param int|null $limit Maximum number of images to process
-     * @param bool $useQueue Use queue for large batches
      * @return array Array of stored file paths/URLs
      */
-    public static function processMultiple(array $files, string $directory = 'properties', ?int $limit = null, bool $useQueue = true): array
+    public static function processMultiple(array $files, string $directory = 'properties', ?int $limit = null): array
     {
         $paths = [];
         $count = 0;
-
-        // Use queue if we have more than the threshold
-        $shouldQueue = $useQueue && count($files) > self::QUEUE_THRESHOLD;
 
         foreach ($files as $file) {
             // Check limit
@@ -219,19 +215,10 @@ class ImageService
             }
 
             if ($file instanceof UploadedFile) {
-                if ($shouldQueue) {
-                    $tempId = self::queueForProcessing($file, $directory);
-                    if ($tempId) {
-                        // For queued uploads, we'll return a placeholder
-                        // The actual path will be available after processing
-                        $count++;
-                    }
-                } else {
-                    $path = self::processAndStore($file, $directory);
-                    if ($path) {
-                        $paths[] = $path;
-                        $count++;
-                    }
+                $path = self::processAndStore($file, $directory);
+                if ($path) {
+                    $paths[] = $path;
+                    $count++;
                 }
             }
         }

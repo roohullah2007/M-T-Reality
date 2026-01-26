@@ -694,7 +694,7 @@ export default function EditListing({ property }) {
                                         src={photo}
                                         alt={`Property photo ${index + 1}`}
                                         className="w-full h-full object-cover"
-                                        onError={(e) => e.target.src = '/images/property-placeholder.jpg'}
+                                        onError={(e) => e.target.src = '/images/property-placeholder.svg'}
                                     />
                                     {/* Main Photo Badge */}
                                     {index === 0 && (

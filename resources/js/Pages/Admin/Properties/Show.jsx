@@ -46,7 +46,7 @@ export default function PropertiesShow({ property }) {
 
     const photos = property.photos && property.photos.length > 0
         ? property.photos
-        : ['https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=800'];
+        : ['/images/property-placeholder.svg'];
 
     const hasRealPhotos = property.photos && property.photos.length > 0;
 
@@ -356,7 +356,7 @@ export default function PropertiesShow({ property }) {
                                 src={photos[currentImageIndex]}
                                 alt={property.property_title}
                                 className="w-full h-[400px] object-cover"
-                                onError={(e) => e.target.src = 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=800'}
+                                onError={(e) => e.target.src = '/images/property-placeholder.svg'}
                             />
 
                             {photos.length > 1 && (
@@ -418,7 +418,7 @@ export default function PropertiesShow({ property }) {
                                                 src={photo}
                                                 alt={`Thumbnail ${index + 1}`}
                                                 className="w-full h-full object-cover"
-                                                onError={(e) => e.target.src = 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=800'}
+                                                onError={(e) => e.target.src = '/images/property-placeholder.svg'}
                                             />
                                         </button>
                                         {hasRealPhotos && (

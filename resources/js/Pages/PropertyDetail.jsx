@@ -40,7 +40,7 @@ function PropertyDetail({ property }) {
 
   const photos = property.photos && property.photos.length > 0
     ? property.photos
-    : ['https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=800'];
+    : ['/images/property-placeholder.svg'];
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prev) => (prev === 0 ? photos.length - 1 : prev - 1));
@@ -275,7 +275,7 @@ function PropertyDetail({ property }) {
               src={photos[currentImageIndex]}
               alt={`${property.property_title} - Image ${currentImageIndex + 1}`}
               className="w-full h-[400px] md:h-[500px] object-cover"
-              onError={(e) => e.target.src = 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=800'}
+              onError={(e) => e.target.src = '/images/property-placeholder.svg'}
             />
 
             {/* Image Navigation */}
@@ -408,7 +408,7 @@ function PropertyDetail({ property }) {
                     src={photo}
                     alt={`Thumbnail ${index + 1}`}
                     className="w-full h-full object-cover"
-                    onError={(e) => e.target.src = 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=800'}
+                    onError={(e) => e.target.src = '/images/property-placeholder.svg'}
                   />
                 </button>
               ))}
