@@ -120,9 +120,9 @@ function ListProperty() {
         continue;
       }
 
-      // Check file size (20MB max)
-      if (file.size > 20 * 1024 * 1024) {
-        setUploadError('Some files skipped. Maximum file size is 20MB per photo.');
+      // Check file size (30MB max)
+      if (file.size > 30 * 1024 * 1024) {
+        setUploadError('Some files skipped. Maximum file size is 30MB per photo.');
         continue;
       }
 
@@ -947,7 +947,7 @@ function ListProperty() {
                   {isUploading ? 'Uploading photos...' : photoPreviews.length === 0 ? 'Click to upload photos' : 'Add more photos'}
                 </p>
                 <p className="text-sm text-[#666] mb-1" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                  JPG, PNG, GIF, WebP, or HEIC (iPhone) - max 20MB each
+                  JPG, PNG, GIF, WebP, or HEIC (iPhone) - max 30MB each
                 </p>
                 <p className="text-xs text-[#888]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
                   Photos are uploaded one by one with progress tracking

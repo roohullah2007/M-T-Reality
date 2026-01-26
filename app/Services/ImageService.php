@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\ProcessImageUpload;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -43,6 +44,11 @@ class ImageService
     public const PHOTOS_EMAIL = 'photos@okbyowner.com';
 
     /**
+     * Number of photos that triggers queue processing
+     */
+    public const QUEUE_THRESHOLD = 5;
+
+    /**
      * Supported input formats including HEIC
      */
     protected const SUPPORTED_FORMATS = [
@@ -63,13 +69,14 @@ class ImageService
     ];
 
     /**
-     * Process an uploaded image: resize and convert to WebP
+     * Process an uploaded image: resize, convert to WebP, and upload to CDN
      *
      * @param UploadedFile $file The uploaded file
      * @param string $directory The storage directory
-     * @return string|null The stored file path or null on failure
+     * @param bool $useQueue Whether to use queue for processing
+     * @return string|null The CDN URL or local path, or null on failure
      */
-    public static function processAndStore(UploadedFile $file, string $directory = 'properties'): ?string
+    public static function processAndStore(UploadedFile $file, string $directory = 'properties', bool $useQueue = false): ?string
     {
         try {
             // Validate file type
@@ -80,7 +87,7 @@ class ImageService
 
             // Generate unique filename with .webp extension
             $filename = Str::uuid() . '.webp';
-            $path = $directory . '/' . $filename;
+            $remotePath = $directory . '/' . $filename;
 
             // Handle HEIC files - they need special processing
             $extension = strtolower($file->getClientOriginalExtension());
@@ -92,7 +99,6 @@ class ImageService
             }
 
             // Read and process the image using Intervention Image
-            // Intervention Image v3 with imagick driver supports HEIC
             $image = Image::read($filePath);
 
             // Auto-orient the image based on EXIF data (important for phone photos)
@@ -110,13 +116,29 @@ class ImageService
 
             // Encode to WebP with quality setting
             $encoded = $image->encode(new WebpEncoder(self::WEBP_QUALITY));
+            $webpContent = (string) $encoded;
 
-            // Store the processed image
-            Storage::disk('public')->put($path, (string) $encoded);
+            // Upload to Bunny CDN if configured
+            if (BunnyCDNService::isConfigured()) {
+                $bunny = new BunnyCDNService();
+                $uploaded = $bunny->uploadContent($webpContent, $remotePath);
 
-            Log::info('Successfully processed and stored image: ' . $path);
-
-            return '/storage/' . $path;
+                if ($uploaded) {
+                    Log::info('Successfully uploaded image to Bunny CDN: ' . $remotePath);
+                    // Return CDN URL
+                    return BunnyCDNService::getUrl($remotePath);
+                } else {
+                    Log::warning('Bunny CDN upload failed, falling back to local storage');
+                    // Fallback to local storage
+                    Storage::disk('public')->put($remotePath, $webpContent);
+                    return '/storage/' . $remotePath;
+                }
+            } else {
+                // Use local storage
+                Storage::disk('public')->put($remotePath, $webpContent);
+                Log::info('Successfully processed and stored image locally: ' . $remotePath);
+                return '/storage/' . $remotePath;
+            }
         } catch (\Exception $e) {
             Log::error('Image processing failed: ' . $e->getMessage(), [
                 'file' => $file->getClientOriginalName(),
@@ -129,17 +151,65 @@ class ImageService
     }
 
     /**
+     * Queue an image for processing (for bulk uploads)
+     *
+     * @param UploadedFile $file The uploaded file
+     * @param string $directory The storage directory
+     * @return string|null Temporary identifier or null on failure
+     */
+    public static function queueForProcessing(UploadedFile $file, string $directory = 'properties'): ?string
+    {
+        try {
+            // Validate file type
+            if (!self::isValidImage($file)) {
+                Log::warning('Invalid image file type for queue: ' . $file->getMimeType());
+                return null;
+            }
+
+            // Store file temporarily
+            $tempDir = storage_path('app/temp/uploads');
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0755, true);
+            }
+
+            $tempFileName = Str::uuid() . '_' . time();
+            $tempFilePath = $tempDir . '/' . $tempFileName;
+
+            // Move uploaded file to temp location
+            $file->move($tempDir, $tempFileName);
+
+            // Dispatch job
+            ProcessImageUpload::dispatch(
+                $tempFilePath,
+                $file->getClientOriginalName(),
+                $directory
+            );
+
+            Log::info('Image queued for processing: ' . $file->getClientOriginalName());
+
+            return $tempFileName;
+        } catch (\Exception $e) {
+            Log::error('Failed to queue image for processing: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Process multiple uploaded images
      *
      * @param array $files Array of UploadedFile objects
      * @param string $directory The storage directory
      * @param int|null $limit Maximum number of images to process
-     * @return array Array of stored file paths
+     * @param bool $useQueue Use queue for large batches
+     * @return array Array of stored file paths/URLs
      */
-    public static function processMultiple(array $files, string $directory = 'properties', ?int $limit = null): array
+    public static function processMultiple(array $files, string $directory = 'properties', ?int $limit = null, bool $useQueue = true): array
     {
         $paths = [];
         $count = 0;
+
+        // Use queue if we have more than the threshold
+        $shouldQueue = $useQueue && count($files) > self::QUEUE_THRESHOLD;
 
         foreach ($files as $file) {
             // Check limit
@@ -149,10 +219,19 @@ class ImageService
             }
 
             if ($file instanceof UploadedFile) {
-                $path = self::processAndStore($file, $directory);
-                if ($path) {
-                    $paths[] = $path;
-                    $count++;
+                if ($shouldQueue) {
+                    $tempId = self::queueForProcessing($file, $directory);
+                    if ($tempId) {
+                        // For queued uploads, we'll return a placeholder
+                        // The actual path will be available after processing
+                        $count++;
+                    }
+                } else {
+                    $path = self::processAndStore($file, $directory);
+                    if ($path) {
+                        $paths[] = $path;
+                        $count++;
+                    }
                 }
             }
         }
@@ -196,7 +275,7 @@ class ImageService
      */
     public static function getMaxFileSize(): int
     {
-        return 20 * 1024 * 1024; // 20MB
+        return 30 * 1024 * 1024; // 30MB
     }
 
     /**
@@ -220,19 +299,51 @@ class ImageService
     }
 
     /**
-     * Delete an image from storage
+     * Delete an image from storage (both CDN and local)
      *
-     * @param string $path The image path (e.g., /storage/properties/image.webp)
+     * @param string $path The image path or URL
      * @return bool
      */
     public static function delete(string $path): bool
     {
         try {
-            // Remove /storage/ prefix to get the actual storage path
-            $storagePath = str_replace('/storage/', '', $path);
-            return Storage::disk('public')->delete($storagePath);
+            $deleted = false;
+
+            // Check if it's a CDN URL
+            $pullZone = config('services.bunnycdn.pull_zone');
+            if ($pullZone && str_contains($path, $pullZone)) {
+                // Extract path from CDN URL
+                $remotePath = parse_url($path, PHP_URL_PATH);
+                $remotePath = ltrim($remotePath, '/');
+
+                if (BunnyCDNService::isConfigured()) {
+                    $bunny = new BunnyCDNService();
+                    $deleted = $bunny->delete($remotePath);
+                }
+
+                // Also try to delete from local storage if it exists
+                if (Storage::disk('public')->exists($remotePath)) {
+                    Storage::disk('public')->delete($remotePath);
+                }
+            } else {
+                // Local storage path
+                $storagePath = str_replace('/storage/', '', $path);
+
+                // Delete from Bunny CDN if configured (might have been synced)
+                if (BunnyCDNService::isConfigured()) {
+                    $bunny = new BunnyCDNService();
+                    $bunny->delete($storagePath);
+                }
+
+                // Delete from local storage
+                $deleted = Storage::disk('public')->delete($storagePath);
+            }
+
+            return $deleted;
         } catch (\Exception $e) {
-            Log::error('Image deletion failed: ' . $e->getMessage());
+            Log::error('Image deletion failed: ' . $e->getMessage(), [
+                'path' => $path
+            ]);
             return false;
         }
     }
@@ -255,9 +366,70 @@ class ImageService
     }
 
     /**
+     * Get the public URL for an image path
+     * Handles both CDN URLs and local storage paths
+     *
+     * @param string $path The stored path
+     * @return string The public URL
+     */
+    public static function getPublicUrl(string $path): string
+    {
+        // If already a full URL, return as is
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        // If Bunny CDN is configured, convert to CDN URL
+        if (BunnyCDNService::isConfigured()) {
+            return BunnyCDNService::getUrl($path);
+        }
+
+        // Return local URL
+        if (!str_starts_with($path, '/')) {
+            return '/storage/' . $path;
+        }
+
+        return $path;
+    }
+
+    /**
+     * Migrate an existing local image to CDN
+     *
+     * @param string $localPath Local storage path (e.g., /storage/properties/uuid.webp)
+     * @return string|null CDN URL or null on failure
+     */
+    public static function migrateToCdn(string $localPath): ?string
+    {
+        if (!BunnyCDNService::isConfigured()) {
+            return null;
+        }
+
+        try {
+            $storagePath = str_replace('/storage/', '', $localPath);
+            $fullPath = storage_path('app/public/' . $storagePath);
+
+            if (!file_exists($fullPath)) {
+                Log::warning('File not found for CDN migration: ' . $fullPath);
+                return null;
+            }
+
+            $bunny = new BunnyCDNService();
+            if ($bunny->upload($fullPath, $storagePath)) {
+                Log::info('Successfully migrated image to CDN: ' . $storagePath);
+                return BunnyCDNService::getUrl($storagePath);
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            Log::error('CDN migration failed: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Create a ZIP file containing all property photos
      *
-     * @param array $photos Array of photo paths
+     * @param array $photos Array of photo paths/URLs
      * @param string $propertyTitle Property title for the ZIP filename
      * @return string|null Path to the created ZIP file or null on failure
      */
@@ -286,18 +458,31 @@ class ImageService
 
             $counter = 1;
             foreach ($photos as $photo) {
-                // Convert storage path to actual file path
-                $storagePath = str_replace('/storage/', '', $photo);
-                $fullPath = storage_path('app/public/' . $storagePath);
+                $fullPath = null;
 
-                if (file_exists($fullPath)) {
-                    // Get extension from the file
-                    $extension = pathinfo($fullPath, PATHINFO_EXTENSION);
+                // Check if it's a CDN URL
+                $pullZone = config('services.bunnycdn.pull_zone');
+                if ($pullZone && str_contains($photo, $pullZone)) {
+                    // Download from CDN
+                    $tempFile = tempnam(sys_get_temp_dir(), 'photo_');
+                    $content = @file_get_contents($photo);
+                    if ($content !== false) {
+                        file_put_contents($tempFile, $content);
+                        $fullPath = $tempFile;
+                    }
+                } else {
+                    // Local file
+                    $storagePath = str_replace('/storage/', '', $photo);
+                    $fullPath = storage_path('app/public/' . $storagePath);
+                }
+
+                if ($fullPath && file_exists($fullPath)) {
+                    $extension = pathinfo($fullPath, PATHINFO_EXTENSION) ?: 'webp';
                     $zipEntryName = sprintf('photo-%02d.%s', $counter, $extension);
                     $zip->addFile($fullPath, $zipEntryName);
                     $counter++;
                 } else {
-                    Log::warning('Photo file not found for ZIP: ' . $fullPath);
+                    Log::warning('Photo file not found for ZIP: ' . $photo);
                 }
             }
 
@@ -336,6 +521,19 @@ class ImageService
             }
         }
 
+        // Also clean up old upload temp files
+        $uploadTempPath = storage_path('app/temp/uploads');
+        if (file_exists($uploadTempPath)) {
+            $uploadFiles = glob($uploadTempPath . '/*');
+            foreach ($uploadFiles as $file) {
+                if (is_file($file) && ($now - filemtime($file)) > ($maxAgeMinutes * 60)) {
+                    if (unlink($file)) {
+                        $deleted++;
+                    }
+                }
+            }
+        }
+
         return $deleted;
     }
 
@@ -356,6 +554,7 @@ class ImageService
             'supported_formats_display' => 'JPG, PNG, GIF, WebP, HEIC (iPhone)',
             'max_dimension' => self::MAX_DIMENSION,
             'output_format' => 'WebP (optimized)',
+            'cdn_enabled' => BunnyCDNService::isConfigured(),
         ];
     }
 }

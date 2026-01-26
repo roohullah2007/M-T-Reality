@@ -72,8 +72,8 @@ export default function EditListing({ property }) {
         // Check file sizes
         const validFiles = [];
         for (const file of files) {
-            if (file.size > 20 * 1024 * 1024) {
-                setUploadError('Each file must be less than 20MB.');
+            if (file.size > 30 * 1024 * 1024) {
+                setUploadError('Each file must be less than 30MB.');
                 continue;
             }
             validFiles.push(file);
@@ -757,7 +757,7 @@ export default function EditListing({ property }) {
 
                     {/* Supported Formats */}
                     <p className="text-xs text-gray-400 mt-3">
-                        Supported formats: JPG, PNG, GIF, WebP, HEIC (iPhone). Max 20MB per file. Photos are automatically optimized.
+                        Supported formats: JPG, PNG, GIF, WebP, HEIC (iPhone). Max 30MB per file. Photos are automatically optimized.
                     </p>
                 </div>
 

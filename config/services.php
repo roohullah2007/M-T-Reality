@@ -41,4 +41,13 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI', '/auth/google/callback'),
     ],
 
+    'bunnycdn' => [
+        'hostname' => env('BUNNYCDN_HOSTNAME'),
+        'username' => env('BUNNYCDN_USERNAME'),
+        'password' => env('BUNNYCDN_PASSWORD'),
+        'port' => env('BUNNYCDN_PORT', 21),
+        'pull_zone' => env('BUNNYCDN_PULL_ZONE'),
+        'local_backup' => env('BUNNYCDN_LOCAL_BACKUP', false),
+    ],
+
 ];

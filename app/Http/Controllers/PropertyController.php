@@ -302,7 +302,7 @@ class PropertyController extends Controller
     public function uploadPhoto(Request $request)
     {
         $request->validate([
-            'photo' => 'required|file|max:20480', // 20MB max
+            'photo' => 'required|file|max:30720', // 30MB max
         ]);
 
         $path = ImageService::processAndStore($request->file('photo'), 'properties');

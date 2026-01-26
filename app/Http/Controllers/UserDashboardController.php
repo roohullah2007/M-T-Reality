@@ -544,7 +544,7 @@ class UserDashboardController extends Controller
 
         $request->validate([
             'photos' => 'required|array|min:1',
-            'photos.*' => 'file|max:20480', // 20MB max per image
+            'photos.*' => 'file|max:30720', // 30MB max per image
         ]);
 
         $currentPhotos = $property->photos ?? [];
