@@ -16,6 +16,7 @@ function ListProperty() {
   const [uploadError, setUploadError] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [isUploading, setIsUploading] = useState(false); // Track if any upload is in progress
+  const [isDragActive, setIsDragActive] = useState(false); // Track drag state for visual feedback
   const maxPhotos = 50;
 
   const { data, setData, post, processing, errors, reset } = useForm({
@@ -91,8 +92,52 @@ function ListProperty() {
     fileInputRef.current?.click();
   };
 
+  // Drag and drop handlers
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isUploading && photoPreviews.length < maxPhotos) {
+      setIsDragActive(true);
+    }
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Only set inactive if we're leaving the drop zone entirely
+    if (e.currentTarget.contains(e.relatedTarget)) return;
+    setIsDragActive(false);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragActive(false);
+
+    if (isUploading || photoPreviews.length >= maxPhotos) return;
+
+    const files = Array.from(e.dataTransfer.files).filter(file =>
+      file.type.startsWith('image/') ||
+      file.name.toLowerCase().endsWith('.heic') ||
+      file.name.toLowerCase().endsWith('.heif')
+    );
+
+    if (files.length > 0) {
+      processFiles(files);
+    }
+  };
+
   const handlePhotoChange = async (e) => {
     const files = Array.from(e.target.files);
+    processFiles(files);
+  };
+
+  const processFiles = async (files) => {
     setUploadError('');
 
     // Calculate remaining slots
@@ -171,9 +216,9 @@ function ListProperty() {
 
           const response = await axios.post('/upload-photo', formData, {
             headers: {
-              'Content-Type': 'multipart/form-data',
               'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
             },
+            timeout: 120000, // 2 minute timeout for large files
             onUploadProgress: (progressEvent) => {
               const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
               setPhotoPreviews(prev => prev.map(p =>
@@ -929,28 +974,42 @@ function ListProperty() {
                 </div>
               )}
 
-              {/* Upload Area */}
+              {/* Upload Area - Click or Drag & Drop */}
               <div
                 onClick={!isUploading && photoPreviews.length < maxPhotos ? handlePhotoClick : undefined}
-                className={`border-2 border-dashed border-[#D0CCC7] rounded-xl p-6 md:p-8 text-center transition-all ${
-                  isUploading || photoPreviews.length >= maxPhotos
-                    ? 'opacity-50 cursor-not-allowed'
-                    : 'hover:border-[#A41E34] hover:bg-[#A41E34]/5 cursor-pointer'
+                onDragEnter={handleDragEnter}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`border-2 border-dashed rounded-xl p-6 md:p-8 text-center transition-all ${
+                  isDragActive
+                    ? 'border-[#A41E34] bg-[#A41E34]/10 scale-[1.02]'
+                    : isUploading || photoPreviews.length >= maxPhotos
+                      ? 'border-[#D0CCC7] opacity-50 cursor-not-allowed'
+                      : 'border-[#D0CCC7] hover:border-[#A41E34] hover:bg-[#A41E34]/5 cursor-pointer'
                 }`}
               >
                 {isUploading ? (
                   <Loader2 className="w-10 h-10 text-[#A41E34] mx-auto mb-3 animate-spin" />
+                ) : isDragActive ? (
+                  <Upload className="w-10 h-10 text-[#A41E34] mx-auto mb-3 animate-bounce" />
                 ) : (
                   <Upload className="w-10 h-10 text-[#666] mx-auto mb-3" />
                 )}
                 <p className="text-base font-semibold text-[#111] mb-1" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                  {isUploading ? 'Uploading photos...' : photoPreviews.length === 0 ? 'Click to upload photos' : 'Add more photos'}
+                  {isUploading
+                    ? 'Uploading photos...'
+                    : isDragActive
+                      ? 'Drop photos here!'
+                      : photoPreviews.length === 0
+                        ? 'Click or drag photos here'
+                        : 'Add more photos'}
                 </p>
                 <p className="text-sm text-[#666] mb-1" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
                   JPG, PNG, GIF, WebP, or HEIC (iPhone) - max 30MB each
                 </p>
                 <p className="text-xs text-[#888]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                  Photos are uploaded one by one with progress tracking
+                  {isDragActive ? 'Release to upload' : 'Drag & drop or click to browse'}
                 </p>
                 <input
                   ref={fileInputRef}

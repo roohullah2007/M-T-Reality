@@ -1,6 +1,7 @@
 import { Head, Link, useForm, router } from '@inertiajs/react';
 import UserDashboardLayout from '@/Layouts/UserDashboardLayout';
 import { useState, useRef } from 'react';
+import axios from 'axios';
 import {
     ArrowLeft,
     Save,
@@ -21,7 +22,8 @@ import {
     X,
     Trash2,
     Star,
-    Loader2
+    Loader2,
+    CheckCircle
 } from 'lucide-react';
 
 export default function EditListing({ property }) {
@@ -48,59 +50,187 @@ export default function EditListing({ property }) {
     });
 
     // Photo management state
-    const [uploading, setUploading] = useState(false);
     const [uploadError, setUploadError] = useState('');
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [photoToDelete, setPhotoToDelete] = useState(null);
     const [deleting, setDeleting] = useState(false);
     const fileInputRef = useRef(null);
 
+    // Progressive upload state for new photos
+    const [newPhotoPreviews, setNewPhotoPreviews] = useState([]); // Photos being uploaded
+    const [isUploading, setIsUploading] = useState(false);
+
     const photos = property.photos || [];
     const maxPhotos = 50;
 
-    const handlePhotoUpload = (e) => {
-        const files = e.target.files;
+    // Calculate total photos (existing + successfully uploaded new ones)
+    const successfulNewPhotos = newPhotoPreviews.filter(p => p.serverPath && !p.error);
+    const totalPhotos = photos.length + successfulNewPhotos.length;
+
+    const handlePhotoUpload = async (e) => {
+        const files = Array.from(e.target.files);
         if (!files || files.length === 0) return;
 
-        // Validate
-        const remainingSlots = maxPhotos - photos.length;
+        setUploadError('');
+
+        // Calculate remaining slots
+        const remainingSlots = maxPhotos - totalPhotos;
+
         if (remainingSlots <= 0) {
-            setUploadError(`Maximum ${maxPhotos} photos allowed per listing.`);
+            setUploadError(`Maximum ${maxPhotos} photos allowed. Remove some photos to add more.`);
             return;
         }
 
-        // Check file sizes
+        // Limit files to remaining slots
+        const filesToProcess = files.slice(0, remainingSlots);
+
+        // Validate each file
         const validFiles = [];
-        for (const file of files) {
-            if (file.size > 30 * 1024 * 1024) {
-                setUploadError('Each file must be less than 30MB.');
+        const supportedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/heic', 'image/heif'];
+        const supportedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'];
+
+        for (const file of filesToProcess) {
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+
+            // Check file type
+            if (!supportedTypes.includes(file.type.toLowerCase()) && !supportedExtensions.includes(fileExtension)) {
+                setUploadError('Some files skipped. Supported formats: JPG, PNG, GIF, WebP, HEIC (iPhone)');
                 continue;
             }
+
+            // Check file size (30MB max)
+            if (file.size > 30 * 1024 * 1024) {
+                setUploadError('Some files skipped. Maximum file size is 30MB per photo.');
+                continue;
+            }
+
             validFiles.push(file);
         }
 
         if (validFiles.length === 0) return;
 
-        setUploading(true);
-        setUploadError('');
+        setIsUploading(true);
 
-        const formData = new FormData();
-        validFiles.slice(0, remainingSlots).forEach((file, index) => {
-            formData.append(`photos[${index}]`, file);
-        });
+        // Process and upload each file one by one
+        for (let i = 0; i < validFiles.length; i++) {
+            const file = validFiles[i];
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            const isHeic = fileExtension === 'heic' || fileExtension === 'heif';
+            const previewId = Date.now() + i + Math.random();
 
-        router.post(route('dashboard.listings.photos.add', property.id), formData, {
-            forceFormData: true,
-            preserveScroll: true,
-            onFinish: () => {
-                setUploading(false);
-                if (fileInputRef.current) {
-                    fileInputRef.current.value = '';
+            // Create preview first (with uploading status)
+            let previewUrl = null;
+            if (!isHeic) {
+                previewUrl = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (event) => resolve(event.target.result);
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            const newPreview = {
+                id: previewId,
+                url: previewUrl,
+                name: file.name,
+                isHeic,
+                uploading: true,
+                progress: 0,
+                error: null,
+                serverPath: null
+            };
+
+            // Add preview to state immediately
+            setNewPhotoPreviews(prev => [...prev, newPreview]);
+
+            // Upload the file
+            try {
+                const formData = new FormData();
+                formData.append('photo', file);
+
+                const response = await axios.post('/upload-photo', formData, {
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+                    },
+                    timeout: 120000, // 2 minute timeout for large files
+                    onUploadProgress: (progressEvent) => {
+                        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                        setNewPhotoPreviews(prev => prev.map(p =>
+                            p.id === previewId ? { ...p, progress: percentCompleted } : p
+                        ));
+                    }
+                });
+
+                if (response.data.success) {
+                    // Update preview with server path and completed status
+                    setNewPhotoPreviews(prev => prev.map(p =>
+                        p.id === previewId ? { ...p, uploading: false, progress: 100, serverPath: response.data.path } : p
+                    ));
+                } else {
+                    // Mark as error
+                    setNewPhotoPreviews(prev => prev.map(p =>
+                        p.id === previewId ? { ...p, uploading: false, error: response.data.message || 'Upload failed' } : p
+                    ));
                 }
+            } catch (error) {
+                console.error('Upload error:', error);
+                // Mark as error but keep in list
+                setNewPhotoPreviews(prev => prev.map(p =>
+                    p.id === previewId ? { ...p, uploading: false, error: error.response?.data?.message || 'Upload failed' } : p
+                ));
+            }
+        }
+
+        setIsUploading(false);
+
+        // Clear file input
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
+
+    // Remove a new photo preview (before saving)
+    const handleRemoveNewPhoto = async (previewId) => {
+        const preview = newPhotoPreviews.find(p => p.id === previewId);
+
+        // If the photo was uploaded to server, delete it
+        if (preview?.serverPath) {
+            try {
+                await axios.post('/delete-uploaded-photo', {
+                    path: preview.serverPath
+                }, {
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+                    }
+                });
+            } catch (error) {
+                console.error('Failed to delete photo from server:', error);
+            }
+        }
+
+        setNewPhotoPreviews(prev => prev.filter(p => p.id !== previewId));
+    };
+
+    // Save new photos to the property
+    const handleSaveNewPhotos = () => {
+        const successfulPaths = newPhotoPreviews
+            .filter(p => p.serverPath && !p.error)
+            .map(p => p.serverPath);
+
+        if (successfulPaths.length === 0) {
+            setUploadError('No photos to save. Please upload photos first.');
+            return;
+        }
+
+        router.post(route('dashboard.listings.photos.add', property.id), {
+            photo_paths: successfulPaths
+        }, {
+            preserveScroll: true,
+            onSuccess: () => {
+                setNewPhotoPreviews([]);
             },
-            onError: (errors) => {
-                setUploadError('Failed to upload photos. Please try again.');
-            },
+            onError: () => {
+                setUploadError('Failed to save photos. Please try again.');
+            }
         });
     };
 
@@ -652,20 +782,20 @@ export default function EditListing({ property }) {
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
                             <Image className="w-5 h-5 text-[#A41E34]" />
-                            Photos ({photos.length}/{maxPhotos})
+                            Photos ({totalPhotos}/{maxPhotos})
                         </h2>
                         <button
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
-                            disabled={uploading || photos.length >= maxPhotos}
+                            disabled={isUploading || totalPhotos >= maxPhotos}
                             className="inline-flex items-center gap-2 px-4 py-2 bg-[#A41E34] text-white rounded-xl text-sm font-medium hover:bg-[#8B1A2C] transition-colors disabled:opacity-50"
                         >
-                            {uploading ? (
+                            {isUploading ? (
                                 <Loader2 className="w-4 h-4 animate-spin" />
                             ) : (
                                 <Upload className="w-4 h-4" />
                             )}
-                            {uploading ? 'Uploading...' : 'Add Photos'}
+                            {isUploading ? 'Uploading...' : 'Add Photos'}
                         </button>
                         <input
                             ref={fileInputRef}
@@ -685,48 +815,165 @@ export default function EditListing({ property }) {
                         </div>
                     )}
 
-                    {/* Photos Grid */}
+                    {/* Upload Progress Summary */}
+                    {newPhotoPreviews.length > 0 && (
+                        <div className="mb-4 flex items-center justify-between flex-wrap gap-3">
+                            <div className="flex items-center gap-3">
+                                {newPhotoPreviews.some(p => p.uploading) && (
+                                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                                        <Loader2 className="w-4 h-4 animate-spin text-[#A41E34]" />
+                                        <span>Uploading {newPhotoPreviews.filter(p => p.uploading).length} photo(s)...</span>
+                                    </div>
+                                )}
+                                {newPhotoPreviews.some(p => p.error) && (
+                                    <div className="flex items-center gap-2 text-sm text-red-600">
+                                        <AlertCircle className="w-4 h-4" />
+                                        <span>{newPhotoPreviews.filter(p => p.error).length} failed</span>
+                                    </div>
+                                )}
+                                {successfulNewPhotos.length > 0 && !newPhotoPreviews.some(p => p.uploading) && (
+                                    <div className="flex items-center gap-2 text-sm text-green-600">
+                                        <CheckCircle className="w-4 h-4" />
+                                        <span>{successfulNewPhotos.length} ready to save</span>
+                                    </div>
+                                )}
+                            </div>
+                            {successfulNewPhotos.length > 0 && !newPhotoPreviews.some(p => p.uploading) && (
+                                <button
+                                    type="button"
+                                    onClick={handleSaveNewPhotos}
+                                    className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-xl text-sm font-medium hover:bg-green-700 transition-colors"
+                                >
+                                    <Save className="w-4 h-4" />
+                                    Save {successfulNewPhotos.length} New Photo(s)
+                                </button>
+                            )}
+                        </div>
+                    )}
+
+                    {/* New Photos Grid (uploads in progress) */}
+                    {newPhotoPreviews.length > 0 && (
+                        <div className="mb-4">
+                            <h3 className="text-sm font-medium text-gray-700 mb-2">New Photos (not yet saved)</h3>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                {newPhotoPreviews.map((preview) => (
+                                    <div key={preview.id} className={`relative aspect-video rounded-xl overflow-hidden bg-gray-100 group ${preview.error ? 'ring-2 ring-red-500' : ''}`}>
+                                        {preview.isHeic ? (
+                                            <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-2">
+                                                <div className="bg-white p-2 rounded-full shadow-sm mb-2">
+                                                    <Image className="w-6 h-6 text-gray-400" />
+                                                </div>
+                                                <span className="text-xs text-gray-500 text-center truncate w-full px-1">{preview.name}</span>
+                                                <span className="text-[10px] text-green-600 mt-1">HEIC</span>
+                                            </div>
+                                        ) : (
+                                            <img
+                                                src={preview.url}
+                                                alt={preview.name}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        )}
+
+                                        {/* Upload Progress Overlay */}
+                                        {preview.uploading && (
+                                            <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center">
+                                                <Loader2 className="w-8 h-8 text-white animate-spin mb-2" />
+                                                <div className="w-3/4 bg-white/30 rounded-full h-2 overflow-hidden">
+                                                    <div
+                                                        className="h-full bg-white rounded-full transition-all duration-300"
+                                                        style={{ width: `${preview.progress}%` }}
+                                                    />
+                                                </div>
+                                                <span className="text-white text-xs mt-1 font-medium">{preview.progress}%</span>
+                                            </div>
+                                        )}
+
+                                        {/* Error Overlay */}
+                                        {preview.error && !preview.uploading && (
+                                            <div className="absolute inset-0 bg-red-500/80 flex flex-col items-center justify-center p-2">
+                                                <AlertCircle className="w-6 h-6 text-white mb-1" />
+                                                <span className="text-white text-xs text-center font-medium">Upload Failed</span>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemoveNewPhoto(preview.id)}
+                                                    className="mt-2 bg-white text-red-600 px-3 py-1 rounded-full text-xs font-medium hover:bg-red-50 transition-colors"
+                                                >
+                                                    Remove
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        {/* Success Indicator */}
+                                        {!preview.uploading && !preview.error && preview.serverPath && (
+                                            <div className="absolute top-2 right-2 bg-green-500 p-1 rounded-full">
+                                                <CheckCircle className="w-3 h-3 text-white" />
+                                            </div>
+                                        )}
+
+                                        {/* Remove button - visible on hover when not uploading */}
+                                        {!preview.uploading && !preview.error && (
+                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemoveNewPhoto(preview.id)}
+                                                    className="bg-white hover:bg-red-50 text-red-600 p-2 rounded-full transition-colors"
+                                                    title="Remove photo"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Existing Photos Grid */}
                     {photos.length > 0 ? (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                            {photos.map((photo, index) => (
-                                <div key={index} className="relative aspect-video rounded-xl overflow-hidden bg-gray-100 group">
-                                    <img
-                                        src={photo}
-                                        alt={`Property photo ${index + 1}`}
-                                        className="w-full h-full object-cover"
-                                        onError={(e) => e.target.src = '/images/property-placeholder.svg'}
-                                    />
-                                    {/* Main Photo Badge */}
-                                    {index === 0 && (
-                                        <span className="absolute top-2 left-2 bg-[#A41E34] text-white text-xs px-2 py-1 rounded-full font-medium">
-                                            Main Photo
-                                        </span>
-                                    )}
-                                    {/* Action Buttons - visible on hover */}
-                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                        {index !== 0 && (
+                        <div>
+                            <h3 className="text-sm font-medium text-gray-700 mb-2">Saved Photos</h3>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                {photos.map((photo, index) => (
+                                    <div key={index} className="relative aspect-video rounded-xl overflow-hidden bg-gray-100 group">
+                                        <img
+                                            src={photo}
+                                            alt={`Property photo ${index + 1}`}
+                                            className="w-full h-full object-cover"
+                                            onError={(e) => e.target.src = '/images/property-placeholder.svg'}
+                                        />
+                                        {/* Main Photo Badge */}
+                                        {index === 0 && (
+                                            <span className="absolute top-2 left-2 bg-[#A41E34] text-white text-xs px-2 py-1 rounded-full font-medium">
+                                                Main Photo
+                                            </span>
+                                        )}
+                                        {/* Action Buttons - visible on hover */}
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                            {index !== 0 && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setAsMainPhoto(index)}
+                                                    className="bg-white hover:bg-yellow-50 text-gray-700 p-2 rounded-full transition-colors"
+                                                    title="Set as main photo"
+                                                >
+                                                    <Star className="w-4 h-4" />
+                                                </button>
+                                            )}
                                             <button
                                                 type="button"
-                                                onClick={() => setAsMainPhoto(index)}
-                                                className="bg-white hover:bg-yellow-50 text-gray-700 p-2 rounded-full transition-colors"
-                                                title="Set as main photo"
+                                                onClick={() => handleDeletePhoto(index)}
+                                                className="bg-white hover:bg-red-50 text-red-600 p-2 rounded-full transition-colors"
+                                                title="Delete photo"
                                             >
-                                                <Star className="w-4 h-4" />
+                                                <Trash2 className="w-4 h-4" />
                                             </button>
-                                        )}
-                                        <button
-                                            type="button"
-                                            onClick={() => handleDeletePhoto(index)}
-                                            className="bg-white hover:bg-red-50 text-red-600 p-2 rounded-full transition-colors"
-                                            title="Delete photo"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
-                    ) : (
+                    ) : newPhotoPreviews.length === 0 && (
                         <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center">
                             <Image className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                             <p className="text-gray-500 mb-2">No photos uploaded yet</p>
@@ -757,7 +1004,7 @@ export default function EditListing({ property }) {
 
                     {/* Supported Formats */}
                     <p className="text-xs text-gray-400 mt-3">
-                        Supported formats: JPG, PNG, GIF, WebP, HEIC (iPhone). Max 30MB per file. Photos are automatically optimized.
+                        Supported formats: JPG, PNG, GIF, WebP, HEIC (iPhone). Max 30MB per file. Photos are uploaded one by one with progress tracking.
                     </p>
                 </div>
 

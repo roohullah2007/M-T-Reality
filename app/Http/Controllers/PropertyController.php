@@ -305,19 +305,75 @@ class PropertyController extends Controller
             'photo' => 'required|file|max:30720', // 30MB max
         ]);
 
-        $path = ImageService::processAndStore($request->file('photo'), 'properties');
+        $file = $request->file('photo');
 
-        if (!$path) {
+        // Validate image type first
+        if (!ImageService::isValidImage($file)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to process image. Please try a different file.',
+                'message' => 'Invalid image type. Supported: JPG, PNG, GIF, WebP, HEIC.',
             ], 422);
         }
 
-        return response()->json([
-            'success' => true,
-            'path' => $path,
-        ]);
+        try {
+            // Increase memory limit for large image processing
+            $currentLimit = ini_get('memory_limit');
+            if ($this->parseMemoryLimit($currentLimit) < 512 * 1024 * 1024) {
+                ini_set('memory_limit', '512M');
+            }
+
+            $path = ImageService::processAndStore($file, 'properties');
+
+            if (!$path) {
+                \Log::warning('Photo upload returned null path', [
+                    'filename' => $file->getClientOriginalName(),
+                    'mime' => $file->getMimeType(),
+                    'size' => $file->getSize(),
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to process image. The file may be corrupted or in an unsupported format.',
+                ], 422);
+            }
+
+            return response()->json([
+                'success' => true,
+                'path' => $path,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Photo upload exception: ' . $e->getMessage(), [
+                'filename' => $file->getClientOriginalName(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error processing image: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Parse memory limit string to bytes
+     */
+    private function parseMemoryLimit(string $limit): int
+    {
+        $limit = trim($limit);
+        $last = strtolower($limit[strlen($limit) - 1]);
+        $value = (int) $limit;
+
+        switch ($last) {
+            case 'g':
+                $value *= 1024 * 1024 * 1024;
+                break;
+            case 'm':
+                $value *= 1024 * 1024;
+                break;
+            case 'k':
+                $value *= 1024;
+                break;
+        }
+
+        return $value;
     }
 
     /**

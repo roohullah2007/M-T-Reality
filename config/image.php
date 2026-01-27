@@ -1,5 +1,8 @@
 <?php
 
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
+
 return [
 
     /*
@@ -7,26 +10,16 @@ return [
     | Image Driver
     |--------------------------------------------------------------------------
     |
-    | Intervention Image supports "gd" and "imagick" as image processing
-    | drivers. By default, this value is set to "gd" (bundled with PHP).
+    | Intervention Image 3.x requires the full driver class name.
+    | Available drivers:
+    | - Intervention\Image\Drivers\Gd\Driver (bundled with PHP)
+    | - Intervention\Image\Drivers\Imagick\Driver (requires ImageMagick)
     |
     | For HEIC/HEIF support (iPhone photos), ImageMagick is recommended.
-    | Make sure PHP ImageMagick extension is installed and enabled.
-    |
-    | To install ImageMagick on Windows:
-    | 1. Download ImageMagick with PHP bindings
-    | 2. Add extension=imagick to php.ini
-    |
-    | To install ImageMagick on Ubuntu/Debian:
-    | sudo apt-get install php-imagick
-    |
-    | To install ImageMagick on macOS:
-    | brew install imagemagick
-    | pecl install imagick
     |
     */
 
-    'driver' => env('IMAGE_DRIVER', 'imagick'),
+    'driver' => GdDriver::class,
 
     /*
     |--------------------------------------------------------------------------

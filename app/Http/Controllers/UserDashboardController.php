@@ -533,7 +533,7 @@ class UserDashboardController extends Controller
     }
 
     /**
-     * Add photos to a listing
+     * Add photos to a listing (supports both file uploads and pre-uploaded paths)
      */
     public function addPhotos(Request $request, Property $property)
     {
@@ -542,11 +542,6 @@ class UserDashboardController extends Controller
             abort(403, 'You do not own this property.');
         }
 
-        $request->validate([
-            'photos' => 'required|array|min:1',
-            'photos.*' => 'file|max:30720', // 30MB max per image
-        ]);
-
         $currentPhotos = $property->photos ?? [];
         $remainingSlots = ImageService::MAX_TOTAL_PHOTOS - count($currentPhotos);
 
@@ -554,12 +549,32 @@ class UserDashboardController extends Controller
             return back()->with('error', 'Your listing has reached the maximum number of photos (' . ImageService::MAX_TOTAL_PHOTOS . ').');
         }
 
-        // Process new photos (limited by remaining slots)
-        $newPhotoPaths = ImageService::processMultiple(
-            $request->file('photos'),
-            'properties',
-            $remainingSlots
-        );
+        $newPhotoPaths = [];
+
+        // Check if pre-uploaded paths are provided (progressive upload method)
+        if ($request->has('photo_paths') && is_array($request->photo_paths)) {
+            $request->validate([
+                'photo_paths' => 'required|array|min:1',
+                'photo_paths.*' => 'string',
+            ]);
+
+            // Use pre-uploaded paths directly (limited by remaining slots)
+            $newPhotoPaths = array_slice($request->photo_paths, 0, $remainingSlots);
+        }
+        // Otherwise, handle direct file uploads (legacy method)
+        elseif ($request->hasFile('photos')) {
+            $request->validate([
+                'photos' => 'required|array|min:1',
+                'photos.*' => 'file|max:30720', // 30MB max per image
+            ]);
+
+            // Process new photos (limited by remaining slots)
+            $newPhotoPaths = ImageService::processMultiple(
+                $request->file('photos'),
+                'properties',
+                $remainingSlots
+            );
+        }
 
         if (empty($newPhotoPaths)) {
             return back()->with('error', 'Failed to process uploaded photos. Please try again.');
