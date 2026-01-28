@@ -1,4 +1,4 @@
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Head, Link, router, usePage, useForm } from '@inertiajs/react';
 import UserDashboardLayout from '@/Layouts/UserDashboardLayout';
 import {
     Plus,
@@ -31,7 +31,6 @@ import {
     Globe
 } from 'lucide-react';
 import { useState } from 'react';
-import { useForm } from '@inertiajs/react';
 
 export default function Listings({ listings, filters = {}, counts = {} }) {
     const [search, setSearch] = useState(filters.search || '');
@@ -246,6 +245,27 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                     <span className={`px-2 py-0.5 text-xs font-medium rounded-full capitalize flex-shrink-0 ${getStatusColor(listing.approval_status)}`}>
                                                         {listing.approval_status}
                                                     </span>
+                                                    {/* Listing Status Badge */}
+                                                    {listing.listing_status && listing.listing_status !== 'for_sale' && (
+                                                        <span className={`px-2 py-0.5 text-xs font-medium rounded-full flex-shrink-0 ${
+                                                            listing.listing_status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                                                            listing.listing_status === 'sold' ? 'bg-gray-200 text-gray-700' :
+                                                            listing.listing_status === 'inactive' ? 'bg-orange-100 text-orange-700' :
+                                                            listing.listing_status === 'for_rent' ? 'bg-blue-100 text-blue-700' :
+                                                            'bg-gray-100 text-gray-600'
+                                                        }`}>
+                                                            {listing.listing_status === 'for_sale' ? 'For Sale' :
+                                                             listing.listing_status === 'for_rent' ? 'For Rent' :
+                                                             listing.listing_status === 'pending' ? 'Pending' :
+                                                             listing.listing_status === 'sold' ? 'Sold' :
+                                                             listing.listing_status === 'inactive' ? 'Inactive' :
+                                                             listing.listing_status}
+                                                        </span>
+                                                    )}
+                                                    {/* Video icon */}
+                                                    {(listing.video_tour_url || listing.has_video) && (
+                                                        <Video className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" title="Has video tour" />
+                                                    )}
                                                     {listing.listing_tier === 'mls' && (
                                                         <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-700 flex-shrink-0">MLS</span>
                                                     )}

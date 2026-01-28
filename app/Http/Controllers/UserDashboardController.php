@@ -82,9 +82,9 @@ class UserDashboardController extends Controller
             } elseif ($request->status === 'pending') {
                 $query->where('approval_status', 'pending');
             } elseif ($request->status === 'sold') {
-                $query->where('status', 'sold');
+                $query->where('listing_status', 'sold');
             } elseif ($request->status === 'inactive') {
-                $query->where('is_active', false);
+                $query->where('listing_status', 'inactive');
             }
         }
 
@@ -98,7 +98,7 @@ class UserDashboardController extends Controller
             'all' => $user->properties()->count(),
             'active' => $user->properties()->where('is_active', true)->where('approval_status', 'approved')->count(),
             'pending' => $user->properties()->where('approval_status', 'pending')->count(),
-            'sold' => $user->properties()->where('status', 'sold')->count(),
+            'sold' => $user->properties()->where('listing_status', 'sold')->count(),
         ];
 
         return Inertia::render('Dashboard/Listings', [
@@ -137,6 +137,7 @@ class UserDashboardController extends Controller
             'property_title' => 'required|string|max:255',
             'property_type' => 'required|string',
             'status' => 'required|string',
+            'listing_status' => 'nullable|string|in:for_sale,for_rent,pending,sold,inactive',
             'price' => 'required|numeric|min:0',
             'address' => 'required|string|max:255',
             'city' => 'required|string|max:100',
@@ -153,7 +154,26 @@ class UserDashboardController extends Controller
             'contact_name' => 'required|string|max:255',
             'contact_email' => 'required|email',
             'contact_phone' => 'required|string|max:20',
+            'virtual_tour_url' => 'nullable|url|max:500',
+            'matterport_url' => 'nullable|url|max:500',
+            'video_tour_url' => 'nullable|url|max:500',
         ]);
+
+        // Map status to listing_status if provided
+        if (isset($validated['listing_status'])) {
+            // Sync the old status field based on listing_status
+            $statusMap = [
+                'for_sale' => 'for-sale',
+                'for_rent' => 'for-rent',
+                'pending' => 'pending',
+                'sold' => 'sold',
+                'inactive' => 'inactive',
+            ];
+            $validated['status'] = $statusMap[$validated['listing_status']] ?? $validated['status'];
+
+            // If marking as inactive, keep is_active true but set listing_status
+            // If reactivating from inactive, set to for_sale
+        }
 
         $property->update($validated);
 

@@ -29,9 +29,9 @@ class AdminPropertyController extends Controller
             });
         }
 
-        // Filter by status
+        // Filter by listing status
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            $query->where('listing_status', $request->status);
         }
 
         // Filter by approval status
@@ -75,6 +75,7 @@ class AdminPropertyController extends Controller
 
         return Inertia::render('Admin/Properties/Show', [
             'property' => $property,
+            'listingStatuses' => Property::LISTING_STATUSES,
         ]);
     }
 
@@ -90,6 +91,7 @@ class AdminPropertyController extends Controller
             'property_title' => 'required|string|max:255',
             'property_type' => 'required|string',
             'status' => 'required|string',
+            'listing_status' => 'nullable|string|in:for_sale,for_rent,pending,sold,inactive',
             'price' => 'required|numeric|min:0',
             'address' => 'required|string',
             'city' => 'required|string',
@@ -108,6 +110,10 @@ class AdminPropertyController extends Controller
             'contact_phone' => 'required|string',
             'is_featured' => 'boolean',
             'is_active' => 'boolean',
+            'virtual_tour_url' => 'nullable|url|max:500',
+            'matterport_url' => 'nullable|url|max:500',
+            'video_tour_url' => 'nullable|url|max:500',
+            'mls_virtual_tour_url' => 'nullable|url|max:500',
         ]);
 
         $oldValues = $property->toArray();

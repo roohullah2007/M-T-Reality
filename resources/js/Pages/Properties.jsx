@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import { MapPin, Home, DollarSign, BedDouble, Bath, ChevronLeft, ChevronRight } from 'lucide-react';
+import { MapPin, Home, DollarSign, BedDouble, Bath, ChevronLeft, ChevronRight, Map, LayoutGrid } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
 import PropertyCard from '@/Components/PropertyCard';
+import PropertyMap from '@/Components/Properties/PropertyMap';
 import AuthModal from '@/Components/AuthModal';
 
-function Properties({ properties = { data: [] }, filters = {} }) {
+function Properties({ properties = { data: [] }, filters = {}, isAdmin = false }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showMap, setShowMap] = useState(false);
   const [searchParams, setSearchParams] = useState({
     keyword: filters.keyword || '',
     location: filters.location || '',
@@ -213,7 +215,9 @@ function Properties({ properties = { data: [] }, filters = {} }) {
                   >
                     <option value="for-sale">For Sale</option>
                     <option value="for-rent">For Rent</option>
+                    <option value="pending">Pending</option>
                     <option value="sold">Sold</option>
+                    {isAdmin && <option value="inactive">Inactive</option>}
                   </select>
                 </div>
               </div>
@@ -259,7 +263,7 @@ function Properties({ properties = { data: [] }, filters = {} }) {
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div>
               <h2 className="text-2xl md:text-[32px] font-medium text-[#111] mb-1" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                {searchParams.status === 'sold' ? 'Recently Sold' : searchParams.status === 'for-rent' ? 'For Rent' : 'For Sale'}
+                {searchParams.status === 'sold' ? 'Recently Sold' : searchParams.status === 'for-rent' ? 'For Rent' : searchParams.status === 'pending' ? 'Pending (Under Contract)' : searchParams.status === 'inactive' ? 'Inactive Listings' : 'For Sale'}
               </h2>
               <p className="text-sm text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                 {pagination ? (
@@ -270,7 +274,25 @@ function Properties({ properties = { data: [] }, filters = {} }) {
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
+              {/* Map/Grid Toggle */}
+              <div className="flex items-center bg-white border border-[#D0CCC7] rounded-xl overflow-hidden">
+                <button
+                  onClick={() => setShowMap(false)}
+                  className={`px-3 py-2 flex items-center gap-1.5 text-sm transition-colors ${!showMap ? 'bg-[#A41E34] text-white' : 'text-[#666] hover:bg-gray-50'}`}
+                  title="Grid View"
+                >
+                  <LayoutGrid className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setShowMap(true)}
+                  className={`px-3 py-2 flex items-center gap-1.5 text-sm transition-colors ${showMap ? 'bg-[#A41E34] text-white' : 'text-[#666] hover:bg-gray-50'}`}
+                  title="Map View"
+                >
+                  <Map className="w-4 h-4" />
+                </button>
+              </div>
+
               <span className="text-sm text-[#666] hidden sm:inline" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                 Sort by:
               </span>
@@ -288,6 +310,13 @@ function Properties({ properties = { data: [] }, filters = {} }) {
               </select>
             </div>
           </div>
+
+          {/* Map View */}
+          {showMap && (
+            <div className="mb-8 h-[500px] rounded-2xl overflow-hidden shadow-sm">
+              <PropertyMap properties={propertyList} />
+            </div>
+          )}
 
           {/* Property Grid */}
           {propertyList.length > 0 ? (

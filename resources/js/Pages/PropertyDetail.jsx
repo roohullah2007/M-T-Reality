@@ -388,8 +388,40 @@ function PropertyDetail({ property }) {
             </div>
 
             {/* Status Badge */}
-            <div className="absolute top-4 left-4 bg-[#A41E34] text-white px-4 py-2 rounded-full text-sm font-semibold">
-              {property.status === 'for-rent' ? 'FOR RENT' : 'FOR SALE'}
+            <div className={`absolute top-4 left-4 text-white px-4 py-2 rounded-full text-sm font-semibold ${
+              (property.listing_status || property.status) === 'sold' ? 'bg-gray-700' :
+              (property.listing_status || property.status) === 'pending' ? 'bg-yellow-600' :
+              (property.listing_status || property.status) === 'inactive' ? 'bg-gray-500' :
+              'bg-[#A41E34]'
+            }`}>
+              {(() => {
+                const ls = property.listing_status || property.status;
+                switch (ls) {
+                  case 'sold': return 'SOLD';
+                  case 'for_rent': case 'for-rent': return 'FOR RENT';
+                  case 'pending': return 'PENDING';
+                  case 'inactive': return 'INACTIVE';
+                  default: return 'FOR SALE';
+                }
+              })()}
+            </div>
+
+            {/* Media Badges */}
+            <div className="absolute bottom-4 left-4 flex gap-2">
+              {(property.video_tour_url || property.video_url || property.has_video) && (
+                <div className="bg-black/70 text-white px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5">
+                  <Video className="w-3.5 h-3.5" />
+                  Video
+                </div>
+              )}
+              {(property.virtual_tour_url || property.matterport_url || property.has_virtual_tour) && (
+                <div className="bg-purple-600/90 text-white px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5">
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                  </svg>
+                  3D Tour
+                </div>
+              )}
             </div>
           </div>
 
@@ -540,12 +572,12 @@ function PropertyDetail({ property }) {
               )}
 
               {/* Multimedia Links */}
-              {(property.video_tour_url || property.virtual_tour_url || property.floor_plan_url) && (
+              {(property.video_tour_url || property.virtual_tour_url || property.matterport_url || property.floor_plan_url) && (
                 <div className="bg-white rounded-2xl p-6 mt-6">
                   <h2 className="text-xl font-semibold text-[#111] mb-4" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                     Virtual Tours & Media
                   </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {property.virtual_tour_url && (
                       <a
                         href={property.virtual_tour_url}
@@ -564,10 +596,31 @@ function PropertyDetail({ property }) {
                           </svg>
                         </div>
                         <div className="flex-1">
-                          <p className="font-medium text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>3D Virtual Tour</p>
-                          <p className="text-sm text-[#666]">Explore in 3D</p>
+                          <p className="font-medium text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Virtual Tour</p>
+                          <p className="text-sm text-[#666]">Explore property</p>
                         </div>
                         <ExternalLink className="w-4 h-4 text-[#666] group-hover:text-[#A41E34] transition-colors" />
+                      </a>
+                    )}
+                    {property.matterport_url && (
+                      <a
+                        href={property.matterport_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 p-4 bg-purple-50 rounded-xl hover:bg-purple-100 transition-colors group"
+                      >
+                        <div className="bg-purple-600 p-3 rounded-lg">
+                          <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                            <line x1="12" y1="22.08" x2="12" y2="12" />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>3D Tour</p>
+                          <p className="text-sm text-[#666]">Matterport 3D walkthrough</p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-[#666] group-hover:text-purple-600 transition-colors" />
                       </a>
                     )}
                     {property.video_tour_url && (
@@ -605,6 +658,28 @@ function PropertyDetail({ property }) {
                       </a>
                     )}
                   </div>
+                </div>
+              )}
+
+              {/* Map */}
+              {(property.latitude && property.longitude) && (
+                <div className="bg-white rounded-2xl p-6 mt-6">
+                  <h2 className="text-xl font-semibold text-[#111] mb-4" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                    Location
+                  </h2>
+                  <div className="rounded-xl overflow-hidden h-[300px]">
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      frameBorder="0"
+                      style={{ border: 0 }}
+                      src={`https://www.openstreetmap.org/export/embed.html?bbox=${property.longitude - 0.01},${property.latitude - 0.01},${property.longitude + 0.01},${property.latitude + 0.01}&layer=mapnik&marker=${property.latitude},${property.longitude}`}
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                  <p className="text-sm text-[#666] mt-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                    {property.address}, {property.city}, {property.state} {property.zip_code}
+                  </p>
                 </div>
               )}
             </div>

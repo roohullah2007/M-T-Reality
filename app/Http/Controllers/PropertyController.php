@@ -112,6 +112,7 @@ class PropertyController extends Controller
             'contact_email' => $validated['contactEmail'],
             'contact_phone' => $validated['contactPhone'],
             'status' => 'for-sale',
+            'listing_status' => 'for_sale',
             'is_active' => true,
             'approval_status' => 'approved',
             'approved_at' => now(),
@@ -218,12 +219,33 @@ class PropertyController extends Controller
      */
     public function publicIndex(Request $request)
     {
-        $query = Property::where('is_active', true)
-            ->where('approval_status', 'approved');
+        $query = Property::where('approval_status', 'approved');
 
-        // Filter by status (for-sale, for-rent, sold) - default to for-sale
+        // Map frontend status values to listing_status
+        $statusMap = [
+            'for-sale' => 'for_sale',
+            'for-rent' => 'for_rent',
+            'pending' => 'pending',
+            'sold' => 'sold',
+            'inactive' => 'inactive',
+        ];
+
         $status = $request->status ?? 'for-sale';
-        $query->where('status', $status);
+        $listingStatus = $statusMap[$status] ?? 'for_sale';
+
+        // Inactive is only visible to admins
+        if ($listingStatus === 'inactive') {
+            if (!auth()->check() || auth()->user()->role !== 'admin') {
+                $listingStatus = 'for_sale';
+            }
+        }
+
+        // For non-inactive statuses, only show active listings
+        if ($listingStatus !== 'inactive') {
+            $query->where('is_active', true);
+        }
+
+        $query->where('listing_status', $listingStatus);
 
         // Search by keyword
         if ($request->keyword) {
@@ -289,9 +311,13 @@ class PropertyController extends Controller
 
         $properties = $query->paginate(12)->withQueryString();
 
+        // Check if current user is admin for inactive filter visibility
+        $isAdmin = auth()->check() && auth()->user()->role === 'admin';
+
         return Inertia::render('Properties', [
             'properties' => $properties,
             'filters' => $request->only(['keyword', 'location', 'status', 'propertyType', 'priceMin', 'priceMax', 'bedrooms', 'bathrooms', 'sort']),
+            'isAdmin' => $isAdmin,
         ]);
     }
 

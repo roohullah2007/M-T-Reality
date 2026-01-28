@@ -13,12 +13,28 @@ class Property extends Model
 {
     use HasFactory;
 
+    // Listing status constants
+    const STATUS_FOR_SALE = 'for_sale';
+    const STATUS_FOR_RENT = 'for_rent';
+    const STATUS_PENDING = 'pending';
+    const STATUS_SOLD = 'sold';
+    const STATUS_INACTIVE = 'inactive';
+
+    const LISTING_STATUSES = [
+        self::STATUS_FOR_SALE => 'For Sale',
+        self::STATUS_FOR_RENT => 'For Rent',
+        self::STATUS_PENDING => 'Pending (Under Contract)',
+        self::STATUS_SOLD => 'Sold',
+        self::STATUS_INACTIVE => 'Inactive',
+    ];
+
     protected $fillable = [
         'user_id',
         'property_title',
         'developer',
         'property_type',
         'status',
+        'listing_status',
         'price',
         'address',
         'city',
@@ -56,6 +72,8 @@ class Property extends Model
         'video_url',
         'video_tour_url',
         'floor_plan_url',
+        'matterport_url',
+        'mls_virtual_tour_url',
         'is_mls_listed',
         'mls_number',
         'mls_listed_at',
@@ -209,6 +227,78 @@ class Property extends Model
     public function scopePublic($query)
     {
         return $query->active()->approved();
+    }
+
+    /**
+     * Scope for listing status
+     */
+    public function scopeListingStatus($query, $status)
+    {
+        return $query->where('listing_status', $status);
+    }
+
+    /**
+     * Scope for for-sale properties
+     */
+    public function scopeForSale($query)
+    {
+        return $query->where('listing_status', self::STATUS_FOR_SALE);
+    }
+
+    /**
+     * Scope for for-rent properties
+     */
+    public function scopeForRent($query)
+    {
+        return $query->where('listing_status', self::STATUS_FOR_RENT);
+    }
+
+    /**
+     * Scope for pending (under contract) properties
+     */
+    public function scopeUnderContract($query)
+    {
+        return $query->where('listing_status', self::STATUS_PENDING);
+    }
+
+    /**
+     * Scope for sold properties
+     */
+    public function scopeSold($query)
+    {
+        return $query->where('listing_status', self::STATUS_SOLD);
+    }
+
+    /**
+     * Scope for inactive properties
+     */
+    public function scopeInactive($query)
+    {
+        return $query->where('listing_status', self::STATUS_INACTIVE);
+    }
+
+    /**
+     * Check if listing has a virtual tour
+     */
+    public function hasVirtualTourUrl(): bool
+    {
+        return !empty($this->virtual_tour_url) || !empty($this->matterport_url);
+    }
+
+    /**
+     * Check if listing has a video tour
+     */
+    public function hasVideoTour(): bool
+    {
+        return !empty($this->video_tour_url) || !empty($this->video_url);
+    }
+
+    /**
+     * Get the listing status label
+     */
+    public function getListingStatusLabelAttribute(): string
+    {
+        return self::LISTING_STATUSES[$this->listing_status] ?? 'For Sale';
     }
 
     /**

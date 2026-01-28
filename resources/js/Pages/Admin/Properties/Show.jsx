@@ -31,7 +31,7 @@ import {
 } from 'lucide-react';
 import { useState, useRef } from 'react';
 
-export default function PropertiesShow({ property }) {
+export default function PropertiesShow({ property, listingStatuses = {} }) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [showApproveModal, setShowApproveModal] = useState(false);
     const [showRejectModal, setShowRejectModal] = useState(false);
@@ -43,6 +43,29 @@ export default function PropertiesShow({ property }) {
     const [uploading, setUploading] = useState(false);
     const [downloadingZip, setDownloadingZip] = useState(false);
     const fileInputRef = useRef(null);
+
+    // Listing status & tour URLs state
+    const [listingStatus, setListingStatus] = useState(property.listing_status || 'for_sale');
+    const [virtualTourUrl, setVirtualTourUrl] = useState(property.virtual_tour_url || '');
+    const [matterportUrl, setMatterportUrl] = useState(property.matterport_url || '');
+    const [videoTourUrl, setVideoTourUrl] = useState(property.video_tour_url || '');
+    const [mlsVirtualTourUrl, setMlsVirtualTourUrl] = useState(property.mls_virtual_tour_url || '');
+    const [savingDetails, setSavingDetails] = useState(false);
+
+    const handleSaveDetails = () => {
+        setSavingDetails(true);
+        router.put(route('admin.properties.update', property.id), {
+            ...property,
+            listing_status: listingStatus,
+            virtual_tour_url: virtualTourUrl || null,
+            matterport_url: matterportUrl || null,
+            video_tour_url: videoTourUrl || null,
+            mls_virtual_tour_url: mlsVirtualTourUrl || null,
+        }, {
+            preserveScroll: true,
+            onFinish: () => setSavingDetails(false),
+        });
+    };
 
     const photos = property.photos && property.photos.length > 0
         ? property.photos
@@ -640,6 +663,86 @@ export default function PropertiesShow({ property }) {
                                     {property.is_active ? 'Yes' : 'No'}
                                 </span>
                             </div>
+                        </div>
+                    </div>
+
+                    {/* Listing Status & Tour URLs */}
+                    <div className="bg-white rounded-xl shadow-sm p-6">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Listing Status & Tours</h3>
+                        <div className="space-y-4">
+                            {/* Listing Status Dropdown */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Listing Status</label>
+                                <select
+                                    value={listingStatus}
+                                    onChange={(e) => setListingStatus(e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                >
+                                    <option value="for_sale">For Sale (Active)</option>
+                                    <option value="for_rent">For Rent</option>
+                                    <option value="pending">Pending (Under Contract)</option>
+                                    <option value="sold">Sold</option>
+                                    <option value="inactive">Inactive (Off-Market)</option>
+                                </select>
+                            </div>
+
+                            {/* Virtual Tour URL */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Virtual Tour URL</label>
+                                <input
+                                    type="url"
+                                    value={virtualTourUrl}
+                                    onChange={(e) => setVirtualTourUrl(e.target.value)}
+                                    placeholder="https://..."
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                />
+                            </div>
+
+                            {/* Matterport URL */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Matterport 3D URL</label>
+                                <input
+                                    type="url"
+                                    value={matterportUrl}
+                                    onChange={(e) => setMatterportUrl(e.target.value)}
+                                    placeholder="https://my.matterport.com/show/?m=..."
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                />
+                            </div>
+
+                            {/* Video Tour URL */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Video Tour URL</label>
+                                <input
+                                    type="url"
+                                    value={videoTourUrl}
+                                    onChange={(e) => setVideoTourUrl(e.target.value)}
+                                    placeholder="https://..."
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                />
+                            </div>
+
+                            {/* MLS Virtual Tour URL */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">MLS Virtual Tour URL</label>
+                                <input
+                                    type="url"
+                                    value={mlsVirtualTourUrl}
+                                    onChange={(e) => setMlsVirtualTourUrl(e.target.value)}
+                                    placeholder="https://... (MLS-compliant, no branding)"
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                />
+                                <p className="text-xs text-gray-400 mt-1">Clean URL only. No branding or YouTube links for MLS export.</p>
+                            </div>
+
+                            {/* Save Button */}
+                            <button
+                                onClick={handleSaveDetails}
+                                disabled={savingDetails}
+                                className="w-full px-4 py-2 bg-[#A41E34] text-white rounded-lg text-sm font-medium hover:bg-[#8B1A2C] transition-colors disabled:opacity-50"
+                            >
+                                {savingDetails ? 'Saving...' : 'Save Status & Tours'}
+                            </button>
                         </div>
                     </div>
                 </div>

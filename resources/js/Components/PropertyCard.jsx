@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
-import { Maximize2, Heart, Info } from 'lucide-react';
+import { Maximize2, Heart, Info, Video, Box } from 'lucide-react';
 
 const PropertyCard = ({ property, onAuthRequired }) => {
   const { auth } = usePage().props;
@@ -18,16 +18,39 @@ const PropertyCard = ({ property, onAuthRequired }) => {
     : '/images/property-placeholder.svg';
 
   const getStatusLabel = () => {
-    switch (property.status) {
+    const ls = property.listing_status || property.status;
+    switch (ls) {
       case 'sold':
         return 'SOLD';
+      case 'for_rent':
       case 'for-rent':
         return 'FOR RENT';
+      case 'pending':
+        return 'PENDING';
+      case 'inactive':
+        return 'INACTIVE';
       default:
         return 'FOR SALE';
     }
   };
   const statusLabel = getStatusLabel();
+
+  const getStatusColor = () => {
+    const ls = property.listing_status || property.status;
+    switch (ls) {
+      case 'sold':
+        return 'bg-gray-700';
+      case 'pending':
+        return 'bg-yellow-600';
+      case 'inactive':
+        return 'bg-gray-500';
+      default:
+        return 'bg-[#A41E34]';
+    }
+  };
+
+  const hasVideo = property.video_tour_url || property.video_url || property.has_video;
+  const hasVirtualTour = property.virtual_tour_url || property.matterport_url || property.has_virtual_tour;
 
   // Handle maximize - open in new tab
   const handleMaximize = (e) => {
@@ -80,16 +103,31 @@ const PropertyCard = ({ property, onAuthRequired }) => {
             onError={(e) => e.target.src = '/images/property-placeholder.svg'}
           />
           {/* Status Badge */}
-          <div className="absolute top-4 right-4 bg-[#A41E34] text-white px-3 py-1.5 text-xs font-semibold rounded-full" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+          <div className={`absolute top-4 right-4 ${getStatusColor()} text-white px-3 py-1.5 text-xs font-semibold rounded-full`} style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
             {statusLabel}
           </div>
 
-          {/* MLS Badge */}
-          {property.is_mls_listed && (
-            <div className="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1.5 text-xs font-semibold rounded-full" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-              MLS
-            </div>
-          )}
+          {/* Left Badges */}
+          <div className="absolute top-4 left-4 flex gap-1.5">
+            {/* MLS Badge */}
+            {property.is_mls_listed && (
+              <div className="bg-blue-600 text-white px-3 py-1.5 text-xs font-semibold rounded-full" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                MLS
+              </div>
+            )}
+            {/* Video Reel Icon */}
+            {hasVideo && (
+              <div className="bg-black/70 text-white p-1.5 rounded-full" title="Video Tour Available">
+                <Video className="w-3.5 h-3.5" />
+              </div>
+            )}
+            {/* 3D Tour Icon */}
+            {hasVirtualTour && (
+              <div className="bg-purple-600/90 text-white p-1.5 rounded-full" title="Virtual Tour Available">
+                <Box className="w-3.5 h-3.5" />
+              </div>
+            )}
+          </div>
 
           {/* Action Buttons */}
           <div className="absolute bottom-4 right-4 flex gap-2">

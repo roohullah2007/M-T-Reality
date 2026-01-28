@@ -31,6 +31,7 @@ export default function EditListing({ property }) {
         property_title: property.property_title || '',
         property_type: property.property_type || 'single-family-home',
         status: property.status || 'for-sale',
+        listing_status: property.listing_status || 'for_sale',
         price: property.price || '',
         address: property.address || '',
         city: property.city || '',
@@ -47,6 +48,9 @@ export default function EditListing({ property }) {
         contact_name: property.contact_name || '',
         contact_email: property.contact_email || '',
         contact_phone: property.contact_phone || '',
+        virtual_tour_url: property.virtual_tour_url || '',
+        matterport_url: property.matterport_url || '',
+        video_tour_url: property.video_tour_url || '',
     });
 
     // Photo management state
@@ -282,9 +286,11 @@ export default function EditListing({ property }) {
     ];
 
     const statusOptions = [
-        { value: 'for-sale', label: 'Active (For Sale)' },
+        { value: 'for_sale', label: 'Active (For Sale)' },
+        { value: 'for_rent', label: 'For Rent' },
         { value: 'pending', label: 'Pending (Under Contract)' },
         { value: 'sold', label: 'Sold' },
+        { value: 'inactive', label: 'Inactive (Temporarily Off-Market)' },
     ];
 
     const featureOptions = [
@@ -424,18 +430,21 @@ export default function EditListing({ property }) {
                                 Listing Status *
                             </label>
                             <select
-                                value={data.status}
-                                onChange={(e) => setData('status', e.target.value)}
+                                value={data.listing_status}
+                                onChange={(e) => setData('listing_status', e.target.value)}
                                 className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
-                                    errors.status ? 'border-red-500' : 'border-gray-200'
+                                    errors.listing_status ? 'border-red-500' : 'border-gray-200'
                                 }`}
                             >
                                 {statusOptions.map((status) => (
                                     <option key={status.value} value={status.value}>{status.label}</option>
                                 ))}
                             </select>
-                            {errors.status && (
-                                <p className="text-red-500 text-sm mt-1">{errors.status}</p>
+                            {errors.listing_status && (
+                                <p className="text-red-500 text-sm mt-1">{errors.listing_status}</p>
+                            )}
+                            {data.listing_status === 'inactive' && (
+                                <p className="text-sm text-amber-600 mt-1">This listing will be hidden from public search while inactive.</p>
                             )}
                         </div>
 
@@ -711,6 +720,76 @@ export default function EditListing({ property }) {
                             </label>
                         ))}
                     </div>
+                </div>
+
+                {/* Virtual Tours & Media */}
+                <div className="bg-white rounded-2xl shadow-sm p-6">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                        <svg className="w-5 h-5 text-[#A41E34]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                        </svg>
+                        Virtual Tours & Media
+                    </h2>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Virtual Tour URL
+                            </label>
+                            <input
+                                type="url"
+                                value={data.virtual_tour_url}
+                                onChange={(e) => setData('virtual_tour_url', e.target.value)}
+                                className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
+                                    errors.virtual_tour_url ? 'border-red-500' : 'border-gray-200'
+                                }`}
+                                placeholder="https://..."
+                            />
+                            {errors.virtual_tour_url && (
+                                <p className="text-red-500 text-sm mt-1">{errors.virtual_tour_url}</p>
+                            )}
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Matterport 3D Tour URL
+                            </label>
+                            <input
+                                type="url"
+                                value={data.matterport_url}
+                                onChange={(e) => setData('matterport_url', e.target.value)}
+                                className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
+                                    errors.matterport_url ? 'border-red-500' : 'border-gray-200'
+                                }`}
+                                placeholder="https://my.matterport.com/show/?m=..."
+                            />
+                            {errors.matterport_url && (
+                                <p className="text-red-500 text-sm mt-1">{errors.matterport_url}</p>
+                            )}
+                        </div>
+
+                        <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Video Tour URL
+                            </label>
+                            <input
+                                type="url"
+                                value={data.video_tour_url}
+                                onChange={(e) => setData('video_tour_url', e.target.value)}
+                                className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
+                                    errors.video_tour_url ? 'border-red-500' : 'border-gray-200'
+                                }`}
+                                placeholder="https://..."
+                            />
+                            {errors.video_tour_url && (
+                                <p className="text-red-500 text-sm mt-1">{errors.video_tour_url}</p>
+                            )}
+                        </div>
+                    </div>
+
+                    <p className="text-xs text-gray-400 mt-3">
+                        Paste URLs only. Do not include iframe code or embed snippets.
+                    </p>
                 </div>
 
                 {/* Contact Information */}
