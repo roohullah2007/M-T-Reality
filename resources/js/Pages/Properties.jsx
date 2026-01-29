@@ -313,7 +313,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
 
           {/* Map View */}
           {showMap && (
-            <div className="mb-8 h-[500px] rounded-2xl overflow-hidden shadow-sm">
+            <div className="mb-8 h-[500px] rounded-2xl overflow-hidden shadow-sm relative" style={{ zIndex: 0, isolation: 'isolate' }}>
               <PropertyMap properties={allPropertiesForMap.length > 0 ? allPropertiesForMap : propertyList} />
             </div>
           )}
