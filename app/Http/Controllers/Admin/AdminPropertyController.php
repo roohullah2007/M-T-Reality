@@ -87,6 +87,16 @@ class AdminPropertyController extends Controller
 
     public function update(Request $request, Property $property)
     {
+        // Convert empty strings to null for optional URL fields
+        $input = $request->all();
+        $urlFields = ['virtual_tour_url', 'matterport_url', 'video_tour_url', 'mls_virtual_tour_url'];
+        foreach ($urlFields as $field) {
+            if (isset($input[$field]) && $input[$field] === '') {
+                $input[$field] = null;
+            }
+        }
+        $request->merge($input);
+
         $validated = $request->validate([
             'property_title' => 'required|string|max:255',
             'property_type' => 'required|string',
@@ -115,6 +125,18 @@ class AdminPropertyController extends Controller
             'video_tour_url' => 'nullable|url|max:500',
             'mls_virtual_tour_url' => 'nullable|url|max:500',
         ]);
+
+        // Sync the old status field based on listing_status if provided
+        if (isset($validated['listing_status'])) {
+            $statusMap = [
+                'for_sale' => 'for-sale',
+                'for_rent' => 'for-rent',
+                'pending' => 'pending',
+                'sold' => 'sold',
+                'inactive' => 'inactive',
+            ];
+            $validated['status'] = $statusMap[$validated['listing_status']] ?? $validated['status'];
+        }
 
         $oldValues = $property->toArray();
         $property->update($validated);

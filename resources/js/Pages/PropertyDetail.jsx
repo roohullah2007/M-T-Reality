@@ -661,13 +661,13 @@ function PropertyDetail({ property }) {
                 </div>
               )}
 
-              {/* Map */}
-              {(property.latitude && property.longitude) && (
-                <div className="bg-white rounded-2xl p-6 mt-6">
-                  <h2 className="text-xl font-semibold text-[#111] mb-4" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                    Location
-                  </h2>
-                  <div className="rounded-xl overflow-hidden h-[300px]">
+              {/* Map - OpenStreetMap */}
+              <div className="bg-white rounded-2xl p-6 mt-6">
+                <h2 className="text-xl font-semibold text-[#111] mb-4" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  Location
+                </h2>
+                <div className="rounded-xl overflow-hidden h-[300px]">
+                  {(property.latitude && property.longitude) ? (
                     <iframe
                       width="100%"
                       height="100%"
@@ -676,12 +676,32 @@ function PropertyDetail({ property }) {
                       src={`https://www.openstreetmap.org/export/embed.html?bbox=${property.longitude - 0.01},${property.latitude - 0.01},${property.longitude + 0.01},${property.latitude + 0.01}&layer=mapnik&marker=${property.latitude},${property.longitude}`}
                       allowFullScreen
                     ></iframe>
-                  </div>
-                  <p className="text-sm text-[#666] mt-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                    {property.address}, {property.city}, {property.state} {property.zip_code}
-                  </p>
+                  ) : (
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      frameBorder="0"
+                      style={{ border: 0 }}
+                      src={`https://www.openstreetmap.org/export/embed.html?bbox=-97.8,35.3,-97.3,35.6&layer=mapnik`}
+                      allowFullScreen
+                    ></iframe>
+                  )}
                 </div>
-              )}
+                <p className="text-sm text-[#666] mt-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  {property.address}, {property.city}, {property.state} {property.zip_code}
+                </p>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${property.address}, ${property.city}, ${property.state} ${property.zip_code}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-[#A41E34] hover:underline mt-2 inline-flex items-center gap-1"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                  Open in Google Maps
+                </a>
+              </div>
             </div>
 
             {/* Sidebar - Contact */}

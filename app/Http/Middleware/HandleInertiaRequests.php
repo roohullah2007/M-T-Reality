@@ -34,6 +34,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'googleMapsApiKey' => config('services.google.maps_api_key'),
         ];
     }
 }

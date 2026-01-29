@@ -48,9 +48,9 @@ export default function EditListing({ property }) {
         contact_name: property.contact_name || '',
         contact_email: property.contact_email || '',
         contact_phone: property.contact_phone || '',
-        virtual_tour_url: property.virtual_tour_url || '',
-        matterport_url: property.matterport_url || '',
-        video_tour_url: property.video_tour_url || '',
+        virtual_tour_url: property.virtual_tour_url ?? '',
+        matterport_url: property.matterport_url ?? '',
+        video_tour_url: property.video_tour_url ?? '',
     });
 
     // Photo management state
@@ -431,7 +431,22 @@ export default function EditListing({ property }) {
                             </label>
                             <select
                                 value={data.listing_status}
-                                onChange={(e) => setData('listing_status', e.target.value)}
+                                onChange={(e) => {
+                                    const newListingStatus = e.target.value;
+                                    // Map listing_status to legacy status field
+                                    const statusMap = {
+                                        'for_sale': 'for-sale',
+                                        'for_rent': 'for-rent',
+                                        'pending': 'pending',
+                                        'sold': 'sold',
+                                        'inactive': 'inactive',
+                                    };
+                                    setData(data => ({
+                                        ...data,
+                                        listing_status: newListingStatus,
+                                        status: statusMap[newListingStatus] || 'for-sale'
+                                    }));
+                                }}
                                 className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
                                     errors.listing_status ? 'border-red-500' : 'border-gray-200'
                                 }`}

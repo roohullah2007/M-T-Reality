@@ -11,6 +11,7 @@ use App\Models\Favorite;
 use App\Models\ServiceRequest;
 use App\Models\Setting;
 use App\Services\EmailService;
+use App\Services\GeocodingService;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -133,11 +134,21 @@ class UserDashboardController extends Controller
             abort(403, 'You do not own this property.');
         }
 
+        // Convert empty strings to null for optional URL fields
+        $input = $request->all();
+        $urlFields = ['virtual_tour_url', 'matterport_url', 'video_tour_url'];
+        foreach ($urlFields as $field) {
+            if (isset($input[$field]) && $input[$field] === '') {
+                $input[$field] = null;
+            }
+        }
+        $request->merge($input);
+
         $validated = $request->validate([
             'property_title' => 'required|string|max:255',
             'property_type' => 'required|string',
             'status' => 'required|string',
-            'listing_status' => 'nullable|string|in:for_sale,for_rent,pending,sold,inactive',
+            'listing_status' => 'required|string|in:for_sale,for_rent,pending,sold,inactive',
             'price' => 'required|numeric|min:0',
             'address' => 'required|string|max:255',
             'city' => 'required|string|max:100',
@@ -159,23 +170,20 @@ class UserDashboardController extends Controller
             'video_tour_url' => 'nullable|url|max:500',
         ]);
 
-        // Map status to listing_status if provided
-        if (isset($validated['listing_status'])) {
-            // Sync the old status field based on listing_status
-            $statusMap = [
-                'for_sale' => 'for-sale',
-                'for_rent' => 'for-rent',
-                'pending' => 'pending',
-                'sold' => 'sold',
-                'inactive' => 'inactive',
-            ];
-            $validated['status'] = $statusMap[$validated['listing_status']] ?? $validated['status'];
-
-            // If marking as inactive, keep is_active true but set listing_status
-            // If reactivating from inactive, set to for_sale
-        }
+        // Sync the old status field based on listing_status
+        $statusMap = [
+            'for_sale' => 'for-sale',
+            'for_rent' => 'for-rent',
+            'pending' => 'pending',
+            'sold' => 'sold',
+            'inactive' => 'inactive',
+        ];
+        $validated['status'] = $statusMap[$validated['listing_status']] ?? $validated['status'];
 
         $property->update($validated);
+
+        // Geocode the property if address changed and no coordinates exist
+        GeocodingService::geocodeProperty($property);
 
         // Send update notification email
         if ($property->contact_email) {

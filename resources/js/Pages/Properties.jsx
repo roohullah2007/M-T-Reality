@@ -10,15 +10,15 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false }
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [searchParams, setSearchParams] = useState({
-    keyword: filters.keyword || '',
-    location: filters.location || '',
-    status: filters.status || 'for-sale',
-    propertyType: filters.propertyType || '',
-    priceMin: filters.priceMin || '',
-    priceMax: filters.priceMax || '',
-    bedrooms: filters.bedrooms || '',
-    bathrooms: filters.bathrooms || '',
-    sort: filters.sort || 'newest',
+    keyword: filters.keyword ?? '',
+    location: filters.location ?? '',
+    status: filters.status ?? 'for-sale',
+    propertyType: filters.propertyType ?? '',
+    priceMin: filters.priceMin ?? '',
+    priceMax: filters.priceMax ?? '',
+    bedrooms: filters.bedrooms ?? '',
+    bathrooms: filters.bathrooms ?? '',
+    sort: filters.sort ?? 'newest',
   });
 
   // Get properties data from pagination

@@ -9,6 +9,7 @@ use App\Models\Property;
 use App\Models\QrScan;
 use App\Models\Setting;
 use App\Services\EmailService;
+use App\Services\GeocodingService;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -117,6 +118,9 @@ class PropertyController extends Controller
             'approval_status' => 'approved',
             'approved_at' => now(),
         ]);
+
+        // Geocode the property address to get coordinates
+        GeocodingService::geocodeProperty($property);
 
         // Send email notifications
         $this->sendPropertySubmissionEmails($property);
