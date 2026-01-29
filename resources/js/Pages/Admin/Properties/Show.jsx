@@ -27,7 +27,12 @@ import {
     Upload,
     Trash2,
     Image,
-    Loader2
+    Loader2,
+    Award,
+    MessageSquare,
+    RefreshCw,
+    Pencil,
+    ExternalLink
 } from 'lucide-react';
 import { useState, useRef } from 'react';
 
@@ -52,6 +57,13 @@ export default function PropertiesShow({ property, listingStatuses = {} }) {
     const [mlsVirtualTourUrl, setMlsVirtualTourUrl] = useState(property.mls_virtual_tour_url || '');
     const [savingDetails, setSavingDetails] = useState(false);
 
+    // Showcase & testimonial state
+    const [testimonial, setTestimonial] = useState(property.testimonial || '');
+    const [testimonialName, setTestimonialName] = useState(property.testimonial_name || '');
+    const [savingTestimonial, setSavingTestimonial] = useState(false);
+    const [togglingShowcase, setTogglingShowcase] = useState(false);
+    const [showConvertModal, setShowConvertModal] = useState(false);
+
     const handleSaveDetails = () => {
         setSavingDetails(true);
         router.put(route('admin.properties.update', property.id), {
@@ -65,6 +77,45 @@ export default function PropertiesShow({ property, listingStatuses = {} }) {
             preserveScroll: true,
             onFinish: () => setSavingDetails(false),
         });
+    };
+
+    const handleToggleShowcase = () => {
+        setTogglingShowcase(true);
+        router.post(route('admin.properties.toggle-showcase', property.id), {}, {
+            preserveScroll: true,
+            onFinish: () => setTogglingShowcase(false),
+        });
+    };
+
+    const handleSaveTestimonial = () => {
+        setSavingTestimonial(true);
+        router.post(route('admin.properties.update-testimonial', property.id), {
+            testimonial: testimonial || null,
+            testimonial_name: testimonialName || null,
+        }, {
+            preserveScroll: true,
+            onFinish: () => setSavingTestimonial(false),
+        });
+    };
+
+    const handleConvertToShowcase = () => {
+        setProcessing(true);
+        router.post(route('admin.properties.convert-showcase', property.id), {
+            testimonial: testimonial || null,
+            testimonial_name: testimonialName || null,
+        }, {
+            preserveScroll: true,
+            onFinish: () => {
+                setProcessing(false);
+                setShowConvertModal(false);
+            },
+        });
+    };
+
+    const handleForceDelete = () => {
+        if (confirm('Are you sure you want to PERMANENTLY delete this property? This cannot be undone.')) {
+            router.delete(route('admin.properties.force-delete', property.id));
+        }
     };
 
     const photos = property.photos && property.photos.length > 0
@@ -225,6 +276,24 @@ export default function PropertiesShow({ property, listingStatuses = {} }) {
 
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-3">
+                    <Link
+                        href={route('admin.properties.edit', property.id)}
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-[#A41E34] text-white rounded-lg font-medium hover:bg-[#8B1A2C] transition-colors"
+                    >
+                        <Pencil className="w-4 h-4" />
+                        Edit Property
+                    </Link>
+
+                    <a
+                        href={`/properties/${property.slug || property.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+                    >
+                        <ExternalLink className="w-4 h-4" />
+                        View Public Page
+                    </a>
+
                     <button
                         onClick={handleToggleFeatured}
                         className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -745,6 +814,114 @@ export default function PropertiesShow({ property, listingStatuses = {} }) {
                             </button>
                         </div>
                     </div>
+
+                    {/* Showcase & Testimonial Management */}
+                    <div className="bg-white rounded-xl shadow-sm p-6">
+                        <div className="flex items-center gap-2 mb-4">
+                            <Award className="w-5 h-5 text-purple-600" />
+                            <h3 className="text-lg font-semibold text-gray-900">Showcase & Marketing</h3>
+                        </div>
+
+                        {/* Transferred Property Notice */}
+                        {property.transferred_at && (
+                            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
+                                <p className="text-sm text-amber-800">
+                                    <strong>Transferred listing</strong> - This property was transferred from {property.original_owner?.name || 'a deleted user'} on {new Date(property.transferred_at).toLocaleDateString()}.
+                                </p>
+                            </div>
+                        )}
+
+                        {/* Showcase Toggle */}
+                        <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                            <div>
+                                <p className="font-medium text-gray-900">Showcase Listing</p>
+                                <p className="text-sm text-gray-500">Display in marketing materials & sold gallery</p>
+                            </div>
+                            <button
+                                onClick={handleToggleShowcase}
+                                disabled={togglingShowcase}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                    property.is_showcase
+                                        ? 'bg-purple-100 text-purple-700 hover:bg-purple-200'
+                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                }`}
+                            >
+                                {togglingShowcase ? (
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                ) : property.is_showcase ? (
+                                    'In Showcase'
+                                ) : (
+                                    'Add to Showcase'
+                                )}
+                            </button>
+                        </div>
+
+                        {/* Testimonial Fields */}
+                        <div className="pt-4 space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <MessageSquare className="w-4 h-4 inline mr-1" />
+                                    Seller Testimonial
+                                </label>
+                                <textarea
+                                    value={testimonial}
+                                    onChange={(e) => setTestimonial(e.target.value)}
+                                    placeholder="Enter testimonial from the seller..."
+                                    rows={3}
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 resize-none"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Display Name</label>
+                                <input
+                                    type="text"
+                                    value={testimonialName}
+                                    onChange={(e) => setTestimonialName(e.target.value)}
+                                    placeholder="e.g., John D., Oklahoma City"
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500"
+                                />
+                                <p className="text-xs text-gray-400 mt-1">Anonymized name for public display</p>
+                            </div>
+                            <button
+                                onClick={handleSaveTestimonial}
+                                disabled={savingTestimonial}
+                                className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors disabled:opacity-50"
+                            >
+                                {savingTestimonial ? 'Saving...' : 'Save Testimonial'}
+                            </button>
+                        </div>
+
+                        {/* Convert to Showcase (for transferred inactive listings) */}
+                        {property.transferred_at && property.listing_status === 'inactive' && (
+                            <div className="mt-4 pt-4 border-t border-gray-100">
+                                <button
+                                    onClick={() => setShowConvertModal(true)}
+                                    className="w-full px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+                                >
+                                    <RefreshCw className="w-4 h-4" />
+                                    Convert to Sold Showcase
+                                </button>
+                                <p className="text-xs text-gray-400 mt-2 text-center">
+                                    Mark as sold and add to public showcase
+                                </p>
+                            </div>
+                        )}
+
+                        {/* Permanent Delete (for transferred listings) */}
+                        {property.transferred_at && (
+                            <div className="mt-4 pt-4 border-t border-gray-100">
+                                <button
+                                    onClick={handleForceDelete}
+                                    className="w-full px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors"
+                                >
+                                    Permanently Delete
+                                </button>
+                                <p className="text-xs text-gray-400 mt-2 text-center">
+                                    This cannot be undone
+                                </p>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
@@ -868,6 +1045,65 @@ export default function PropertiesShow({ property, listingStatuses = {} }) {
                                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
                             >
                                 {processing ? 'Deleting...' : 'Delete Photo'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Convert to Showcase Modal */}
+            {showConvertModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-2xl max-w-md w-full p-6">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="bg-green-100 p-2 rounded-lg">
+                                <Award className="w-5 h-5 text-green-600" />
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-900">Convert to Sold Showcase</h3>
+                        </div>
+                        <p className="text-gray-600 mb-4">
+                            This will mark the property as <strong>Sold</strong> and add it to the public showcase for marketing purposes.
+                        </p>
+                        <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                            <p className="font-medium text-gray-900">{property.property_title}</p>
+                            <p className="text-sm text-gray-500">{property.address}, {property.city}</p>
+                        </div>
+                        <div className="space-y-3 mb-6">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Testimonial (optional)</label>
+                                <textarea
+                                    value={testimonial}
+                                    onChange={(e) => setTestimonial(e.target.value)}
+                                    placeholder="Enter seller testimonial..."
+                                    rows={3}
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 resize-none"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Display Name</label>
+                                <input
+                                    type="text"
+                                    value={testimonialName}
+                                    onChange={(e) => setTestimonialName(e.target.value)}
+                                    placeholder="e.g., John D., Oklahoma City"
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500"
+                                />
+                            </div>
+                        </div>
+                        <div className="flex justify-end gap-3">
+                            <button
+                                onClick={() => setShowConvertModal(false)}
+                                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                                disabled={processing}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleConvertToShowcase}
+                                disabled={processing}
+                                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+                            >
+                                {processing ? 'Converting...' : 'Convert to Showcase'}
                             </button>
                         </div>
                     </div>

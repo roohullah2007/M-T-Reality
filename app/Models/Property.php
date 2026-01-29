@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Property extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     // Listing status constants
     const STATUS_FOR_SALE = 'for_sale';
@@ -30,6 +31,7 @@ class Property extends Model
 
     protected $fillable = [
         'user_id',
+        'original_user_id',
         'property_title',
         'developer',
         'property_type',
@@ -49,17 +51,22 @@ class Property extends Model
         'lot_size',
         'year_built',
         'description',
+        'testimonial',
+        'testimonial_name',
         'features',
         'photos',
         'contact_name',
         'contact_email',
         'contact_phone',
         'is_featured',
+        'is_showcase',
         'is_active',
         'approval_status',
         'rejection_reason',
         'approved_at',
         'approved_by',
+        'sold_at',
+        'transferred_at',
         'latitude',
         'longitude',
         'views',
@@ -86,10 +93,13 @@ class Property extends Model
         'price' => 'decimal:2',
         'bathrooms' => 'decimal:1',
         'is_featured' => 'boolean',
+        'is_showcase' => 'boolean',
         'is_active' => 'boolean',
         'latitude' => 'decimal:7',
         'longitude' => 'decimal:7',
         'approved_at' => 'datetime',
+        'sold_at' => 'datetime',
+        'transferred_at' => 'datetime',
         // Upgrade field casts
         'has_professional_photos' => 'boolean',
         'has_virtual_tour' => 'boolean',
@@ -115,6 +125,14 @@ class Property extends Model
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Get the original owner (before transfer to admin)
+     */
+    public function originalOwner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'original_user_id');
     }
 
     /**
@@ -275,6 +293,63 @@ class Property extends Model
     public function scopeInactive($query)
     {
         return $query->where('listing_status', self::STATUS_INACTIVE);
+    }
+
+    /**
+     * Scope for showcase properties (admin-approved for marketing)
+     */
+    public function scopeShowcase($query)
+    {
+        return $query->where('is_showcase', true);
+    }
+
+    /**
+     * Scope for transferred properties
+     */
+    public function scopeTransferred($query)
+    {
+        return $query->whereNotNull('transferred_at');
+    }
+
+    /**
+     * Transfer property to admin account
+     */
+    public function transferToAdmin(int $adminUserId): void
+    {
+        $this->update([
+            'original_user_id' => $this->user_id,
+            'user_id' => $adminUserId,
+            'listing_status' => self::STATUS_INACTIVE,
+            'is_active' => false,
+            'transferred_at' => now(),
+        ]);
+    }
+
+    /**
+     * Mark as sold with timestamp
+     */
+    public function markAsSold(): void
+    {
+        $this->update([
+            'listing_status' => self::STATUS_SOLD,
+            'sold_at' => now(),
+        ]);
+    }
+
+    /**
+     * Check if property was transferred from another user
+     */
+    public function isTransferred(): bool
+    {
+        return !is_null($this->transferred_at);
+    }
+
+    /**
+     * Check if property is a showcase listing
+     */
+    public function isShowcase(): bool
+    {
+        return (bool) $this->is_showcase;
     }
 
     /**

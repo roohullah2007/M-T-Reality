@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Property;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -140,12 +141,41 @@ class AdminUserController extends Controller
 
         $userName = $user->name;
 
+        // Transfer user's properties to admin before deletion
+        $this->transferUserPropertiesToAdmin($user);
+
         ActivityLog::log('user_deleted', $user, $user->toArray(), null, "Deleted user: {$userName}");
 
         $user->delete();
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'User deleted successfully.');
+            ->with('success', 'User deleted successfully. Their properties have been transferred to admin.');
+    }
+
+    /**
+     * Transfer all user properties to current admin account.
+     */
+    protected function transferUserPropertiesToAdmin(User $user): void
+    {
+        $adminUser = auth()->user();
+
+        // Get all user's properties (including soft-deleted)
+        $properties = Property::withTrashed()->where('user_id', $user->id)->get();
+
+        foreach ($properties as $property) {
+            // Restore if soft-deleted
+            if ($property->trashed()) {
+                $property->restore();
+            }
+
+            // Transfer to admin
+            $property->transferToAdmin($adminUser->id);
+
+            // If it was sold, mark sold_at if not already set
+            if ($property->listing_status === Property::STATUS_SOLD && !$property->sold_at) {
+                $property->update(['sold_at' => now()]);
+            }
+        }
     }
 
     public function toggleStatus(User $user)

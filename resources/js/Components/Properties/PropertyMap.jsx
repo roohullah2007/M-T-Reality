@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { MapPin, Navigation, ZoomIn, ZoomOut } from 'lucide-react';
+import { MapPin, Navigation, ZoomIn, ZoomOut, X, ChevronUp, BedDouble, Bath, Maximize2 } from 'lucide-react';
 
 const PropertyMap = ({ properties = [], onPropertyClick }) => {
   const mapRef = useRef(null);
   const [mapInstance, setMapInstance] = useState(null);
   const mapInstanceRef = useRef(null);
   const markersRef = useRef([]);
+  const [showListingsPanel, setShowListingsPanel] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.L) {
@@ -184,15 +185,104 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
         </button>
       </div>
 
-      {/* Property Count */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-full shadow-lg z-[1000]">
+      {/* Property Count - Clickable */}
+      <button
+        onClick={() => setShowListingsPanel(!showListingsPanel)}
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-full shadow-lg z-[1000] hover:bg-gray-50 transition-colors cursor-pointer"
+      >
         <div className="flex items-center gap-2">
           <MapPin className="w-4 h-4 text-[#A41E34]" />
           <span className="font-semibold text-sm text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
             {propertiesWithCoords.length} on map
           </span>
+          <ChevronUp className={`w-4 h-4 text-gray-500 transition-transform ${showListingsPanel ? 'rotate-180' : ''}`} />
         </div>
-      </div>
+      </button>
+
+      {/* Listings Panel */}
+      {showListingsPanel && propertiesWithCoords.length > 0 && (
+        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 w-[340px] max-h-[300px] bg-white rounded-xl shadow-2xl z-[1001] overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50">
+            <span className="font-semibold text-sm text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+              Properties on Map ({propertiesWithCoords.length})
+            </span>
+            <button
+              onClick={() => setShowListingsPanel(false)}
+              className="p-1 hover:bg-gray-200 rounded-full transition-colors"
+            >
+              <X className="w-4 h-4 text-gray-500" />
+            </button>
+          </div>
+          <div className="overflow-y-auto max-h-[250px]">
+            {propertiesWithCoords.map((property) => {
+              const photo = property.photos && property.photos.length > 0
+                ? property.photos[0]
+                : '/images/property-placeholder.svg';
+              const baths = (property.full_bathrooms || 0) + (property.half_bathrooms ? property.half_bathrooms * 0.5 : 0);
+
+              return (
+                <a
+                  key={property.id}
+                  href={`/properties/${property.slug || property.id}`}
+                  className="flex gap-3 p-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
+                  onClick={(e) => {
+                    if (onPropertyClick) {
+                      e.preventDefault();
+                      onPropertyClick(property);
+                      // Center map on this property
+                      if (mapInstance) {
+                        mapInstance.setView([parseFloat(property.latitude), parseFloat(property.longitude)], 15);
+                        // Find and open the marker popup
+                        markersRef.current.forEach(marker => {
+                          const markerLatLng = marker.getLatLng();
+                          if (markerLatLng.lat === parseFloat(property.latitude) && markerLatLng.lng === parseFloat(property.longitude)) {
+                            marker.openPopup();
+                          }
+                        });
+                      }
+                      setShowListingsPanel(false);
+                    }
+                  }}
+                >
+                  <img
+                    src={photo}
+                    alt={property.property_title || ''}
+                    className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
+                    onError={(e) => e.target.src = '/images/property-placeholder.svg'}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-[#A41E34] text-sm" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                      ${Number(property.price).toLocaleString()}
+                    </p>
+                    <p className="text-xs text-gray-600 truncate" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                      {property.address}
+                    </p>
+                    <p className="text-xs text-gray-500" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                      {property.city}, {property.state || 'OK'}
+                    </p>
+                    <div className="flex items-center gap-2 mt-1 text-xs text-gray-500">
+                      <span className="flex items-center gap-0.5">
+                        <BedDouble className="w-3 h-3" />
+                        {property.bedrooms}
+                      </span>
+                      <span className="flex items-center gap-0.5">
+                        <Bath className="w-3 h-3" />
+                        {baths}
+                      </span>
+                      {property.sqft && (
+                        <span className="flex items-center gap-0.5">
+                          <Maximize2 className="w-3 h-3" />
+                          {Number(property.sqft).toLocaleString()}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Loading */}
       {!mapInstance && (

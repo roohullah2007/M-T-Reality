@@ -238,9 +238,16 @@ export default function PropertiesIndex({ properties, filters = {}, counts = {} 
                                                 <Link
                                                     href={route('admin.properties.show', property.id)}
                                                     className="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg"
-                                                    title="Review"
+                                                    title="View"
                                                 >
                                                     <Eye className="w-4 h-4" />
+                                                </Link>
+                                                <Link
+                                                    href={route('admin.properties.edit', property.id)}
+                                                    className="p-2 text-green-500 hover:text-green-700 hover:bg-green-50 rounded-lg"
+                                                    title="Edit"
+                                                >
+                                                    <Edit className="w-4 h-4" />
                                                 </Link>
                                                 <button
                                                     onClick={() => {

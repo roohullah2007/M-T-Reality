@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { MapPin, BedDouble, Bath, Maximize2, Calendar, Home, Heart, Share2, ArrowLeft, Phone, Mail, CheckCircle2, ChevronLeft, ChevronRight, Copy, Check, BadgeCheck, Calculator, DollarSign, Printer, Video, ExternalLink } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
+import SinglePropertyMap from '@/Components/Properties/SinglePropertyMap';
 
 function PropertyDetail({ property }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -406,21 +407,31 @@ function PropertyDetail({ property }) {
               })()}
             </div>
 
-            {/* Media Badges */}
+            {/* Media Badges - Clickable */}
             <div className="absolute bottom-4 left-4 flex gap-2">
-              {(property.video_tour_url || property.video_url || property.has_video) && (
-                <div className="bg-black/70 text-white px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5">
+              {(property.video_tour_url || property.video_url) && (
+                <a
+                  href={property.video_tour_url || property.video_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-black/70 hover:bg-black/90 text-white px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
+                >
                   <Video className="w-3.5 h-3.5" />
                   Video
-                </div>
+                </a>
               )}
-              {(property.virtual_tour_url || property.matterport_url || property.has_virtual_tour) && (
-                <div className="bg-purple-600/90 text-white px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5">
+              {(property.matterport_url || property.virtual_tour_url) && (
+                <a
+                  href={property.matterport_url || property.virtual_tour_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-purple-600/90 hover:bg-purple-700 text-white px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
+                >
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                   </svg>
                   3D Tour
-                </div>
+                </a>
               )}
             </div>
           </div>
@@ -661,31 +672,13 @@ function PropertyDetail({ property }) {
                 </div>
               )}
 
-              {/* Map - OpenStreetMap */}
+              {/* Map - Leaflet */}
               <div className="bg-white rounded-2xl p-6 mt-6">
                 <h2 className="text-xl font-semibold text-[#111] mb-4" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   Location
                 </h2>
                 <div className="rounded-xl overflow-hidden h-[300px]">
-                  {(property.latitude && property.longitude) ? (
-                    <iframe
-                      width="100%"
-                      height="100%"
-                      frameBorder="0"
-                      style={{ border: 0 }}
-                      src={`https://www.openstreetmap.org/export/embed.html?bbox=${property.longitude - 0.01},${property.latitude - 0.01},${property.longitude + 0.01},${property.latitude + 0.01}&layer=mapnik&marker=${property.latitude},${property.longitude}`}
-                      allowFullScreen
-                    ></iframe>
-                  ) : (
-                    <iframe
-                      width="100%"
-                      height="100%"
-                      frameBorder="0"
-                      style={{ border: 0 }}
-                      src={`https://www.openstreetmap.org/export/embed.html?bbox=-97.8,35.3,-97.3,35.6&layer=mapnik`}
-                      allowFullScreen
-                    ></iframe>
-                  )}
+                  <SinglePropertyMap property={property} />
                 </div>
                 <p className="text-sm text-[#666] mt-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   {property.address}, {property.city}, {property.state} {property.zip_code}

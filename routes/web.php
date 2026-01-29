@@ -186,6 +186,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/properties/{property}/download-photos', [AdminPropertyController::class, 'downloadPhotos'])->name('properties.download-photos');
     Route::post('/properties/{property}/add-photos', [AdminPropertyController::class, 'addPhotos'])->name('properties.add-photos');
     Route::post('/properties/{property}/remove-photo', [AdminPropertyController::class, 'removePhoto'])->name('properties.remove-photo');
+    Route::post('/properties/{property}/toggle-showcase', [AdminPropertyController::class, 'toggleShowcase'])->name('properties.toggle-showcase');
+    Route::post('/properties/{property}/testimonial', [AdminPropertyController::class, 'updateTestimonial'])->name('properties.update-testimonial');
+    Route::post('/properties/{property}/convert-showcase', [AdminPropertyController::class, 'convertToShowcase'])->name('properties.convert-showcase');
+    Route::delete('/properties/{property}/force', [AdminPropertyController::class, 'forceDelete'])->name('properties.force-delete');
+    Route::post('/properties/{property}/restore', [AdminPropertyController::class, 'restore'])->name('properties.restore');
 
     // Inquiries Management
     Route::get('/inquiries', [AdminInquiryController::class, 'index'])->name('inquiries.index');

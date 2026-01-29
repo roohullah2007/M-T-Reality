@@ -6,19 +6,19 @@ import PropertyCard from '@/Components/PropertyCard';
 import PropertyMap from '@/Components/Properties/PropertyMap';
 import AuthModal from '@/Components/AuthModal';
 
-function Properties({ properties = { data: [] }, filters = {}, isAdmin = false }) {
+function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, allPropertiesForMap = [] }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [searchParams, setSearchParams] = useState({
-    keyword: filters.keyword ?? '',
-    location: filters.location ?? '',
-    status: filters.status ?? 'for-sale',
-    propertyType: filters.propertyType ?? '',
-    priceMin: filters.priceMin ?? '',
-    priceMax: filters.priceMax ?? '',
-    bedrooms: filters.bedrooms ?? '',
-    bathrooms: filters.bathrooms ?? '',
-    sort: filters.sort ?? 'newest',
+    keyword: String(filters.keyword || ''),
+    location: String(filters.location || ''),
+    status: String(filters.status || 'for-sale'),
+    propertyType: String(filters.propertyType || ''),
+    priceMin: String(filters.priceMin || ''),
+    priceMax: String(filters.priceMax || ''),
+    bedrooms: String(filters.bedrooms || ''),
+    bathrooms: String(filters.bathrooms || ''),
+    sort: String(filters.sort || 'newest'),
   });
 
   // Get properties data from pagination
@@ -314,7 +314,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false }
           {/* Map View */}
           {showMap && (
             <div className="mb-8 h-[500px] rounded-2xl overflow-hidden shadow-sm">
-              <PropertyMap properties={propertyList} />
+              <PropertyMap properties={allPropertiesForMap.length > 0 ? allPropertiesForMap : propertyList} />
             </div>
           )}
 

@@ -8,6 +8,7 @@ use App\Mail\PropertyUpdatedNotification;
 use App\Models\Property;
 use App\Models\QrScan;
 use App\Models\Setting;
+use App\Models\User;
 use App\Services\EmailService;
 use App\Services\GeocodingService;
 use App\Services\ImageService;
@@ -210,12 +211,31 @@ class PropertyController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * Instead of hard delete, transfer sold listings to admin for marketing.
      */
     public function destroy(Property $property)
     {
+        // If property was sold, transfer to admin for potential showcase
+        if ($property->listing_status === Property::STATUS_SOLD) {
+            $adminUser = $this->getPrimaryAdmin();
+            if ($adminUser) {
+                $property->transferToAdmin($adminUser->id);
+                return redirect()->back()->with('success', 'Sold listing archived for records. Contact admin if you need it removed.');
+            }
+        }
+
+        // For non-sold properties, soft delete (can be restored by admin)
         $property->delete();
 
         return redirect()->back()->with('success', 'Property deleted successfully!');
+    }
+
+    /**
+     * Get the primary admin user for property transfers.
+     */
+    protected function getPrimaryAdmin(): ?User
+    {
+        return User::where('role', 'admin')->orderBy('id')->first();
     }
 
     /**
@@ -313,7 +333,22 @@ class PropertyController extends Controller
                 $query->latest();
         }
 
+        // Clone query for map before pagination
+        $mapQuery = clone $query;
+
         $properties = $query->paginate(12)->withQueryString();
+
+        // Get all properties with coordinates for map (lightweight data)
+        // Note: 'slug' is a computed attribute, not a DB column, so we don't select it
+        $allPropertiesForMap = $mapQuery
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->select([
+                'id', 'property_title', 'price', 'address', 'city', 'state', 'zip_code',
+                'bedrooms', 'full_bathrooms', 'half_bathrooms', 'sqft', 'listing_status',
+                'latitude', 'longitude', 'photos'
+            ])
+            ->get();
 
         // Check if current user is admin for inactive filter visibility
         $isAdmin = auth()->check() && auth()->user()->role === 'admin';
@@ -322,6 +357,7 @@ class PropertyController extends Controller
             'properties' => $properties,
             'filters' => $request->only(['keyword', 'location', 'status', 'propertyType', 'priceMin', 'priceMax', 'bedrooms', 'bathrooms', 'sort']),
             'isAdmin' => $isAdmin,
+            'allPropertiesForMap' => $allPropertiesForMap,
         ]);
     }
 

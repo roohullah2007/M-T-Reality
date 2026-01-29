@@ -16,7 +16,7 @@ class AdminPropertyController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Property::with('user');
+        $query = Property::with(['user', 'originalOwner']);
 
         // Search
         if ($request->filled('search')) {
@@ -49,6 +49,20 @@ class AdminPropertyController extends Controller
             $query->where('is_featured', $request->featured === 'yes');
         }
 
+        // Filter by showcase
+        if ($request->filled('showcase')) {
+            $query->where('is_showcase', $request->showcase === 'yes');
+        }
+
+        // Filter by transferred (archived from users)
+        if ($request->filled('transferred')) {
+            if ($request->transferred === 'yes') {
+                $query->whereNotNull('transferred_at');
+            } else {
+                $query->whereNull('transferred_at');
+            }
+        }
+
         $properties = $query->latest()
             ->paginate(15)
             ->withQueryString();
@@ -60,11 +74,14 @@ class AdminPropertyController extends Controller
             'approved' => Property::approved()->count(),
             'rejected' => Property::where('approval_status', 'rejected')->count(),
             'featured' => Property::featured()->count(),
+            'showcase' => Property::showcase()->count(),
+            'transferred' => Property::transferred()->count(),
+            'sold' => Property::sold()->count(),
         ];
 
         return Inertia::render('Admin/Properties/Index', [
             'properties' => $properties,
-            'filters' => $request->only(['search', 'status', 'approval', 'type', 'featured']),
+            'filters' => $request->only(['search', 'status', 'approval', 'type', 'featured', 'showcase', 'transferred']),
             'counts' => $counts,
         ]);
     }
@@ -81,8 +98,12 @@ class AdminPropertyController extends Controller
 
     public function edit(Property $property)
     {
-        // Redirect to show page - admins review properties, not edit them
-        return redirect()->route('admin.properties.show', $property->id);
+        $property->load(['user', 'images']);
+
+        return Inertia::render('Admin/Properties/Edit', [
+            'property' => $property,
+            'listingStatuses' => Property::LISTING_STATUSES,
+        ]);
     }
 
     public function update(Request $request, Property $property)
@@ -100,7 +121,7 @@ class AdminPropertyController extends Controller
         $validated = $request->validate([
             'property_title' => 'required|string|max:255',
             'property_type' => 'required|string',
-            'status' => 'required|string',
+            'status' => 'nullable|string',
             'listing_status' => 'nullable|string|in:for_sale,for_rent,pending,sold,inactive',
             'price' => 'required|numeric|min:0',
             'address' => 'required|string',
@@ -109,22 +130,55 @@ class AdminPropertyController extends Controller
             'zip_code' => 'required|string',
             'subdivision' => 'nullable|string',
             'bedrooms' => 'required|integer|min:0',
-            'bathrooms' => 'required|numeric|min:0',
+            'full_bathrooms' => 'nullable|integer|min:0',
+            'half_bathrooms' => 'nullable|integer|min:0',
+            'bathrooms' => 'nullable|numeric|min:0',
             'sqft' => 'required|integer|min:0',
             'lot_size' => 'nullable|integer|min:0',
             'year_built' => 'nullable|integer|min:1800|max:' . (date('Y') + 1),
             'description' => 'required|string',
             'features' => 'nullable|array',
+            'photos' => 'nullable|array',
             'contact_name' => 'required|string',
             'contact_email' => 'required|email',
             'contact_phone' => 'required|string',
             'is_featured' => 'boolean',
             'is_active' => 'boolean',
-            'virtual_tour_url' => 'nullable|url|max:500',
-            'matterport_url' => 'nullable|url|max:500',
-            'video_tour_url' => 'nullable|url|max:500',
-            'mls_virtual_tour_url' => 'nullable|url|max:500',
+            'virtual_tour_url' => 'nullable|string|max:500',
+            'matterport_url' => 'nullable|string|max:500',
+            'video_tour_url' => 'nullable|string|max:500',
+            'mls_virtual_tour_url' => 'nullable|string|max:500',
         ]);
+
+        // Set defaults for fields that don't allow null in database
+        $defaultsIfNull = [
+            'full_bathrooms' => 0,
+            'half_bathrooms' => 0,
+            'lot_size' => null, // This one can be null, remove from update if null
+        ];
+
+        foreach ($defaultsIfNull as $field => $default) {
+            if (array_key_exists($field, $validated) && $validated[$field] === null) {
+                if ($default === null) {
+                    unset($validated[$field]); // Don't update this field
+                } else {
+                    $validated[$field] = $default;
+                }
+            }
+        }
+
+        // Calculate bathrooms if full/half provided
+        if (isset($validated['full_bathrooms'])) {
+            $validated['bathrooms'] = ($validated['full_bathrooms'] ?? 0) + (($validated['half_bathrooms'] ?? 0) * 0.5);
+        }
+
+        // Ensure URL fields are included (convert empty to null for database)
+        $urlFields = ['virtual_tour_url', 'matterport_url', 'video_tour_url', 'mls_virtual_tour_url'];
+        foreach ($urlFields as $field) {
+            if (array_key_exists($field, $validated)) {
+                $validated[$field] = !empty($validated[$field]) ? $validated[$field] : null;
+            }
+        }
 
         // Sync the old status field based on listing_status if provided
         if (isset($validated['listing_status'])) {
@@ -143,7 +197,7 @@ class AdminPropertyController extends Controller
 
         ActivityLog::log('property_updated', $property, $oldValues, $validated, "Updated property: {$property->property_title}");
 
-        return redirect()->route('admin.properties.index')
+        return redirect()->route('admin.properties.show', $property->id)
             ->with('success', 'Property updated successfully.');
     }
 
@@ -221,6 +275,89 @@ class AdminPropertyController extends Controller
         ActivityLog::log("property_{$status}", $property, null, null, "Property {$property->property_title} {$status}");
 
         return back()->with('success', "Property {$status} successfully.");
+    }
+
+    /**
+     * Toggle showcase status (for marketing display)
+     */
+    public function toggleShowcase(Property $property)
+    {
+        $property->update(['is_showcase' => !$property->is_showcase]);
+
+        $status = $property->is_showcase ? 'added to showcase' : 'removed from showcase';
+
+        ActivityLog::log("property_showcase_" . ($property->is_showcase ? 'added' : 'removed'), $property, null, null, "Property {$property->property_title} {$status}");
+
+        return back()->with('success', "Property {$status} successfully.");
+    }
+
+    /**
+     * Update testimonial for a property
+     */
+    public function updateTestimonial(Request $request, Property $property)
+    {
+        $validated = $request->validate([
+            'testimonial' => 'nullable|string|max:2000',
+            'testimonial_name' => 'nullable|string|max:255',
+        ]);
+
+        $property->update($validated);
+
+        ActivityLog::log('property_testimonial_updated', $property, null, $validated, "Updated testimonial for property: {$property->property_title}");
+
+        return back()->with('success', 'Testimonial updated successfully.');
+    }
+
+    /**
+     * Convert transferred listing to sold showcase
+     */
+    public function convertToShowcase(Request $request, Property $property)
+    {
+        $validated = $request->validate([
+            'testimonial' => 'nullable|string|max:2000',
+            'testimonial_name' => 'nullable|string|max:255',
+        ]);
+
+        $property->update([
+            'listing_status' => Property::STATUS_SOLD,
+            'is_showcase' => true,
+            'is_active' => true,
+            'testimonial' => $validated['testimonial'] ?? null,
+            'testimonial_name' => $validated['testimonial_name'] ?? null,
+            'sold_at' => $property->sold_at ?? now(),
+        ]);
+
+        ActivityLog::log('property_converted_to_showcase', $property, null, $validated, "Converted to showcase: {$property->property_title}");
+
+        return back()->with('success', 'Property converted to sold showcase listing.');
+    }
+
+    /**
+     * Permanently delete a property (admin only, bypasses soft delete)
+     */
+    public function forceDelete(Property $property)
+    {
+        $propertyTitle = $property->property_title;
+
+        ActivityLog::log('property_force_deleted', $property, $property->toArray(), null, "Permanently deleted property: {$propertyTitle}");
+
+        $property->forceDelete();
+
+        return redirect()->route('admin.properties.index')
+            ->with('success', 'Property permanently deleted.');
+    }
+
+    /**
+     * Restore a soft-deleted property
+     */
+    public function restore($id)
+    {
+        $property = Property::withTrashed()->findOrFail($id);
+        $property->restore();
+
+        ActivityLog::log('property_restored', $property, null, null, "Restored property: {$property->property_title}");
+
+        return back()->with('success', 'Property restored successfully.');
     }
 
     public function bulkAction(Request $request)
