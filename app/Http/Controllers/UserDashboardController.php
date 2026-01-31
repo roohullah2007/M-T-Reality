@@ -134,6 +134,14 @@ class UserDashboardController extends Controller
             abort(403, 'You do not own this property.');
         }
 
+        // Log incoming request for debugging
+        \Log::info('UpdateListing request for property ' . $property->id, [
+            'listing_status' => $request->input('listing_status'),
+            'features' => $request->input('features'),
+            'virtual_tour_url' => $request->input('virtual_tour_url'),
+            'all_data' => $request->all(),
+        ]);
+
         // Convert empty strings to null for optional URL fields
         $input = $request->all();
         $urlFields = ['virtual_tour_url', 'matterport_url', 'video_tour_url'];
@@ -142,6 +150,14 @@ class UserDashboardController extends Controller
                 $input[$field] = null;
             }
         }
+
+        // Ensure lot_size is a string (can come as number from frontend)
+        if (isset($input['lot_size']) && $input['lot_size'] !== null && $input['lot_size'] !== '') {
+            $input['lot_size'] = (string) $input['lot_size'];
+        } elseif (isset($input['lot_size']) && $input['lot_size'] === '') {
+            $input['lot_size'] = null;
+        }
+
         $request->merge($input);
 
         $validated = $request->validate([
@@ -180,7 +196,35 @@ class UserDashboardController extends Controller
         ];
         $validated['status'] = $statusMap[$validated['listing_status']] ?? $validated['status'];
 
+        // Handle nullable integer fields - convert null/empty to appropriate defaults
+        // These fields are optional in the form but the DB columns may not allow NULL
+        // half_bathrooms: default to 0 if empty
+        if (!isset($validated['half_bathrooms']) || $validated['half_bathrooms'] === null || $validated['half_bathrooms'] === '') {
+            $validated['half_bathrooms'] = 0;
+        }
+        // sqft: default to 0 if empty (DB column is NOT NULL)
+        if (!isset($validated['sqft']) || $validated['sqft'] === null || $validated['sqft'] === '') {
+            $validated['sqft'] = 0;
+        }
+        // year_built: can be null in DB, so leave it as null if empty
+
+        // Ensure features is always an array
+        if (!isset($validated['features']) || !is_array($validated['features'])) {
+            $validated['features'] = [];
+        }
+
+        // Log validated data before update
+        \Log::info('UpdateListing validated data for property ' . $property->id, [
+            'listing_status' => $validated['listing_status'] ?? null,
+            'features' => $validated['features'] ?? null,
+            'virtual_tour_url' => $validated['virtual_tour_url'] ?? null,
+            'half_bathrooms' => $validated['half_bathrooms'] ?? null,
+        ]);
+
         $property->update($validated);
+
+        // Log confirmation of update
+        \Log::info('Property ' . $property->id . ' updated successfully');
 
         // Geocode the property if address changed and no coordinates exist
         GeocodingService::geocodeProperty($property);

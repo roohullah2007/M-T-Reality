@@ -32,19 +32,19 @@ export default function EditListing({ property }) {
         property_type: property.property_type || 'single-family-home',
         status: property.status || 'for-sale',
         listing_status: property.listing_status || 'for_sale',
-        price: property.price || '',
+        price: property.price ?? '',
         address: property.address || '',
         city: property.city || '',
         state: property.state || '',
         zip_code: property.zip_code || '',
-        bedrooms: property.bedrooms || '',
-        full_bathrooms: property.full_bathrooms || '',
-        half_bathrooms: property.half_bathrooms || '',
-        sqft: property.sqft || '',
-        lot_size: property.lot_size || '',
-        year_built: property.year_built || '',
+        bedrooms: property.bedrooms ?? '',
+        full_bathrooms: property.full_bathrooms ?? '',
+        half_bathrooms: property.half_bathrooms ?? '',
+        sqft: property.sqft ?? '',
+        lot_size: property.lot_size != null ? String(property.lot_size) : '',
+        year_built: property.year_built ?? '',
         description: property.description || '',
-        features: property.features || [],
+        features: Array.isArray(property.features) ? property.features : [],
         contact_name: property.contact_name || '',
         contact_email: property.contact_email || '',
         contact_phone: property.contact_phone || '',
@@ -324,11 +324,18 @@ export default function EditListing({ property }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        put(route('dashboard.listings.update', property.id));
+        put(route('dashboard.listings.update', property.id), {
+            preserveScroll: true,
+            onError: (errors) => {
+                console.error('Validation errors:', errors);
+                // Scroll to top to show error summary
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+        });
     };
 
     const toggleFeature = (feature) => {
-        const currentFeatures = data.features || [];
+        const currentFeatures = Array.isArray(data.features) ? data.features : [];
         if (currentFeatures.includes(feature)) {
             setData('features', currentFeatures.filter(f => f !== feature));
         } else {
@@ -379,6 +386,23 @@ export default function EditListing({ property }) {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Validation Errors Summary */}
+                {Object.keys(errors).length > 0 && (
+                    <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+                        <div className="flex items-start gap-3">
+                            <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                            <div>
+                                <p className="font-medium text-red-800">Please fix the following errors:</p>
+                                <ul className="mt-2 text-sm text-red-700 list-disc list-inside space-y-1">
+                                    {Object.entries(errors).map(([field, message]) => (
+                                        <li key={field}><strong>{field.replace(/_/g, ' ')}:</strong> {message}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* Basic Information */}
                 <div className="bg-white rounded-2xl shadow-sm p-6">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
@@ -705,35 +729,39 @@ export default function EditListing({ property }) {
                     </h2>
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                        {featureOptions.map((feature) => (
-                            <label
-                                key={feature}
-                                className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-colors ${
-                                    (data.features || []).includes(feature)
-                                        ? 'border-[#A41E34] bg-[#A41E34]/5 text-[#A41E34]'
-                                        : 'border-gray-200 hover:border-gray-300'
-                                }`}
-                            >
-                                <input
-                                    type="checkbox"
-                                    checked={(data.features || []).includes(feature)}
-                                    onChange={() => toggleFeature(feature)}
-                                    className="sr-only"
-                                />
-                                <span className={`w-4 h-4 rounded border flex items-center justify-center ${
-                                    (data.features || []).includes(feature)
-                                        ? 'bg-[#A41E34] border-[#A41E34]'
-                                        : 'border-gray-300'
-                                }`}>
-                                    {(data.features || []).includes(feature) && (
-                                        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    )}
-                                </span>
-                                <span className="text-sm">{feature}</span>
-                            </label>
-                        ))}
+                        {featureOptions.map((feature) => {
+                            const features = Array.isArray(data.features) ? data.features : [];
+                            const isSelected = features.includes(feature);
+                            return (
+                                <label
+                                    key={feature}
+                                    className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-colors ${
+                                        isSelected
+                                            ? 'border-[#A41E34] bg-[#A41E34]/5 text-[#A41E34]'
+                                            : 'border-gray-200 hover:border-gray-300'
+                                    }`}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={isSelected}
+                                        onChange={() => toggleFeature(feature)}
+                                        className="sr-only"
+                                    />
+                                    <span className={`w-4 h-4 rounded border flex items-center justify-center ${
+                                        isSelected
+                                            ? 'bg-[#A41E34] border-[#A41E34]'
+                                            : 'border-gray-300'
+                                    }`}>
+                                        {isSelected && (
+                                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        )}
+                                    </span>
+                                    <span className="text-sm">{feature}</span>
+                                </label>
+                            );
+                        })}
                     </div>
                 </div>
 

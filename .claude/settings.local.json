@@ -52,7 +52,8 @@
       "Bash(for file in \"app/Http/Controllers/Auth/RegisteredUserController.php\" \"app/Http/Controllers/Auth/GoogleController.php\" \"app/Http/Controllers/UserDashboardController.php\" \"app/Http/Controllers/PropertyController.php\" \"app/Models/User.php\" \"app/Models/Property.php\" \"app/Mail/EmailVerificationCode.php\")",
       "Bash(do echo \"Checking: $file\")",
       "Bash(done)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(del add_coordinates.php)"
     ],
     "deny": [],
     "ask": []
