@@ -315,8 +315,48 @@ export default function EditListing({ property }) {
         'Guest Quarters',
     ];
 
-    const handleSubmit = (e) => {
+    const [savingPhotos, setSavingPhotos] = useState(false);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Check if there are any photos still uploading
+        if (newPhotoPreviews.some(p => p.uploading)) {
+            setUploadError('Please wait for all photos to finish uploading before saving.');
+            return;
+        }
+
+        // If there are new photos to save, save them first
+        const successfulPaths = newPhotoPreviews
+            .filter(p => p.serverPath && !p.error)
+            .map(p => p.serverPath);
+
+        if (successfulPaths.length > 0) {
+            setSavingPhotos(true);
+            try {
+                await new Promise((resolve, reject) => {
+                    router.post(route('dashboard.listings.photos.add', property.id), {
+                        photo_paths: successfulPaths
+                    }, {
+                        preserveScroll: true,
+                        onSuccess: () => {
+                            setNewPhotoPreviews([]);
+                            resolve();
+                        },
+                        onError: () => {
+                            reject(new Error('Failed to save photos'));
+                        }
+                    });
+                });
+            } catch (error) {
+                setSavingPhotos(false);
+                setUploadError('Failed to save photos. Please try again.');
+                return;
+            }
+            setSavingPhotos(false);
+        }
+
+        // Now save the form data
         put(route('dashboard.listings.update', property.id), {
             preserveScroll: true,
             onError: (errors) => {
@@ -953,16 +993,6 @@ export default function EditListing({ property }) {
                                     </div>
                                 )}
                             </div>
-                            {successfulNewPhotos.length > 0 && !newPhotoPreviews.some(p => p.uploading) && (
-                                <button
-                                    type="button"
-                                    onClick={handleSaveNewPhotos}
-                                    className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-xl text-sm font-medium hover:bg-green-700 transition-colors"
-                                >
-                                    <Save className="w-4 h-4" />
-                                    Save {successfulNewPhotos.length} New Photo(s)
-                                </button>
-                            )}
                         </div>
                     )}
 
@@ -1041,6 +1071,35 @@ export default function EditListing({ property }) {
                                     </div>
                                 ))}
                             </div>
+
+                            {/* Save Photos Button - Prominent */}
+                            {successfulNewPhotos.length > 0 && !newPhotoPreviews.some(p => p.uploading) && (
+                                <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-xl">
+                                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                        <div className="flex items-center gap-3">
+                                            <div className="bg-green-100 p-2 rounded-lg flex-shrink-0">
+                                                <CheckCircle className="w-5 h-5 text-green-600" />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-semibold text-green-800">
+                                                    {successfulNewPhotos.length} photo(s) ready to save
+                                                </p>
+                                                <p className="text-xs text-green-600 mt-0.5">
+                                                    Click "Save Photos" or "Save Changes" at the bottom to add them to your listing
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={handleSaveNewPhotos}
+                                            className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white rounded-xl text-sm font-medium hover:bg-green-700 transition-colors whitespace-nowrap"
+                                        >
+                                            <Upload className="w-4 h-4" />
+                                            Save Photos
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
 
@@ -1133,11 +1192,15 @@ export default function EditListing({ property }) {
                     </Link>
                     <button
                         type="submit"
-                        disabled={processing}
+                        disabled={processing || savingPhotos || isUploading}
                         className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#A41E34] text-white rounded-xl font-medium hover:bg-[#8B1A2C] transition-colors disabled:opacity-50"
                     >
-                        <Save className="w-5 h-5" />
-                        {processing ? 'Saving...' : 'Save Changes'}
+                        {(processing || savingPhotos) ? (
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                            <Save className="w-5 h-5" />
+                        )}
+                        {savingPhotos ? 'Saving Photos...' : processing ? 'Saving...' : 'Save Changes'}
                     </button>
                 </div>
             </form>
