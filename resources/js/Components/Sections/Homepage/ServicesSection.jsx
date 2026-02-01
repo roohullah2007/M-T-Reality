@@ -271,9 +271,9 @@ const ServicesSection = () => {
             <div className={`flex flex-col ${(selectedService.modalImage || selectedService.beforeAfterImages) ? 'lg:grid lg:grid-cols-2' : ''}`} style={{ maxHeight: '90vh' }}>
               {/* Left - Image or Before/After (only if image exists) */}
               {(selectedService.modalImage || selectedService.beforeAfterImages) && (
-                <div className="relative shrink-0 bg-[#f5f5f5] lg:rounded-l-2xl overflow-hidden" style={{ height: '500px' }}>
+                <div className="relative shrink-0 bg-[#f5f5f5] lg:rounded-l-2xl overflow-hidden h-[300px] lg:h-auto lg:min-h-[500px]" style={{ maxHeight: '90vh' }}>
                   {selectedService.beforeAfterImages ? (
-                    <div className="w-full grid grid-rows-2" style={{ height: '500px' }}>
+                    <div className="w-full h-full grid grid-rows-2">
                       {/* Before Image */}
                       <div className="relative bg-[#1a1a1a] overflow-hidden">
                         <img
@@ -303,7 +303,7 @@ const ServicesSection = () => {
                       </div>
                     </div>
                   ) : selectedService.showPhoneVideo ? (
-                    <div className="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-[#1a1a2e] to-[#16213e]">
+                    <div className="relative w-full h-full min-h-[400px] flex items-center justify-center bg-gradient-to-br from-[#1a1a2e] to-[#16213e]">
                       <div className="flex items-center justify-center">
                         {/* Phone Mockup with Video */}
                         <div className="relative">
