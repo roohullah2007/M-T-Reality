@@ -151,9 +151,9 @@ class UserDashboardController extends Controller
             }
         }
 
-        // Ensure lot_size is a string (can come as number from frontend)
+        // Convert lot_size to integer (DB column is integer)
         if (isset($input['lot_size']) && $input['lot_size'] !== null && $input['lot_size'] !== '') {
-            $input['lot_size'] = (string) $input['lot_size'];
+            $input['lot_size'] = is_numeric($input['lot_size']) ? (int) $input['lot_size'] : null;
         } elseif (isset($input['lot_size']) && $input['lot_size'] === '') {
             $input['lot_size'] = null;
         }
@@ -174,7 +174,7 @@ class UserDashboardController extends Controller
             'full_bathrooms' => 'required|integer|min:0',
             'half_bathrooms' => 'nullable|integer|min:0',
             'sqft' => 'nullable|integer|min:0',
-            'lot_size' => 'nullable|string',
+            'lot_size' => 'nullable|integer|min:0',
             'year_built' => 'nullable|integer|min:1800|max:' . (date('Y') + 1),
             'description' => 'nullable|string',
             'features' => 'nullable|array',

@@ -161,8 +161,8 @@ class QrCodeController extends Controller
             'scanned_at' => now(),
         ]);
 
-        // Redirect to the property page
-        return redirect()->route('properties.show', $sticker->property);
+        // Redirect to the property page with slug URL (SEO friendly)
+        return redirect()->to('/properties/' . $sticker->property->slug);
     }
 
     /**
