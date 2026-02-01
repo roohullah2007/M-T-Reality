@@ -215,9 +215,6 @@ function ListProperty() {
           formData.append('photo', file);
 
           const response = await axios.post('/upload-photo', formData, {
-            headers: {
-              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
-            },
             timeout: 120000, // 2 minute timeout for large files
             onUploadProgress: (progressEvent) => {
               const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -260,10 +257,6 @@ function ListProperty() {
       try {
         await axios.post('/delete-uploaded-photo', {
           path: preview.serverPath
-        }, {
-          headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
-          }
         });
       } catch (error) {
         console.error('Failed to delete photo from server:', error);

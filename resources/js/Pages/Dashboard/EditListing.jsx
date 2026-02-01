@@ -41,7 +41,7 @@ export default function EditListing({ property }) {
         full_bathrooms: property.full_bathrooms ?? '',
         half_bathrooms: property.half_bathrooms ?? '',
         sqft: property.sqft ?? '',
-        lot_size: property.lot_size != null ? String(property.lot_size) : '',
+        lot_size: property.lot_size ?? '',
         year_built: property.year_built ?? '',
         description: property.description || '',
         features: Array.isArray(property.features) ? property.features : [],
@@ -152,9 +152,6 @@ export default function EditListing({ property }) {
                 formData.append('photo', file);
 
                 const response = await axios.post('/upload-photo', formData, {
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
-                    },
                     timeout: 120000, // 2 minute timeout for large files
                     onUploadProgress: (progressEvent) => {
                         const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -201,10 +198,6 @@ export default function EditListing({ property }) {
             try {
                 await axios.post('/delete-uploaded-photo', {
                     path: preview.serverPath
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
-                    }
                 });
             } catch (error) {
                 console.error('Failed to delete photo from server:', error);
