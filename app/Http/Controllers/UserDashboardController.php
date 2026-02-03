@@ -160,6 +160,9 @@ class UserDashboardController extends Controller
 
         $request->merge($input);
 
+        // Check if this is a land/lot listing (different validation rules apply)
+        $isLand = $request->input('property_type') === 'land';
+
         $validated = $request->validate([
             'property_title' => 'required|string|max:255',
             'property_type' => 'required|string',
@@ -170,11 +173,19 @@ class UserDashboardController extends Controller
             'city' => 'required|string|max:100',
             'state' => 'required|string|max:50',
             'zip_code' => 'required|string|max:20',
-            'bedrooms' => 'required|integer|min:0',
-            'full_bathrooms' => 'required|integer|min:0',
+            // School Information
+            'school_district' => 'required|string|max:255',
+            'grade_school' => 'nullable|string|max:255',
+            'middle_school' => 'nullable|string|max:255',
+            'high_school' => 'nullable|string|max:255',
+            // For land listings, bedrooms/bathrooms/sqft/yearBuilt are not applicable
+            'bedrooms' => $isLand ? 'nullable|integer|min:0' : 'required|integer|min:0',
+            'full_bathrooms' => $isLand ? 'nullable|integer|min:0' : 'required|integer|min:0',
             'half_bathrooms' => 'nullable|integer|min:0',
             'sqft' => 'nullable|integer|min:0',
-            'lot_size' => 'nullable|integer|min:0',
+            'lot_size' => $isLand ? 'required|string|max:100' : 'nullable|string|max:100',
+            'acres' => 'nullable|numeric|min:0',
+            'zoning' => 'nullable|string|max:100',
             'year_built' => 'nullable|integer|min:1800|max:' . (date('Y') + 1),
             'description' => 'nullable|string',
             'features' => 'nullable|array',
@@ -198,13 +209,23 @@ class UserDashboardController extends Controller
 
         // Handle nullable integer fields - convert null/empty to appropriate defaults
         // These fields are optional in the form but the DB columns may not allow NULL
-        // half_bathrooms: default to 0 if empty
-        if (!isset($validated['half_bathrooms']) || $validated['half_bathrooms'] === null || $validated['half_bathrooms'] === '') {
+
+        // For land listings, set bedrooms/bathrooms/sqft to 0 (they don't apply)
+        if ($isLand) {
+            $validated['bedrooms'] = 0;
+            $validated['full_bathrooms'] = 0;
             $validated['half_bathrooms'] = 0;
-        }
-        // sqft: default to 0 if empty (DB column is NOT NULL)
-        if (!isset($validated['sqft']) || $validated['sqft'] === null || $validated['sqft'] === '') {
             $validated['sqft'] = 0;
+            $validated['year_built'] = null;
+        } else {
+            // half_bathrooms: default to 0 if empty
+            if (!isset($validated['half_bathrooms']) || $validated['half_bathrooms'] === null || $validated['half_bathrooms'] === '') {
+                $validated['half_bathrooms'] = 0;
+            }
+            // sqft: default to 0 if empty (DB column is NOT NULL)
+            if (!isset($validated['sqft']) || $validated['sqft'] === null || $validated['sqft'] === '') {
+                $validated['sqft'] = 0;
+            }
         }
         // year_built: can be null in DB, so leave it as null if empty
 

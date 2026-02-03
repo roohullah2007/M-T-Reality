@@ -118,6 +118,9 @@ class AdminPropertyController extends Controller
         }
         $request->merge($input);
 
+        // Check if this is a land/lot listing (different validation rules apply)
+        $isLand = $request->input('property_type') === 'land';
+
         $validated = $request->validate([
             'property_title' => 'required|string|max:255',
             'property_type' => 'required|string',
@@ -129,12 +132,20 @@ class AdminPropertyController extends Controller
             'state' => 'required|string',
             'zip_code' => 'required|string',
             'subdivision' => 'nullable|string',
-            'bedrooms' => 'required|integer|min:0',
+            // School Information
+            'school_district' => 'required|string|max:255',
+            'grade_school' => 'nullable|string|max:255',
+            'middle_school' => 'nullable|string|max:255',
+            'high_school' => 'nullable|string|max:255',
+            // For land listings, bedrooms/bathrooms/sqft are not applicable
+            'bedrooms' => $isLand ? 'nullable|integer|min:0' : 'required|integer|min:0',
             'full_bathrooms' => 'nullable|integer|min:0',
             'half_bathrooms' => 'nullable|integer|min:0',
             'bathrooms' => 'nullable|numeric|min:0',
-            'sqft' => 'required|integer|min:0',
-            'lot_size' => 'nullable|integer|min:0',
+            'sqft' => $isLand ? 'nullable|integer|min:0' : 'required|integer|min:0',
+            'lot_size' => $isLand ? 'required|string|max:100' : 'nullable|string|max:100',
+            'acres' => 'nullable|numeric|min:0',
+            'zoning' => 'nullable|string|max:100',
             'year_built' => 'nullable|integer|min:1800|max:' . (date('Y') + 1),
             'description' => 'required|string',
             'features' => 'nullable|array',
@@ -150,26 +161,31 @@ class AdminPropertyController extends Controller
             'mls_virtual_tour_url' => 'nullable|string|max:500',
         ]);
 
-        // Set defaults for fields that don't allow null in database
-        $defaultsIfNull = [
-            'full_bathrooms' => 0,
-            'half_bathrooms' => 0,
-            'lot_size' => null, // This one can be null, remove from update if null
-        ];
+        // For land listings, set bedrooms/bathrooms/sqft to 0 (they don't apply)
+        if ($isLand) {
+            $validated['bedrooms'] = 0;
+            $validated['full_bathrooms'] = 0;
+            $validated['half_bathrooms'] = 0;
+            $validated['bathrooms'] = 0;
+            $validated['sqft'] = 0;
+            $validated['year_built'] = null;
+        } else {
+            // Set defaults for fields that don't allow null in database
+            $defaultsIfNull = [
+                'full_bathrooms' => 0,
+                'half_bathrooms' => 0,
+            ];
 
-        foreach ($defaultsIfNull as $field => $default) {
-            if (array_key_exists($field, $validated) && $validated[$field] === null) {
-                if ($default === null) {
-                    unset($validated[$field]); // Don't update this field
-                } else {
+            foreach ($defaultsIfNull as $field => $default) {
+                if (array_key_exists($field, $validated) && $validated[$field] === null) {
                     $validated[$field] = $default;
                 }
             }
-        }
 
-        // Calculate bathrooms if full/half provided
-        if (isset($validated['full_bathrooms'])) {
-            $validated['bathrooms'] = ($validated['full_bathrooms'] ?? 0) + (($validated['half_bathrooms'] ?? 0) * 0.5);
+            // Calculate bathrooms if full/half provided
+            if (isset($validated['full_bathrooms'])) {
+                $validated['bathrooms'] = ($validated['full_bathrooms'] ?? 0) + (($validated['half_bathrooms'] ?? 0) * 0.5);
+            }
         }
 
         // Ensure URL fields are included (convert empty to null for database)

@@ -146,6 +146,7 @@ function PropertyDetail({ property }) {
         <div class="address">${property.address}, ${property.city}, ${property.state} ${property.zip_code}</div>
         ${photos[0] ? `<img src="${photos[0]}" class="photo" alt="Property Photo">` : ''}
         <div class="details">
+          ${property.property_type !== 'land' ? `
           <div class="detail-box">
             <div class="detail-label">Bedrooms</div>
             <div class="detail-value">${property.bedrooms}</div>
@@ -162,6 +163,16 @@ function PropertyDetail({ property }) {
             <div class="detail-label">Year Built</div>
             <div class="detail-value">${property.year_built || 'N/A'}</div>
           </div>
+          ` : `
+          <div class="detail-box">
+            <div class="detail-label">Lot Size</div>
+            <div class="detail-value">${property.lot_size || 'N/A'}</div>
+          </div>
+          <div class="detail-box">
+            <div class="detail-label">Property Type</div>
+            <div class="detail-value">Lot/Land</div>
+          </div>
+          `}
         </div>
         <div class="description">
           <h3 style="margin-bottom: 10px;">Description</h3>
@@ -172,6 +183,17 @@ function PropertyDetail({ property }) {
             <h3>Features & Amenities</h3>
             <div class="features-grid">
               ${property.features.map(f => `<div class="feature-item">${f}</div>`).join('')}
+            </div>
+          </div>
+        ` : ''}
+        ${property.school_district ? `
+          <div class="features" style="margin-top: 20px;">
+            <h3>School Information</h3>
+            <div class="features-grid" style="grid-template-columns: repeat(2, 1fr);">
+              <div class="feature-item">District: ${property.school_district}</div>
+              ${property.grade_school ? `<div class="feature-item">Grade: ${property.grade_school}</div>` : ''}
+              ${property.middle_school ? `<div class="feature-item">Middle: ${property.middle_school}</div>` : ''}
+              ${property.high_school ? `<div class="feature-item">High: ${property.high_school}</div>` : ''}
             </div>
           </div>
         ` : ''}
@@ -491,65 +513,96 @@ function PropertyDetail({ property }) {
               {/* Quick Stats */}
               <div className="bg-white rounded-2xl p-6 mb-6">
                 <h2 className="text-xl font-semibold text-[#111] mb-4" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Property Details
+                  {property.property_type === 'land' ? 'Lot Details' : 'Property Details'}
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-[#EEEDEA] p-3 rounded-lg">
-                      <BedDouble className="w-5 h-5 text-[#A41E34]" />
+                  {/* Show bedrooms/bathrooms/sqft/year built only for non-land properties */}
+                  {property.property_type !== 'land' && (
+                    <>
+                      <div className="flex items-center gap-3">
+                        <div className="bg-[#EEEDEA] p-3 rounded-lg">
+                          <BedDouble className="w-5 h-5 text-[#A41E34]" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-[#666]">Bedrooms</p>
+                          <p className="font-semibold text-[#111]">{property.bedrooms}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="bg-[#EEEDEA] p-3 rounded-lg">
+                          <Bath className="w-5 h-5 text-[#A41E34]" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-[#666]">Bathrooms</p>
+                          <p className="font-semibold text-[#111]">
+                            {property.full_bathrooms || 0} Full{property.half_bathrooms > 0 ? `, ${property.half_bathrooms} Half` : ''}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="bg-[#EEEDEA] p-3 rounded-lg">
+                          <Maximize2 className="w-5 h-5 text-[#A41E34]" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-[#666]">Square Feet</p>
+                          <p className="font-semibold text-[#111]">{property.sqft ? property.sqft.toLocaleString() : 'N/A'}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="bg-[#EEEDEA] p-3 rounded-lg">
+                          <Calendar className="w-5 h-5 text-[#A41E34]" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-[#666]">Year Built</p>
+                          <p className="font-semibold text-[#111]">{property.year_built || 'N/A'}</p>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {/* For land properties, show lot size prominently */}
+                  {property.property_type === 'land' && property.lot_size && (
+                    <div className="flex items-center gap-3 col-span-2">
+                      <div className="bg-[#EEEDEA] p-3 rounded-lg">
+                        <Maximize2 className="w-5 h-5 text-[#A41E34]" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-[#666]">Lot Size</p>
+                        <p className="font-semibold text-[#111]">{property.lot_size}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm text-[#666]">Bedrooms</p>
-                      <p className="font-semibold text-[#111]">{property.bedrooms}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="bg-[#EEEDEA] p-3 rounded-lg">
-                      <Bath className="w-5 h-5 text-[#A41E34]" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-[#666]">Bathrooms</p>
-                      <p className="font-semibold text-[#111]">
-                        {property.full_bathrooms || 0} Full{property.half_bathrooms > 0 ? `, ${property.half_bathrooms} Half` : ''}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="bg-[#EEEDEA] p-3 rounded-lg">
-                      <Maximize2 className="w-5 h-5 text-[#A41E34]" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-[#666]">Square Feet</p>
-                      <p className="font-semibold text-[#111]">{property.sqft ? property.sqft.toLocaleString() : 'N/A'}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="bg-[#EEEDEA] p-3 rounded-lg">
-                      <Calendar className="w-5 h-5 text-[#A41E34]" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-[#666]">Year Built</p>
-                      <p className="font-semibold text-[#111]">{property.year_built || 'N/A'}</p>
-                    </div>
-                  </div>
+                  )}
                 </div>
 
                 {/* Additional Details */}
-                <div className="mt-6 pt-6 border-t border-gray-200 grid grid-cols-3 gap-4">
+                <div className="mt-6 pt-6 border-t border-gray-200 grid grid-cols-2 md:grid-cols-3 gap-4">
                   <div>
                     <p className="text-sm text-[#666]">Property Type</p>
                     <p className="font-semibold text-[#111]">{propertyTypeLabels[property.property_type] || property.property_type}</p>
                   </div>
-                  {property.lot_size && (
+                  {/* Show lot size in additional details only for non-land properties */}
+                  {property.property_type !== 'land' && property.lot_size && (
                     <div>
                       <p className="text-sm text-[#666]">Lot Size</p>
-                      <p className="font-semibold text-[#111]">{property.lot_size.toLocaleString()} sqft</p>
+                      <p className="font-semibold text-[#111]">{property.lot_size}</p>
                     </div>
                   )}
                   {property.subdivision && (
                     <div>
                       <p className="text-sm text-[#666]">Subdivision</p>
                       <p className="font-semibold text-[#111]">{property.subdivision}</p>
+                    </div>
+                  )}
+                  {/* Show acres and zoning for land properties */}
+                  {property.property_type === 'land' && property.acres && (
+                    <div>
+                      <p className="text-sm text-[#666]">Acres</p>
+                      <p className="font-semibold text-[#111]">{property.acres}</p>
+                    </div>
+                  )}
+                  {property.property_type === 'land' && property.zoning && (
+                    <div>
+                      <p className="text-sm text-[#666]">Zoning</p>
+                      <p className="font-semibold text-[#111]">{property.zoning}</p>
                     </div>
                   )}
                 </div>
@@ -564,6 +617,43 @@ function PropertyDetail({ property }) {
                   {property.description}
                 </p>
               </div>
+
+              {/* School Information */}
+              {property.school_district && (
+                <div className="bg-white rounded-2xl p-6 mb-6">
+                  <h2 className="text-xl font-semibold text-[#111] mb-4 flex items-center gap-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                    <svg className="w-5 h-5 text-[#A41E34]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                    </svg>
+                    School Information
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-[#666]">School District</p>
+                      <p className="font-semibold text-[#111]">{property.school_district}</p>
+                    </div>
+                    {property.grade_school && (
+                      <div>
+                        <p className="text-sm text-[#666]">Grade School</p>
+                        <p className="font-semibold text-[#111]">{property.grade_school}</p>
+                      </div>
+                    )}
+                    {property.middle_school && (
+                      <div>
+                        <p className="text-sm text-[#666]">Middle/Jr High School</p>
+                        <p className="font-semibold text-[#111]">{property.middle_school}</p>
+                      </div>
+                    )}
+                    {property.high_school && (
+                      <div>
+                        <p className="text-sm text-[#666]">High School</p>
+                        <p className="font-semibold text-[#111]">{property.high_school}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Features */}
               {property.features && property.features.length > 0 && (

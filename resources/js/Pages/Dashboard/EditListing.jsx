@@ -37,11 +37,18 @@ export default function EditListing({ property }) {
         city: property.city || '',
         state: property.state || '',
         zip_code: property.zip_code || '',
+        // School Information
+        school_district: property.school_district || '',
+        grade_school: property.grade_school || '',
+        middle_school: property.middle_school || '',
+        high_school: property.high_school || '',
         bedrooms: property.bedrooms ?? '',
         full_bathrooms: property.full_bathrooms ?? '',
         half_bathrooms: property.half_bathrooms ?? '',
         sqft: property.sqft ?? '',
         lot_size: property.lot_size ?? '',
+        acres: property.acres ?? '',
+        zoning: property.zoning ?? '',
         year_built: property.year_built ?? '',
         description: property.description || '',
         features: Array.isArray(property.features) ? property.features : [],
@@ -313,6 +320,25 @@ export default function EditListing({ property }) {
         'Waterfront',
         'Golf Course',
         'Guest Quarters',
+    ];
+
+    const landFeatureOptions = [
+        'Fenced',
+        'Mature Trees',
+        'Additional Land Available',
+        'Corner Lot',
+        'Cul-De-Sac',
+        'Farm or Ranch',
+        'Greenbelt',
+        'Golf Course Frontage',
+        'Hunting',
+        'Livestock Allowed',
+        'Mobile Ready',
+        'Pond',
+        'Sidewalk',
+        'Spring/Creek',
+        'Water Frontage',
+        'Zero Lot Line',
     ];
 
     const [savingPhotos, setSavingPhotos] = useState(false);
@@ -623,122 +649,234 @@ export default function EditListing({ property }) {
                     </div>
                 </div>
 
-                {/* Property Details */}
+                {/* School Information */}
+                <div className="bg-white rounded-2xl shadow-sm p-6">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                        <svg className="w-5 h-5 text-[#A41E34]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                        </svg>
+                        School Information
+                    </h2>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                School District *
+                            </label>
+                            <input
+                                type="text"
+                                value={data.school_district}
+                                onChange={(e) => setData('school_district', e.target.value)}
+                                className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
+                                    errors.school_district ? 'border-red-500' : 'border-gray-200'
+                                }`}
+                                placeholder="e.g., Tulsa Public Schools"
+                            />
+                            {errors.school_district && (
+                                <p className="text-red-500 text-sm mt-1">{errors.school_district}</p>
+                            )}
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Grade School
+                            </label>
+                            <input
+                                type="text"
+                                value={data.grade_school}
+                                onChange={(e) => setData('grade_school', e.target.value)}
+                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                placeholder="Elementary school name"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Middle/Jr High School
+                            </label>
+                            <input
+                                type="text"
+                                value={data.middle_school}
+                                onChange={(e) => setData('middle_school', e.target.value)}
+                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                placeholder="Middle school name"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                High School
+                            </label>
+                            <input
+                                type="text"
+                                value={data.high_school}
+                                onChange={(e) => setData('high_school', e.target.value)}
+                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                placeholder="High school name"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Property Details / Lot Details */}
                 <div className="bg-white rounded-2xl shadow-sm p-6">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
                         <FileText className="w-5 h-5 text-[#A41E34]" />
-                        Property Details
+                        {data.property_type === 'land' ? 'Lot Details' : 'Property Details'}
                     </h2>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                <Bed className="w-4 h-4 inline-block mr-1" />
-                                Bedrooms *
-                            </label>
-                            <input
-                                type="number"
-                                value={data.bedrooms}
-                                onChange={(e) => setData('bedrooms', e.target.value)}
-                                className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
-                                    errors.bedrooms ? 'border-red-500' : 'border-gray-200'
-                                }`}
-                                min="0"
-                            />
-                            {errors.bedrooms && (
-                                <p className="text-red-500 text-sm mt-1">{errors.bedrooms}</p>
-                            )}
-                        </div>
+                        {/* Only show bedrooms, bathrooms, sqft, year built for non-land properties */}
+                        {data.property_type !== 'land' && (
+                            <>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        <Bed className="w-4 h-4 inline-block mr-1" />
+                                        Bedrooms *
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={data.bedrooms}
+                                        onChange={(e) => setData('bedrooms', e.target.value)}
+                                        className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
+                                            errors.bedrooms ? 'border-red-500' : 'border-gray-200'
+                                        }`}
+                                        min="0"
+                                    />
+                                    {errors.bedrooms && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.bedrooms}</p>
+                                    )}
+                                </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                <Bath className="w-4 h-4 inline-block mr-1" />
-                                Full Baths *
-                            </label>
-                            <input
-                                type="number"
-                                value={data.full_bathrooms}
-                                onChange={(e) => setData('full_bathrooms', e.target.value)}
-                                className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
-                                    errors.full_bathrooms ? 'border-red-500' : 'border-gray-200'
-                                }`}
-                                min="0"
-                            />
-                            {errors.full_bathrooms && (
-                                <p className="text-red-500 text-sm mt-1">{errors.full_bathrooms}</p>
-                            )}
-                        </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        <Bath className="w-4 h-4 inline-block mr-1" />
+                                        Full Baths *
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={data.full_bathrooms}
+                                        onChange={(e) => setData('full_bathrooms', e.target.value)}
+                                        className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
+                                            errors.full_bathrooms ? 'border-red-500' : 'border-gray-200'
+                                        }`}
+                                        min="0"
+                                    />
+                                    {errors.full_bathrooms && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.full_bathrooms}</p>
+                                    )}
+                                </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                <Bath className="w-4 h-4 inline-block mr-1" />
-                                Half Baths
-                            </label>
-                            <input
-                                type="number"
-                                value={data.half_bathrooms}
-                                onChange={(e) => setData('half_bathrooms', e.target.value)}
-                                className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
-                                    errors.half_bathrooms ? 'border-red-500' : 'border-gray-200'
-                                }`}
-                                min="0"
-                            />
-                            {errors.half_bathrooms && (
-                                <p className="text-red-500 text-sm mt-1">{errors.half_bathrooms}</p>
-                            )}
-                        </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        <Bath className="w-4 h-4 inline-block mr-1" />
+                                        Half Baths
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={data.half_bathrooms}
+                                        onChange={(e) => setData('half_bathrooms', e.target.value)}
+                                        className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
+                                            errors.half_bathrooms ? 'border-red-500' : 'border-gray-200'
+                                        }`}
+                                        min="0"
+                                    />
+                                    {errors.half_bathrooms && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.half_bathrooms}</p>
+                                    )}
+                                </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                <Square className="w-4 h-4 inline-block mr-1" />
-                                Sq. Ft.
-                            </label>
-                            <input
-                                type="number"
-                                value={data.sqft}
-                                onChange={(e) => setData('sqft', e.target.value)}
-                                className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
-                                    errors.sqft ? 'border-red-500' : 'border-gray-200'
-                                }`}
-                                min="0"
-                            />
-                            {errors.sqft && (
-                                <p className="text-red-500 text-sm mt-1">{errors.sqft}</p>
-                            )}
-                        </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        <Square className="w-4 h-4 inline-block mr-1" />
+                                        Sq. Ft.
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={data.sqft}
+                                        onChange={(e) => setData('sqft', e.target.value)}
+                                        className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
+                                            errors.sqft ? 'border-red-500' : 'border-gray-200'
+                                        }`}
+                                        min="0"
+                                    />
+                                    {errors.sqft && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.sqft}</p>
+                                    )}
+                                </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                <Calendar className="w-4 h-4 inline-block mr-1" />
-                                Year Built
-                            </label>
-                            <input
-                                type="number"
-                                value={data.year_built}
-                                onChange={(e) => setData('year_built', e.target.value)}
-                                className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
-                                    errors.year_built ? 'border-red-500' : 'border-gray-200'
-                                }`}
-                                min="1800"
-                                max={new Date().getFullYear() + 1}
-                            />
-                            {errors.year_built && (
-                                <p className="text-red-500 text-sm mt-1">{errors.year_built}</p>
-                            )}
-                        </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        <Calendar className="w-4 h-4 inline-block mr-1" />
+                                        Year Built
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={data.year_built}
+                                        onChange={(e) => setData('year_built', e.target.value)}
+                                        className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
+                                            errors.year_built ? 'border-red-500' : 'border-gray-200'
+                                        }`}
+                                        min="1800"
+                                        max={new Date().getFullYear() + 1}
+                                    />
+                                    {errors.year_built && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.year_built}</p>
+                                    )}
+                                </div>
+                            </>
+                        )}
 
-                        <div className="col-span-2">
+                        <div className={data.property_type === 'land' ? '' : 'col-span-2'}>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Lot Size
+                                Lot Size (Sq Ft) {data.property_type === 'land' ? '*' : ''}
                             </label>
                             <input
                                 type="text"
                                 value={data.lot_size}
                                 onChange={(e) => setData('lot_size', e.target.value)}
-                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
-                                placeholder="e.g., 0.25 acres"
+                                className={`w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] ${
+                                    errors.lot_size ? 'border-red-500' : 'border-gray-200'
+                                }`}
+                                placeholder="e.g., 43560"
                             />
+                            {errors.lot_size && (
+                                <p className="text-red-500 text-sm mt-1">{errors.lot_size}</p>
+                            )}
                         </div>
+
+                        {data.property_type === 'land' && (
+                            <>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Acres
+                                    </label>
+                                    <input
+                                        type="number"
+                                        step="0.0001"
+                                        value={data.acres}
+                                        onChange={(e) => setData('acres', e.target.value)}
+                                        className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                        placeholder="e.g., 5.5"
+                                    />
+                                    <p className="text-xs text-gray-400 mt-1">Acres x 43,560 = sqft</p>
+                                </div>
+
+                                <div className="col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Zoning
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={data.zoning}
+                                        onChange={(e) => setData('zoning', e.target.value)}
+                                        className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                        placeholder="e.g., Agricultural, Residential"
+                                    />
+                                </div>
+                            </>
+                        )}
                     </div>
 
                     <div className="mt-6">
@@ -750,7 +888,7 @@ export default function EditListing({ property }) {
                             onChange={(e) => setData('description', e.target.value)}
                             rows={5}
                             className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
-                            placeholder="Describe your property..."
+                            placeholder={data.property_type === 'land' ? 'Describe your lot/land...' : 'Describe your property...'}
                         />
                     </div>
                 </div>
@@ -758,11 +896,11 @@ export default function EditListing({ property }) {
                 {/* Features */}
                 <div className="bg-white rounded-2xl shadow-sm p-6">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                        Features & Amenities
+                        {data.property_type === 'land' ? 'Land Features' : 'Features & Amenities'}
                     </h2>
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                        {featureOptions.map((feature) => {
+                        {(data.property_type === 'land' ? landFeatureOptions : featureOptions).map((feature) => {
                             const features = Array.isArray(data.features) ? data.features : [];
                             const isSelected = features.includes(feature);
                             return (

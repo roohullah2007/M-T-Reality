@@ -18,6 +18,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
     priceMax: String(filters.priceMax || ''),
     bedrooms: String(filters.bedrooms || ''),
     bathrooms: String(filters.bathrooms || ''),
+    schoolDistrict: String(filters.schoolDistrict || ''),
     sort: String(filters.sort || 'newest'),
   });
 
@@ -194,6 +195,30 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
               </div>
             </div>
 
+            {/* Second Row - School District */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+              {/* School District */}
+              <div>
+                <label className="block text-sm font-medium text-[#111] mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  School District
+                </label>
+                <div className="relative">
+                  <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                  </svg>
+                  <input
+                    type="text"
+                    placeholder="Search school district"
+                    className="w-full pl-10 pr-4 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#A41E34] transition-colors"
+                    style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                    value={searchParams.schoolDistrict}
+                    onChange={(e) => handleSearchChange('schoolDistrict', e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+
             {/* Status Dropdown & Action Buttons */}
             <div className="flex justify-between items-center mt-4 gap-3">
               {/* Status Dropdown */}
@@ -235,6 +260,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                       priceMax: '',
                       bedrooms: '',
                       bathrooms: '',
+                      schoolDistrict: '',
                       sort: 'newest',
                     });
                     router.get('/properties');
@@ -352,6 +378,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                       priceMax: '',
                       bedrooms: '',
                       bathrooms: '',
+                      schoolDistrict: '',
                       sort: 'newest',
                     });
                     router.get('/properties');

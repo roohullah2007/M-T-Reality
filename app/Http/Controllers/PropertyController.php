@@ -43,6 +43,9 @@ class PropertyController extends Controller
      */
     public function store(Request $request)
     {
+        // Check if this is a land/lot listing (different validation rules apply)
+        $isLand = $request->input('propertyType') === 'land';
+
         $validated = $request->validate([
             'propertyTitle' => 'required|string|max:255',
             'developer' => 'nullable|string|max:255',
@@ -52,11 +55,19 @@ class PropertyController extends Controller
             'city' => 'required|string',
             'zipCode' => 'required|string',
             'subdivision' => 'nullable|string',
-            'bedrooms' => 'required|integer|min:0',
-            'fullBathrooms' => 'required|integer|min:0',
+            // School Information (required for all property types)
+            'schoolDistrict' => 'required|string|max:255',
+            'gradeSchool' => 'nullable|string|max:255',
+            'middleSchool' => 'nullable|string|max:255',
+            'highSchool' => 'nullable|string|max:255',
+            // For land listings, bedrooms/bathrooms/sqft/yearBuilt are not applicable
+            'bedrooms' => $isLand ? 'nullable|integer|min:0' : 'required|integer|min:0',
+            'fullBathrooms' => $isLand ? 'nullable|integer|min:0' : 'required|integer|min:0',
             'halfBathrooms' => 'nullable|integer|min:0',
-            'sqft' => 'required|integer|min:0',
-            'lotSize' => 'nullable|integer|min:0',
+            'sqft' => $isLand ? 'nullable|integer|min:0' : 'required|integer|min:0',
+            'lotSize' => $isLand ? 'required|string|max:100' : 'nullable|string|max:100',
+            'acres' => 'nullable|numeric|min:0',
+            'zoning' => 'nullable|string|max:100',
             'yearBuilt' => 'nullable|integer|min:1800|max:' . (date('Y') + 1),
             'description' => 'required|string',
             'features' => 'nullable', // JSON string or array from frontend
@@ -89,6 +100,12 @@ class PropertyController extends Controller
         $user = auth()->user();
 
         // Convert camelCase to snake_case for database
+        // For land listings, set bedrooms/bathrooms/sqft to 0 (they don't apply)
+        $bedrooms = $isLand ? 0 : ($validated['bedrooms'] ?? 0);
+        $fullBathrooms = $isLand ? 0 : ($validated['fullBathrooms'] ?? 0);
+        $halfBathrooms = $isLand ? 0 : ($validated['halfBathrooms'] ?? 0);
+        $sqft = $isLand ? 0 : ($validated['sqft'] ?? 0);
+
         $property = Property::create([
             'user_id' => $user->id,
             'property_title' => $validated['propertyTitle'],
@@ -100,13 +117,20 @@ class PropertyController extends Controller
             'state' => 'Oklahoma',
             'zip_code' => $validated['zipCode'],
             'subdivision' => $validated['subdivision'] ?? null,
-            'bedrooms' => $validated['bedrooms'],
-            'bathrooms' => $validated['fullBathrooms'] + (($validated['halfBathrooms'] ?? 0) * 0.5),
-            'full_bathrooms' => $validated['fullBathrooms'],
-            'half_bathrooms' => $validated['halfBathrooms'] ?? 0,
-            'sqft' => $validated['sqft'],
+            // School Information
+            'school_district' => $validated['schoolDistrict'],
+            'grade_school' => $validated['gradeSchool'] ?? null,
+            'middle_school' => $validated['middleSchool'] ?? null,
+            'high_school' => $validated['highSchool'] ?? null,
+            'bedrooms' => $bedrooms,
+            'bathrooms' => $fullBathrooms + ($halfBathrooms * 0.5),
+            'full_bathrooms' => $fullBathrooms,
+            'half_bathrooms' => $halfBathrooms,
+            'sqft' => $sqft,
             'lot_size' => $validated['lotSize'] ?? null,
-            'year_built' => $validated['yearBuilt'] ?? null,
+            'acres' => $validated['acres'] ?? null,
+            'zoning' => $validated['zoning'] ?? null,
+            'year_built' => $isLand ? null : ($validated['yearBuilt'] ?? null),
             'description' => $validated['description'],
             'features' => $features,
             'photos' => $photoPaths,
@@ -314,6 +338,11 @@ class PropertyController extends Controller
             $query->where('full_bathrooms', '>=', $request->bathrooms);
         }
 
+        // Filter by school district
+        if ($request->schoolDistrict) {
+            $query->where('school_district', 'like', '%' . $request->schoolDistrict . '%');
+        }
+
         // Sorting
         $sortBy = $request->sort ?? 'newest';
         switch ($sortBy) {
@@ -355,7 +384,7 @@ class PropertyController extends Controller
 
         return Inertia::render('Properties', [
             'properties' => $properties,
-            'filters' => $request->only(['keyword', 'location', 'status', 'propertyType', 'priceMin', 'priceMax', 'bedrooms', 'bathrooms', 'sort']),
+            'filters' => $request->only(['keyword', 'location', 'status', 'propertyType', 'priceMin', 'priceMax', 'bedrooms', 'bathrooms', 'schoolDistrict', 'sort']),
             'isAdmin' => $isAdmin,
             'allPropertiesForMap' => $allPropertiesForMap,
         ]);

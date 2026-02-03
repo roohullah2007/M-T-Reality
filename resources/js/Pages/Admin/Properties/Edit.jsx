@@ -40,11 +40,18 @@ export default function EditProperty({ property, listingStatuses = {} }) {
         state: property.state || 'Oklahoma',
         zip_code: property.zip_code || '',
         subdivision: property.subdivision || '',
+        // School Information
+        school_district: property.school_district || '',
+        grade_school: property.grade_school || '',
+        middle_school: property.middle_school || '',
+        high_school: property.high_school || '',
         bedrooms: property.bedrooms ?? 0,
         full_bathrooms: property.full_bathrooms ?? 0,
         half_bathrooms: property.half_bathrooms ?? 0,
         sqft: property.sqft || '',
         lot_size: property.lot_size || '',
+        acres: property.acres ?? '',
+        zoning: property.zoning || '',
         year_built: property.year_built || '',
         description: property.description || '',
         features: property.features || [],
@@ -214,17 +221,21 @@ export default function EditProperty({ property, listingStatuses = {} }) {
         const newPhotoPaths = successfulNewPhotos.map(p => p.serverPath);
         const allPhotos = [...photos, ...newPhotoPaths];
 
+        // Check if this is a land property
+        const isLand = data.property_type === 'land';
+
         // Ensure numeric fields are numbers, not empty strings
+        // For land properties, set bedrooms/bathrooms/sqft to 0 (they don't apply)
         const submitData = {
             ...data,
             photos: allPhotos,
-            bedrooms: parseInt(data.bedrooms) || 0,
-            full_bathrooms: parseInt(data.full_bathrooms) || 0,
-            half_bathrooms: parseInt(data.half_bathrooms) || 0,
-            sqft: parseInt(data.sqft) || 0,
+            bedrooms: isLand ? 0 : (parseInt(data.bedrooms) || 0),
+            full_bathrooms: isLand ? 0 : (parseInt(data.full_bathrooms) || 0),
+            half_bathrooms: isLand ? 0 : (parseInt(data.half_bathrooms) || 0),
+            sqft: isLand ? 0 : (parseInt(data.sqft) || 0),
             price: parseFloat(data.price) || 0,
-            lot_size: data.lot_size ? parseInt(data.lot_size) : null,
-            year_built: data.year_built ? parseInt(data.year_built) : null,
+            lot_size: data.lot_size || null,
+            year_built: isLand ? null : (data.year_built ? parseInt(data.year_built) : null),
             // Ensure URL fields are explicitly included (keep value or empty string)
             virtual_tour_url: data.virtual_tour_url || '',
             matterport_url: data.matterport_url || '',
@@ -423,67 +434,157 @@ export default function EditProperty({ property, listingStatuses = {} }) {
                     </div>
                 </div>
 
-                {/* Property Details */}
+                {/* School Information */}
+                <div className="bg-white rounded-xl shadow-sm p-6">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <svg className="w-5 h-5 text-[#A41E34]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                        </svg>
+                        School Information
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">School District *</label>
+                            <input
+                                type="text"
+                                value={data.school_district}
+                                onChange={e => setData('school_district', e.target.value)}
+                                placeholder="e.g., Tulsa Public Schools"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                            />
+                            {errors.school_district && <p className="text-red-500 text-sm mt-1">{errors.school_district}</p>}
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Grade School</label>
+                            <input
+                                type="text"
+                                value={data.grade_school}
+                                onChange={e => setData('grade_school', e.target.value)}
+                                placeholder="Elementary school name"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Middle/Jr High School</label>
+                            <input
+                                type="text"
+                                value={data.middle_school}
+                                onChange={e => setData('middle_school', e.target.value)}
+                                placeholder="Middle school name"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">High School</label>
+                            <input
+                                type="text"
+                                value={data.high_school}
+                                onChange={e => setData('high_school', e.target.value)}
+                                placeholder="High school name"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Property Details / Lot Details */}
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                         <Square className="w-5 h-5 text-[#A41E34]" />
-                        Property Details
+                        {data.property_type === 'land' ? 'Lot Details' : 'Property Details'}
                     </h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Bedrooms</label>
+                        {/* Only show bedrooms, bathrooms, sqft, year built for non-land properties */}
+                        {data.property_type !== 'land' && (
+                            <>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Bedrooms</label>
+                                    <input
+                                        type="number"
+                                        value={data.bedrooms}
+                                        onChange={e => setData('bedrooms', e.target.value)}
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Full Baths</label>
+                                    <input
+                                        type="number"
+                                        value={data.full_bathrooms}
+                                        onChange={e => setData('full_bathrooms', e.target.value)}
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Half Baths</label>
+                                    <input
+                                        type="number"
+                                        value={data.half_bathrooms}
+                                        onChange={e => setData('half_bathrooms', e.target.value)}
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Sqft</label>
+                                    <input
+                                        type="number"
+                                        value={data.sqft}
+                                        onChange={e => setData('sqft', e.target.value)}
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Year Built</label>
+                                    <input
+                                        type="number"
+                                        value={data.year_built}
+                                        onChange={e => setData('year_built', e.target.value)}
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                    />
+                                </div>
+                            </>
+                        )}
+                        <div className={data.property_type === 'land' ? '' : ''}>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Lot Size (Sq Ft) {data.property_type === 'land' ? '*' : ''}
+                            </label>
                             <input
-                                type="number"
-                                value={data.bedrooms}
-                                onChange={e => setData('bedrooms', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Full Baths</label>
-                            <input
-                                type="number"
-                                value={data.full_bathrooms}
-                                onChange={e => setData('full_bathrooms', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Half Baths</label>
-                            <input
-                                type="number"
-                                value={data.half_bathrooms}
-                                onChange={e => setData('half_bathrooms', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Sqft</label>
-                            <input
-                                type="number"
-                                value={data.sqft}
-                                onChange={e => setData('sqft', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Lot Size (sqft)</label>
-                            <input
-                                type="number"
+                                type="text"
                                 value={data.lot_size}
                                 onChange={e => setData('lot_size', e.target.value)}
+                                placeholder="e.g., 43560"
                                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
                             />
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Year Built</label>
-                            <input
-                                type="number"
-                                value={data.year_built}
-                                onChange={e => setData('year_built', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
-                            />
-                        </div>
+
+                        {data.property_type === 'land' && (
+                            <>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Acres</label>
+                                    <input
+                                        type="number"
+                                        step="0.0001"
+                                        value={data.acres}
+                                        onChange={e => setData('acres', e.target.value)}
+                                        placeholder="e.g., 5.5"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                    />
+                                    <p className="text-xs text-gray-400 mt-1">Acres x 43,560 = sqft</p>
+                                </div>
+
+                                <div className="col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Zoning</label>
+                                    <input
+                                        type="text"
+                                        value={data.zoning}
+                                        onChange={e => setData('zoning', e.target.value)}
+                                        placeholder="e.g., Agricultural, Residential"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                    />
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
 

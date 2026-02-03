@@ -34,12 +34,20 @@ function ListProperty() {
     zipCode: '',
     subdivision: '',
 
+    // School Information
+    schoolDistrict: '',
+    gradeSchool: '',
+    middleSchool: '',
+    highSchool: '',
+
     // Property Details
     bedrooms: '',
     fullBathrooms: '',
     halfBathrooms: '',
     sqft: '',
     lotSize: '',
+    acres: '',
+    zoning: '',
     yearBuilt: '',
 
     // Description
@@ -74,6 +82,12 @@ function ListProperty() {
     'Stainless Steel Appliances', 'Updated Kitchen', 'Updated Bathroom',
     'Security System', 'Sprinkler System', 'Fenced Yard', 'Mature Trees',
     'Mountain View', 'Lakefront', 'Waterfront', 'Golf Course', 'Guest Quarters'
+  ];
+
+  const landFeatures = [
+    'Fenced', 'Mature Trees', 'Additional Land Available', 'Corner Lot', 'Cul-De-Sac',
+    'Farm or Ranch', 'Greenbelt', 'Golf Course Frontage', 'Hunting', 'Livestock Allowed',
+    'Mobile Ready', 'Pond', 'Sidewalk', 'Spring/Creek', 'Water Frontage', 'Zero Lot Line'
   ];
 
   const handleInputChange = (field, value) => {
@@ -322,11 +336,18 @@ function ListProperty() {
       state: data.state,
       zipCode: data.zipCode,
       subdivision: data.subdivision || '',
+      // School Information
+      schoolDistrict: data.schoolDistrict,
+      gradeSchool: data.gradeSchool || '',
+      middleSchool: data.middleSchool || '',
+      highSchool: data.highSchool || '',
       bedrooms: data.bedrooms,
       fullBathrooms: data.fullBathrooms,
       halfBathrooms: data.halfBathrooms || 0,
       sqft: data.sqft,
       lotSize: data.lotSize || '',
+      acres: data.acres || '',
+      zoning: data.zoning || '',
       yearBuilt: data.yearBuilt || '',
       description: data.description,
       contactName: data.contactName,
@@ -629,107 +650,223 @@ function ListProperty() {
               </div>
             </div>
 
-            {/* Property Details */}
+            {/* School Information */}
+            <div className="bg-white rounded-xl p-6 md:p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="bg-[#E5E1DC] p-3 rounded-lg">
+                  <svg className="w-6 h-6 text-[#3D3D3D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                  </svg>
+                </div>
+                <h2 className="text-2xl md:text-3xl font-semibold text-[#111]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                  School Information
+                </h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                    School District *
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g., Tulsa Public Schools"
+                    className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
+                    style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+                    value={data.schoolDistrict}
+                    onChange={(e) => handleInputChange('schoolDistrict', e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                    Grade School
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Elementary school name"
+                    className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
+                    style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+                    value={data.gradeSchool}
+                    onChange={(e) => handleInputChange('gradeSchool', e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                    Middle/Jr High School
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Middle school name"
+                    className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
+                    style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+                    value={data.middleSchool}
+                    onChange={(e) => handleInputChange('middleSchool', e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                    High School
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="High school name"
+                    className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
+                    style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+                    value={data.highSchool}
+                    onChange={(e) => handleInputChange('highSchool', e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Property Details / Lot Details */}
             <div className="bg-white rounded-xl p-6 md:p-8">
               <div className="flex items-center gap-3 mb-6">
                 <div className="bg-[#E5E1DC] p-3 rounded-lg">
                   <Home className="w-6 h-6 text-[#3D3D3D]" />
                 </div>
                 <h2 className="text-2xl md:text-3xl font-semibold text-[#111]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                  Property Details
+                  {data.propertyType === 'land' ? 'Lot Details' : 'Property Details'}
                 </h2>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                    Bedrooms *
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="3"
-                    min="0"
-                    className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
-                    style={{ fontFamily: '"Instrument Sans", sans-serif' }}
-                    value={data.bedrooms}
-                    onChange={(e) => handleInputChange('bedrooms', e.target.value)}
-                    required
-                  />
-                </div>
+                {/* Only show bedrooms, bathrooms, sqft, year built for non-land properties */}
+                {data.propertyType !== 'land' && (
+                  <>
+                    <div>
+                      <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                        Bedrooms *
+                      </label>
+                      <input
+                        type="number"
+                        placeholder="3"
+                        min="0"
+                        className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
+                        style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+                        value={data.bedrooms}
+                        onChange={(e) => handleInputChange('bedrooms', e.target.value)}
+                        required
+                      />
+                    </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                    Full Bathrooms *
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="2"
-                    min="0"
-                    className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
-                    style={{ fontFamily: '"Instrument Sans", sans-serif' }}
-                    value={data.fullBathrooms}
-                    onChange={(e) => handleInputChange('fullBathrooms', e.target.value)}
-                    required
-                  />
-                </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                        Full Bathrooms *
+                      </label>
+                      <input
+                        type="number"
+                        placeholder="2"
+                        min="0"
+                        className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
+                        style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+                        value={data.fullBathrooms}
+                        onChange={(e) => handleInputChange('fullBathrooms', e.target.value)}
+                        required
+                      />
+                    </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                    Half Bathrooms
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="1"
-                    min="0"
-                    className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
-                    style={{ fontFamily: '"Instrument Sans", sans-serif' }}
-                    value={data.halfBathrooms}
-                    onChange={(e) => handleInputChange('halfBathrooms', e.target.value)}
-                  />
-                </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                        Half Bathrooms
+                      </label>
+                      <input
+                        type="number"
+                        placeholder="1"
+                        min="0"
+                        className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
+                        style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+                        value={data.halfBathrooms}
+                        onChange={(e) => handleInputChange('halfBathrooms', e.target.value)}
+                      />
+                    </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                    Square Feet *
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="2000"
-                    className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
-                    style={{ fontFamily: '"Instrument Sans", sans-serif' }}
-                    value={data.sqft}
-                    onChange={(e) => handleInputChange('sqft', e.target.value)}
-                    required
-                  />
-                </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                        Square Feet *
+                      </label>
+                      <input
+                        type="number"
+                        placeholder="2000"
+                        className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
+                        style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+                        value={data.sqft}
+                        onChange={(e) => handleInputChange('sqft', e.target.value)}
+                        required
+                      />
+                    </div>
+                  </>
+                )}
 
-                <div>
+                <div className={data.propertyType === 'land' ? '' : ''}>
                   <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                    Lot Size (sqft)
+                    Lot Size (Sq Ft) {data.propertyType === 'land' ? '*' : ''}
                   </label>
                   <input
-                    type="number"
-                    placeholder="5000"
+                    type="text"
+                    placeholder="e.g., 43560"
                     className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
                     style={{ fontFamily: '"Instrument Sans", sans-serif' }}
                     value={data.lotSize}
                     onChange={(e) => handleInputChange('lotSize', e.target.value)}
+                    required={data.propertyType === 'land'}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                    Year Built
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="2010"
-                    className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
-                    style={{ fontFamily: '"Instrument Sans", sans-serif' }}
-                    value={data.yearBuilt}
-                    onChange={(e) => handleInputChange('yearBuilt', e.target.value)}
-                  />
-                </div>
+                {data.propertyType === 'land' && (
+                  <>
+                    <div>
+                      <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                        Acres
+                      </label>
+                      <input
+                        type="number"
+                        step="0.0001"
+                        placeholder="e.g., 5.5"
+                        className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
+                        style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+                        value={data.acres}
+                        onChange={(e) => handleInputChange('acres', e.target.value)}
+                      />
+                      <p className="text-xs text-[#666] mt-1">Multiply Acres x 43,560 for sqft</p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                        Zoning
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g., Agricultural, Residential"
+                        className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
+                        style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+                        value={data.zoning}
+                        onChange={(e) => handleInputChange('zoning', e.target.value)}
+                      />
+                    </div>
+                  </>
+                )}
+
+                {data.propertyType !== 'land' && (
+                  <div>
+                    <label className="block text-sm font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                      Year Built
+                    </label>
+                    <input
+                      type="number"
+                      placeholder="2010"
+                      className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
+                      style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+                      value={data.yearBuilt}
+                      onChange={(e) => handleInputChange('yearBuilt', e.target.value)}
+                    />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -767,12 +904,12 @@ function ListProperty() {
                   <CheckCircle className="w-6 h-6 text-[#3D3D3D]" />
                 </div>
                 <h2 className="text-2xl md:text-3xl font-semibold text-[#111]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                  Property Features
+                  {data.propertyType === 'land' ? 'Land Features' : 'Property Features'}
                 </h2>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {features.map(feature => (
+                {(data.propertyType === 'land' ? landFeatures : features).map(feature => (
                   <label key={feature} className="flex items-center gap-2 cursor-pointer p-3 rounded-lg hover:bg-[#EEEDEA] transition-colors">
                     <input
                       type="checkbox"
