@@ -345,10 +345,10 @@ function ListProperty() {
       fullBathrooms: data.fullBathrooms,
       halfBathrooms: data.halfBathrooms || 0,
       sqft: data.sqft,
-      lotSize: data.lotSize || '',
-      acres: data.acres || '',
+      lotSize: data.lotSize ? parseInt(data.lotSize, 10) : null,
+      acres: data.acres ? parseFloat(data.acres) : null,
       zoning: data.zoning || '',
-      yearBuilt: data.yearBuilt || '',
+      yearBuilt: data.yearBuilt ? parseInt(data.yearBuilt, 10) : null,
       description: data.description,
       contactName: data.contactName,
       contactEmail: data.contactEmail,
@@ -808,7 +808,8 @@ function ListProperty() {
                     Lot Size (Sq Ft) {data.propertyType === 'land' ? '*' : ''}
                   </label>
                   <input
-                    type="text"
+                    type="number"
+                    min="0"
                     placeholder="e.g., 43560"
                     className="w-full px-4 py-3 border border-[#D0CCC7] rounded-lg focus:ring-2 focus:ring-[#A41E34] focus:border-transparent transition-all"
                     style={{ fontFamily: '"Instrument Sans", sans-serif' }}

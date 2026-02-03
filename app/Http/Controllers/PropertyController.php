@@ -65,7 +65,7 @@ class PropertyController extends Controller
             'fullBathrooms' => $isLand ? 'nullable|integer|min:0' : 'required|integer|min:0',
             'halfBathrooms' => 'nullable|integer|min:0',
             'sqft' => $isLand ? 'nullable|integer|min:0' : 'required|integer|min:0',
-            'lotSize' => $isLand ? 'required|string|max:100' : 'nullable|string|max:100',
+            'lotSize' => 'nullable|integer|min:0',
             'acres' => 'nullable|numeric|min:0',
             'zoning' => 'nullable|string|max:100',
             'yearBuilt' => 'nullable|integer|min:1800|max:' . (date('Y') + 1),
