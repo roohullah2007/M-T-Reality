@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import { MapPin, Navigation, ZoomIn, ZoomOut, Loader2, AlertCircle } from 'lucide-react';
+import { MapPin, Navigation, ZoomIn, ZoomOut, Loader2, AlertCircle, Layers } from 'lucide-react';
 import { usePage } from '@inertiajs/react';
 import axios from 'axios';
 
@@ -55,6 +55,7 @@ const LocationMapPicker = ({
         lng: isValidCoord(longitude) ? parseFloat(longitude) : null,
     });
     const [isReverseGeocoding, setIsReverseGeocoding] = useState(false);
+    const [mapType, setMapType] = useState('roadmap'); // 'roadmap' or 'satellite'
 
     // Oklahoma default center
     const defaultLat = 35.5;
@@ -417,6 +418,20 @@ const LocationMapPicker = ({
                         onClick={handleResetView}
                     >
                         <Navigation className="w-4 h-4 text-gray-700" />
+                    </button>
+                    <button
+                        type="button"
+                        className={`p-2 rounded-lg shadow-lg transition-colors ${mapType === 'satellite' ? 'bg-[#A41E34] text-white' : 'bg-white hover:bg-gray-50 text-gray-700'}`}
+                        title={mapType === 'satellite' ? 'Switch to Road Map' : 'Switch to Satellite View'}
+                        onClick={() => {
+                            const newType = mapType === 'roadmap' ? 'satellite' : 'roadmap';
+                            setMapType(newType);
+                            if (mapInstanceRef.current) {
+                                mapInstanceRef.current.setMapTypeId(newType);
+                            }
+                        }}
+                    >
+                        <Layers className="w-4 h-4" />
                     </button>
                 </div>
 

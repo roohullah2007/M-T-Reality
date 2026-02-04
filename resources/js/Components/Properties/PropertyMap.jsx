@@ -1,90 +1,114 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { MapPin, Navigation, ZoomIn, ZoomOut, X, ChevronUp, BedDouble, Bath, Maximize2 } from 'lucide-react';
+import { MapPin, Navigation, ZoomIn, ZoomOut, X, ChevronUp, BedDouble, Bath, Maximize2, Layers } from 'lucide-react';
+import { usePage } from '@inertiajs/react';
 
 const PropertyMap = ({ properties = [], onPropertyClick }) => {
+  const { googleMapsApiKey } = usePage().props;
   const mapRef = useRef(null);
   const [mapInstance, setMapInstance] = useState(null);
   const mapInstanceRef = useRef(null);
   const markersRef = useRef([]);
+  const infoWindowRef = useRef(null);
   const [showListingsPanel, setShowListingsPanel] = useState(false);
+  const [mapType, setMapType] = useState('roadmap');
+
+  // Oklahoma default center
+  const defaultLat = 35.5;
+  const defaultLng = -97.5;
+  const defaultZoom = 7;
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.L) {
+    if (!googleMapsApiKey) {
+      console.error('Google Maps API key is not configured');
+      return;
+    }
+
+    if (typeof window !== 'undefined' && window.google && window.google.maps) {
       initializeMap();
     } else {
-      loadLeaflet();
+      loadGoogleMaps();
     }
 
     return () => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
-        mapInstanceRef.current = null;
+      // Clean up markers
+      if (markersRef.current) {
+        markersRef.current.forEach(marker => marker.setMap(null));
+        markersRef.current = [];
       }
+      if (infoWindowRef.current) {
+        infoWindowRef.current.close();
+      }
+      mapInstanceRef.current = null;
     };
-  }, []);
+  }, [googleMapsApiKey]);
 
   // Update markers when properties change
   useEffect(() => {
-    if (mapInstance && window.L) {
+    if (mapInstance && window.google && window.google.maps) {
       updateMarkers();
     }
   }, [properties, mapInstance]);
 
-  const loadLeaflet = () => {
-    // Check if already loading
-    if (document.querySelector('link[href*="leaflet"]')) {
-      const checkLeaflet = setInterval(() => {
-        if (window.L) {
-          clearInterval(checkLeaflet);
+  const loadGoogleMaps = () => {
+    // Check if script is already loading
+    if (document.querySelector('script[src*="maps.googleapis.com"]')) {
+      const checkGoogle = setInterval(() => {
+        if (window.google && window.google.maps) {
+          clearInterval(checkGoogle);
           initializeMap();
         }
       }, 100);
       return;
     }
 
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-    document.head.appendChild(link);
-
     const script = document.createElement('script');
-    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=marker`;
+    script.async = true;
+    script.defer = true;
     script.onload = () => initializeMap();
-    document.body.appendChild(script);
+    script.onerror = () => console.error('Failed to load Google Maps');
+    document.head.appendChild(script);
   };
 
   const initializeMap = () => {
     if (!mapRef.current || mapInstance) return;
 
-    const L = window.L;
-
-    // Default center: Oklahoma
-    const map = L.map(mapRef.current, {
+    const map = new window.google.maps.Map(mapRef.current, {
+      center: { lat: defaultLat, lng: defaultLng },
+      zoom: defaultZoom,
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullscreenControl: false,
       zoomControl: false,
-    }).setView([35.5, -97.5], 7);
+      mapTypeId: mapType,
+      styles: [
+        {
+          featureType: 'poi',
+          elementType: 'labels',
+          stylers: [{ visibility: 'off' }],
+        },
+      ],
+    });
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      maxZoom: 19,
-    }).addTo(map);
+    // Create a single info window to reuse
+    infoWindowRef.current = new window.google.maps.InfoWindow();
 
     mapInstanceRef.current = map;
     setMapInstance(map);
   };
 
   const updateMarkers = () => {
-    const L = window.L;
-    if (!L || !mapInstance) return;
+    if (!window.google || !window.google.maps || !mapInstance) return;
 
     // Clear existing markers
-    markersRef.current.forEach(m => mapInstance.removeLayer(m));
+    markersRef.current.forEach(marker => marker.setMap(null));
     markersRef.current = [];
 
     const validProperties = properties.filter(p => p.latitude && p.longitude);
 
     if (validProperties.length === 0) return;
 
-    const bounds = L.latLngBounds();
+    const bounds = new window.google.maps.LatLngBounds();
 
     validProperties.forEach((property) => {
       const lat = parseFloat(property.latitude);
@@ -92,7 +116,7 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
 
       if (isNaN(lat) || isNaN(lng)) return;
 
-      bounds.extend([lat, lng]);
+      bounds.extend({ lat, lng });
 
       const priceLabel = property.price >= 1000000
         ? `$${(property.price / 1000000).toFixed(1)}M`
@@ -103,19 +127,60 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
         : property.listing_status === 'inactive' ? '#6B7280'
         : '#A41E34';
 
-      const markerIcon = L.divIcon({
-        className: 'custom-marker',
-        html: `
-          <div style="position:relative;cursor:pointer;">
-            <div style="background:${statusColor};color:white;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.3);">
-              ${priceLabel}
-            </div>
-            <div style="position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid ${statusColor};"></div>
+      // Create custom marker element
+      const markerDiv = document.createElement('div');
+      markerDiv.innerHTML = `
+        <div style="position:relative;cursor:pointer;">
+          <div style="background:${statusColor};color:white;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.3);">
+            ${priceLabel}
           </div>
-        `,
-        iconSize: [80, 40],
-        iconAnchor: [40, 40],
-      });
+          <div style="position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid ${statusColor};"></div>
+        </div>
+      `;
+
+      // Use AdvancedMarkerElement if available, otherwise fallback to regular marker
+      let marker;
+      if (window.google.maps.marker && window.google.maps.marker.AdvancedMarkerElement) {
+        marker = new window.google.maps.marker.AdvancedMarkerElement({
+          position: { lat, lng },
+          map: mapInstance,
+          content: markerDiv,
+        });
+      } else {
+        // Fallback to regular marker with custom icon
+        marker = new window.google.maps.Marker({
+          position: { lat, lng },
+          map: mapInstance,
+          label: {
+            text: priceLabel,
+            color: 'white',
+            fontSize: '12px',
+            fontWeight: '700',
+          },
+          icon: {
+            path: window.google.maps.SymbolPath.CIRCLE,
+            scale: 0,
+          },
+        });
+
+        // Create overlay for custom HTML marker
+        const overlay = new window.google.maps.OverlayView();
+        overlay.onAdd = function() {
+          const panes = this.getPanes();
+          panes.overlayMouseTarget.appendChild(markerDiv);
+        };
+        overlay.draw = function() {
+          const projection = this.getProjection();
+          const position = projection.fromLatLngToDivPixel(new window.google.maps.LatLng(lat, lng));
+          markerDiv.style.position = 'absolute';
+          markerDiv.style.left = (position.x - 40) + 'px';
+          markerDiv.style.top = (position.y - 40) + 'px';
+        };
+        overlay.onRemove = function() {
+          markerDiv.parentNode?.removeChild(markerDiv);
+        };
+        overlay.setMap(mapInstance);
+      }
 
       const photo = property.photos && property.photos.length > 0
         ? property.photos[0]
@@ -137,20 +202,64 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
         </div>
       `;
 
-      const marker = L.marker([lat, lng], { icon: markerIcon })
-        .addTo(mapInstance)
-        .bindPopup(popupContent, { maxWidth: 260, minWidth: 220 });
+      // Add click listener
+      const clickHandler = () => {
+        if (infoWindowRef.current) {
+          infoWindowRef.current.setContent(popupContent);
+          infoWindowRef.current.setPosition({ lat, lng });
+          infoWindowRef.current.open(mapInstance);
+        }
+        if (onPropertyClick) {
+          onPropertyClick(property);
+        }
+      };
 
-      if (onPropertyClick) {
-        marker.on('click', () => onPropertyClick(property));
+      if (marker.addListener) {
+        marker.addListener('click', clickHandler);
+      } else {
+        markerDiv.addEventListener('click', clickHandler);
       }
 
       markersRef.current.push(marker);
     });
 
     // Fit map to bounds
-    if (bounds.isValid()) {
-      mapInstance.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+    if (validProperties.length > 0) {
+      mapInstance.fitBounds(bounds, { padding: 40 });
+      // Limit max zoom when fitting bounds
+      const listener = window.google.maps.event.addListener(mapInstance, 'idle', () => {
+        if (mapInstance.getZoom() > 14) {
+          mapInstance.setZoom(14);
+        }
+        window.google.maps.event.removeListener(listener);
+      });
+    }
+  };
+
+  const handleZoomIn = () => {
+    if (mapInstance) {
+      mapInstance.setZoom(mapInstance.getZoom() + 1);
+    }
+  };
+
+  const handleZoomOut = () => {
+    if (mapInstance) {
+      mapInstance.setZoom(mapInstance.getZoom() - 1);
+    }
+  };
+
+  const handleResetView = () => {
+    if (mapInstance) {
+      mapInstance.setCenter({ lat: defaultLat, lng: defaultLng });
+      mapInstance.setZoom(defaultZoom);
+    }
+  };
+
+  const handleToggleMapType = () => {
+    const newType = mapType === 'roadmap' ? 'satellite' : 'roadmap';
+    setMapType(newType);
+    if (mapInstance) {
+      mapInstance.setMapTypeId(newType);
     }
   };
 
@@ -161,34 +270,41 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
       <div ref={mapRef} className="w-full h-full" style={{ minHeight: '400px' }} />
 
       {/* Map Controls */}
-      <div className="absolute top-4 right-4 flex flex-col gap-2 z-[1000]">
+      <div className="absolute top-4 right-4 flex flex-col gap-2 z-[10]">
         <button
           className="bg-white p-2 rounded-lg shadow-lg hover:bg-gray-50 transition-colors"
           title="Zoom In"
-          onClick={() => mapInstance?.zoomIn()}
+          onClick={handleZoomIn}
         >
           <ZoomIn className="w-4 h-4 text-gray-700" />
         </button>
         <button
           className="bg-white p-2 rounded-lg shadow-lg hover:bg-gray-50 transition-colors"
           title="Zoom Out"
-          onClick={() => mapInstance?.zoomOut()}
+          onClick={handleZoomOut}
         >
           <ZoomOut className="w-4 h-4 text-gray-700" />
         </button>
         <button
           className="bg-white p-2 rounded-lg shadow-lg hover:bg-gray-50 transition-colors"
           title="Reset View"
-          onClick={() => mapInstance?.setView([35.5, -97.5], 7)}
+          onClick={handleResetView}
         >
           <Navigation className="w-4 h-4 text-gray-700" />
+        </button>
+        <button
+          className={`p-2 rounded-lg shadow-lg transition-colors ${mapType === 'satellite' ? 'bg-[#A41E34] text-white' : 'bg-white hover:bg-gray-50 text-gray-700'}`}
+          title={mapType === 'satellite' ? 'Switch to Road Map' : 'Switch to Satellite View'}
+          onClick={handleToggleMapType}
+        >
+          <Layers className="w-4 h-4" />
         </button>
       </div>
 
       {/* Property Count - Clickable */}
       <button
         onClick={() => setShowListingsPanel(!showListingsPanel)}
-        className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-full shadow-lg z-[1000] hover:bg-gray-50 transition-colors cursor-pointer"
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-full shadow-lg z-[10] hover:bg-gray-50 transition-colors cursor-pointer"
       >
         <div className="flex items-center gap-2">
           <MapPin className="w-4 h-4 text-[#A41E34]" />
@@ -201,7 +317,7 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
 
       {/* Listings Panel */}
       {showListingsPanel && propertiesWithCoords.length > 0 && (
-        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 w-[340px] max-h-[300px] bg-white rounded-xl shadow-2xl z-[1001] overflow-hidden">
+        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 w-[340px] max-h-[300px] bg-white rounded-xl shadow-2xl z-[11] overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50">
             <span className="font-semibold text-sm text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
               Properties on Map ({propertiesWithCoords.length})
@@ -231,14 +347,11 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
                       onPropertyClick(property);
                       // Center map on this property
                       if (mapInstance) {
-                        mapInstance.setView([parseFloat(property.latitude), parseFloat(property.longitude)], 15);
-                        // Find and open the marker popup
-                        markersRef.current.forEach(marker => {
-                          const markerLatLng = marker.getLatLng();
-                          if (markerLatLng.lat === parseFloat(property.latitude) && markerLatLng.lng === parseFloat(property.longitude)) {
-                            marker.openPopup();
-                          }
+                        mapInstance.setCenter({
+                          lat: parseFloat(property.latitude),
+                          lng: parseFloat(property.longitude)
                         });
+                        mapInstance.setZoom(15);
                       }
                       setShowListingsPanel(false);
                     }
@@ -293,33 +406,6 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
           </div>
         </div>
       )}
-
-      <style>{`
-        .custom-marker {
-          background: transparent !important;
-          border: none !important;
-        }
-        .leaflet-popup-content-wrapper {
-          border-radius: 12px !important;
-          padding: 0 !important;
-          overflow: hidden;
-        }
-        .leaflet-popup-content {
-          margin: 0 !important;
-        }
-        .leaflet-popup-close-button {
-          top: 6px !important;
-          right: 6px !important;
-          z-index: 10;
-          background: white !important;
-          border-radius: 50% !important;
-          width: 22px !important;
-          height: 22px !important;
-          line-height: 22px !important;
-          text-align: center !important;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-      `}</style>
     </div>
   );
 };

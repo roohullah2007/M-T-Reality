@@ -762,7 +762,7 @@ function PropertyDetail({ property }) {
                 </div>
               )}
 
-              {/* Map - Leaflet */}
+              {/* Map - Google Maps */}
               <div className="bg-white rounded-2xl p-6 mt-6">
                 <h2 className="text-xl font-semibold text-[#111] mb-4" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   Location
