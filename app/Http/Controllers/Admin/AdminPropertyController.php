@@ -143,7 +143,7 @@ class AdminPropertyController extends Controller
             'half_bathrooms' => 'nullable|integer|min:0',
             'bathrooms' => 'nullable|numeric|min:0',
             'sqft' => $isLand ? 'nullable|integer|min:0' : 'required|integer|min:0',
-            'lot_size' => $isLand ? 'required|string|max:100' : 'nullable|string|max:100',
+            'lot_size' => $isLand ? 'required|integer|min:0' : 'nullable|integer|min:0',
             'acres' => 'nullable|numeric|min:0',
             'zoning' => 'nullable|string|max:100',
             'year_built' => 'nullable|integer|min:1800|max:' . (date('Y') + 1),

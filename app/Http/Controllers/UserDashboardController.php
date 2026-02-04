@@ -151,10 +151,8 @@ class UserDashboardController extends Controller
             }
         }
 
-        // Convert lot_size to integer (DB column is integer)
-        if (isset($input['lot_size']) && $input['lot_size'] !== null && $input['lot_size'] !== '') {
-            $input['lot_size'] = is_numeric($input['lot_size']) ? (int) $input['lot_size'] : null;
-        } elseif (isset($input['lot_size']) && $input['lot_size'] === '') {
+        // Convert empty lot_size to null (DB column is nullable integer)
+        if (isset($input['lot_size']) && $input['lot_size'] === '') {
             $input['lot_size'] = null;
         }
 
@@ -183,7 +181,7 @@ class UserDashboardController extends Controller
             'full_bathrooms' => $isLand ? 'nullable|integer|min:0' : 'required|integer|min:0',
             'half_bathrooms' => 'nullable|integer|min:0',
             'sqft' => 'nullable|integer|min:0',
-            'lot_size' => $isLand ? 'required|string|max:100' : 'nullable|string|max:100',
+            'lot_size' => $isLand ? 'required|integer|min:0' : 'nullable|integer|min:0',
             'acres' => 'nullable|numeric|min:0',
             'zoning' => 'nullable|string|max:100',
             'year_built' => 'nullable|integer|min:1800|max:' . (date('Y') + 1),

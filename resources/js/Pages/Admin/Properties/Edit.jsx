@@ -49,7 +49,7 @@ export default function EditProperty({ property, listingStatuses = {} }) {
         full_bathrooms: property.full_bathrooms ?? 0,
         half_bathrooms: property.half_bathrooms ?? 0,
         sqft: property.sqft || '',
-        lot_size: property.lot_size || '',
+        lot_size: property.lot_size != null ? String(property.lot_size) : '',
         acres: property.acres ?? '',
         zoning: property.zoning || '',
         year_built: property.year_built || '',
@@ -234,7 +234,7 @@ export default function EditProperty({ property, listingStatuses = {} }) {
             half_bathrooms: isLand ? 0 : (parseInt(data.half_bathrooms) || 0),
             sqft: isLand ? 0 : (parseInt(data.sqft) || 0),
             price: parseFloat(data.price) || 0,
-            lot_size: data.lot_size || null,
+            lot_size: data.lot_size ? parseInt(data.lot_size) : null,
             year_built: isLand ? null : (data.year_built ? parseInt(data.year_built) : null),
             // Ensure URL fields are explicitly included (keep value or empty string)
             virtual_tour_url: data.virtual_tour_url || '',

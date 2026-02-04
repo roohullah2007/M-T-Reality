@@ -46,7 +46,7 @@ export default function EditListing({ property }) {
         full_bathrooms: property.full_bathrooms ?? '',
         half_bathrooms: property.half_bathrooms ?? '',
         sqft: property.sqft ?? '',
-        lot_size: property.lot_size ?? '',
+        lot_size: property.lot_size != null ? String(property.lot_size) : '',
         acres: property.acres ?? '',
         zoning: property.zoning ?? '',
         year_built: property.year_built ?? '',
@@ -382,9 +382,13 @@ export default function EditListing({ property }) {
             setSavingPhotos(false);
         }
 
-        // Now save the form data
+        // Now save the form data - transform lot_size to integer for database
         put(route('dashboard.listings.update', property.id), {
             preserveScroll: true,
+            transform: (formData) => ({
+                ...formData,
+                lot_size: formData.lot_size ? parseInt(formData.lot_size, 10) : null,
+            }),
             onError: (errors) => {
                 console.error('Validation errors:', errors);
                 // Scroll to top to show error summary
