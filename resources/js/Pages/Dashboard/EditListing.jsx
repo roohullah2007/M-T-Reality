@@ -1,7 +1,8 @@
 import { Head, Link, useForm, router } from '@inertiajs/react';
 import UserDashboardLayout from '@/Layouts/UserDashboardLayout';
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import axios from 'axios';
+import LocationMapPicker from '@/Components/Properties/LocationMapPicker';
 import {
     ArrowLeft,
     Save,
@@ -58,7 +59,38 @@ export default function EditListing({ property }) {
         virtual_tour_url: property.virtual_tour_url ?? '',
         matterport_url: property.matterport_url ?? '',
         video_tour_url: property.video_tour_url ?? '',
+        latitude: property.latitude ?? '',
+        longitude: property.longitude ?? '',
     });
+
+    // Handler for map location changes (with optional address data from reverse geocoding)
+    const handleLocationChange = useCallback((lat, lng, addressData) => {
+        setData(data => {
+            const updates = {
+                ...data,
+                latitude: lat,
+                longitude: lng,
+            };
+
+            // If address data is provided from reverse geocoding, populate the form fields
+            if (addressData) {
+                if (addressData.address) {
+                    updates.address = addressData.address;
+                }
+                if (addressData.city) {
+                    updates.city = addressData.city;
+                }
+                if (addressData.state) {
+                    updates.state = addressData.state;
+                }
+                if (addressData.zip_code) {
+                    updates.zip_code = addressData.zip_code;
+                }
+            }
+
+            return updates;
+        });
+    }, [setData]);
 
     // Photo management state
     const [uploadError, setUploadError] = useState('');
@@ -649,6 +681,19 @@ export default function EditListing({ property }) {
                             {errors.zip_code && (
                                 <p className="text-red-500 text-sm mt-1">{errors.zip_code}</p>
                             )}
+                        </div>
+
+                        {/* Location Map Picker */}
+                        <div className="md:col-span-2">
+                            <LocationMapPicker
+                                latitude={data.latitude}
+                                longitude={data.longitude}
+                                address={data.address}
+                                city={data.city}
+                                state={data.state}
+                                zipCode={data.zip_code}
+                                onLocationChange={handleLocationChange}
+                            />
                         </div>
                     </div>
                 </div>

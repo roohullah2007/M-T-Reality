@@ -50,6 +50,8 @@ Route::get('/csrf-token', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/upload-photo', [PropertyController::class, 'uploadPhoto'])->name('upload.photo');
     Route::post('/delete-uploaded-photo', [PropertyController::class, 'deleteUploadedPhoto'])->name('delete.uploaded.photo');
+    Route::post('/api/geocode', [PropertyController::class, 'geocodeAddress'])->name('api.geocode');
+    Route::post('/api/reverse-geocode', [PropertyController::class, 'reverseGeocodeAddress'])->name('api.reverse-geocode');
 });
 
 Route::get('/buyers', function () {

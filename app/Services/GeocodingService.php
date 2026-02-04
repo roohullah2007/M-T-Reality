@@ -108,6 +108,147 @@ class GeocodingService
     }
 
     /**
+     * Reverse geocode coordinates to get address components using Google Geocoding API
+     *
+     * @param float $latitude
+     * @param float $longitude
+     * @return array|null Returns address components or null on failure
+     */
+    public static function reverseGeocode(float $latitude, float $longitude): ?array
+    {
+        $apiKey = config('services.google.maps_api_key');
+
+        if (empty($apiKey)) {
+            Log::warning('Google Maps API key not configured for reverse geocoding');
+            return self::reverseGeocodeWithNominatim($latitude, $longitude);
+        }
+
+        try {
+            $response = Http::timeout(10)
+                ->get('https://maps.googleapis.com/maps/api/geocode/json', [
+                    'latlng' => "{$latitude},{$longitude}",
+                    'key' => $apiKey,
+                ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                if ($data['status'] === 'OK' && !empty($data['results'])) {
+                    return self::parseGoogleAddressComponents($data['results'][0]);
+                }
+
+                Log::warning('Google Reverse Geocoding returned no results', [
+                    'lat' => $latitude,
+                    'lng' => $longitude,
+                    'status' => $data['status'] ?? 'unknown',
+                ]);
+
+                // Fallback to Nominatim
+                return self::reverseGeocodeWithNominatim($latitude, $longitude);
+            }
+
+            // Fallback to Nominatim on HTTP failure
+            return self::reverseGeocodeWithNominatim($latitude, $longitude);
+        } catch (\Exception $e) {
+            Log::error('Google Reverse Geocoding error', [
+                'error' => $e->getMessage(),
+                'lat' => $latitude,
+                'lng' => $longitude,
+            ]);
+
+            // Fallback to Nominatim
+            return self::reverseGeocodeWithNominatim($latitude, $longitude);
+        }
+    }
+
+    /**
+     * Parse Google address components into a structured array
+     */
+    private static function parseGoogleAddressComponents(array $result): array
+    {
+        $address = [
+            'address' => '',
+            'city' => '',
+            'state' => '',
+            'zip_code' => '',
+            'formatted_address' => $result['formatted_address'] ?? '',
+        ];
+
+        $streetNumber = '';
+        $route = '';
+
+        foreach ($result['address_components'] as $component) {
+            $types = $component['types'];
+
+            if (in_array('street_number', $types)) {
+                $streetNumber = $component['long_name'];
+            }
+            if (in_array('route', $types)) {
+                $route = $component['long_name'];
+            }
+            if (in_array('locality', $types)) {
+                $address['city'] = $component['long_name'];
+            }
+            if (in_array('administrative_area_level_1', $types)) {
+                $address['state'] = $component['short_name'];
+            }
+            if (in_array('postal_code', $types)) {
+                $address['zip_code'] = $component['long_name'];
+            }
+        }
+
+        // Combine street number and route
+        $address['address'] = trim("{$streetNumber} {$route}");
+
+        return $address;
+    }
+
+    /**
+     * Fallback reverse geocoding using OpenStreetMap Nominatim API
+     */
+    private static function reverseGeocodeWithNominatim(float $latitude, float $longitude): ?array
+    {
+        try {
+            $response = Http::timeout(10)
+                ->withHeaders([
+                    'User-Agent' => 'OKByOwner/1.0 (contact@okbyowner.com)',
+                ])
+                ->get('https://nominatim.openstreetmap.org/reverse', [
+                    'lat' => $latitude,
+                    'lon' => $longitude,
+                    'format' => 'json',
+                    'addressdetails' => 1,
+                ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                if (!empty($data) && isset($data['address'])) {
+                    $addr = $data['address'];
+                    $streetNumber = $addr['house_number'] ?? '';
+                    $road = $addr['road'] ?? '';
+
+                    return [
+                        'address' => trim("{$streetNumber} {$road}"),
+                        'city' => $addr['city'] ?? $addr['town'] ?? $addr['village'] ?? '',
+                        'state' => $addr['state'] ?? '',
+                        'zip_code' => $addr['postcode'] ?? '',
+                        'formatted_address' => $data['display_name'] ?? '',
+                    ];
+                }
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            Log::error('Nominatim Reverse Geocoding error', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return null;
+        }
+    }
+
+    /**
      * Geocode a property if it doesn't have coordinates
      *
      * @param \App\Models\Property $property

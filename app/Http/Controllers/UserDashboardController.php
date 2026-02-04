@@ -193,6 +193,8 @@ class UserDashboardController extends Controller
             'virtual_tour_url' => 'nullable|url|max:500',
             'matterport_url' => 'nullable|url|max:500',
             'video_tour_url' => 'nullable|url|max:500',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
         ]);
 
         // Sync the old status field based on listing_status
@@ -238,6 +240,8 @@ class UserDashboardController extends Controller
             'features' => $validated['features'] ?? null,
             'virtual_tour_url' => $validated['virtual_tour_url'] ?? null,
             'half_bathrooms' => $validated['half_bathrooms'] ?? null,
+            'latitude' => $validated['latitude'] ?? null,
+            'longitude' => $validated['longitude'] ?? null,
         ]);
 
         $property->update($validated);
@@ -245,8 +249,10 @@ class UserDashboardController extends Controller
         // Log confirmation of update
         \Log::info('Property ' . $property->id . ' updated successfully');
 
-        // Geocode the property if address changed and no coordinates exist
-        GeocodingService::geocodeProperty($property);
+        // Only geocode if no coordinates were provided by user
+        if (empty($validated['latitude']) && empty($validated['longitude'])) {
+            GeocodingService::geocodeProperty($property);
+        }
 
         // Send update notification email
         if ($property->contact_email) {

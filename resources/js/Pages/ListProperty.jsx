@@ -1,8 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { Head, useForm, router, usePage } from '@inertiajs/react';
 import { Upload, Home, MapPin, DollarSign, Image, FileText, CheckCircle, ChevronRight, X, AlertCircle, Loader2, Star } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
 import axios from 'axios';
+import LocationMapPicker from '@/Components/Properties/LocationMapPicker';
 
 function ListProperty() {
   const { auth } = usePage().props;
@@ -63,7 +64,40 @@ function ListProperty() {
     contactName: user?.name || '',
     contactEmail: user?.email || '',
     contactPhone: user?.phone || '',
+
+    // Location coordinates (set by map picker)
+    latitude: '',
+    longitude: '',
   });
+
+  // Handler for map location changes (with optional address data from reverse geocoding)
+  const handleLocationChange = useCallback((lat, lng, addressData) => {
+    setData(data => {
+      const updates = {
+        ...data,
+        latitude: lat,
+        longitude: lng,
+      };
+
+      // If address data is provided from reverse geocoding, populate the form fields
+      if (addressData) {
+        if (addressData.address) {
+          updates.address = addressData.address;
+        }
+        if (addressData.city) {
+          updates.city = addressData.city;
+        }
+        if (addressData.state) {
+          updates.state = addressData.state;
+        }
+        if (addressData.zip_code) {
+          updates.zipCode = addressData.zip_code;
+        }
+      }
+
+      return updates;
+    });
+  }, [setData]);
 
   const propertyTypes = [
     { value: 'single-family-home', label: 'Single Family Home' },
@@ -354,7 +388,10 @@ function ListProperty() {
       contactEmail: data.contactEmail,
       contactPhone: data.contactPhone,
       features: JSON.stringify(data.features),
-      photoPaths: reorderedPaths // Pre-uploaded photo paths
+      photoPaths: reorderedPaths, // Pre-uploaded photo paths
+      // Location coordinates from map picker
+      latitude: data.latitude || null,
+      longitude: data.longitude || null,
     };
 
     router.post('/properties', submitData, {
@@ -645,6 +682,19 @@ function ListProperty() {
                     style={{ fontFamily: '"Instrument Sans", sans-serif' }}
                     value={data.subdivision}
                     onChange={(e) => handleInputChange('subdivision', e.target.value)}
+                  />
+                </div>
+
+                {/* Location Map Picker */}
+                <div className="md:col-span-2">
+                  <LocationMapPicker
+                    latitude={data.latitude}
+                    longitude={data.longitude}
+                    address={data.address}
+                    city={data.city}
+                    state={data.state}
+                    zipCode={data.zipCode}
+                    onLocationChange={handleLocationChange}
                   />
                 </div>
               </div>

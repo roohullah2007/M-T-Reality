@@ -76,6 +76,8 @@ class PropertyController extends Controller
             'contactPhone' => 'required|string',
             'photoPaths' => 'nullable|array|max:' . ImageService::MAX_INITIAL_PHOTOS, // Pre-uploaded photo paths
             'photoPaths.*' => 'string', // Each path is a string
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
         ]);
 
         // Parse features - handle both JSON string and array formats
@@ -142,10 +144,15 @@ class PropertyController extends Controller
             'is_active' => true,
             'approval_status' => 'approved',
             'approved_at' => now(),
+            // Use provided coordinates if available
+            'latitude' => $validated['latitude'] ?? null,
+            'longitude' => $validated['longitude'] ?? null,
         ]);
 
-        // Geocode the property address to get coordinates
-        GeocodingService::geocodeProperty($property);
+        // Only geocode if no coordinates were provided
+        if (!$property->latitude || !$property->longitude) {
+            GeocodingService::geocodeProperty($property);
+        }
 
         // Send email notifications
         $this->sendPropertySubmissionEmails($property);
@@ -387,6 +394,73 @@ class PropertyController extends Controller
             'filters' => $request->only(['keyword', 'location', 'status', 'propertyType', 'priceMin', 'priceMax', 'bedrooms', 'bathrooms', 'schoolDistrict', 'sort']),
             'isAdmin' => $isAdmin,
             'allPropertiesForMap' => $allPropertiesForMap,
+        ]);
+    }
+
+    /**
+     * Geocode an address and return coordinates.
+     * Used by the frontend map picker component.
+     */
+    public function geocodeAddress(Request $request)
+    {
+        $request->validate([
+            'address' => 'required|string|max:255',
+            'city' => 'required|string|max:100',
+            'state' => 'nullable|string|max:50',
+            'zip_code' => 'nullable|string|max:20',
+        ]);
+
+        $coordinates = GeocodingService::geocode(
+            $request->address,
+            $request->city,
+            $request->state ?? 'Oklahoma',
+            $request->zip_code ?? ''
+        );
+
+        if ($coordinates) {
+            return response()->json([
+                'success' => true,
+                'latitude' => $coordinates['latitude'],
+                'longitude' => $coordinates['longitude'],
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Could not geocode the address.',
+        ]);
+    }
+
+    /**
+     * Reverse geocode coordinates to get address.
+     * Used by the frontend map picker component.
+     */
+    public function reverseGeocodeAddress(Request $request)
+    {
+        $request->validate([
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
+        ]);
+
+        $addressData = GeocodingService::reverseGeocode(
+            (float) $request->latitude,
+            (float) $request->longitude
+        );
+
+        if ($addressData) {
+            return response()->json([
+                'success' => true,
+                'address' => $addressData['address'],
+                'city' => $addressData['city'],
+                'state' => $addressData['state'],
+                'zip_code' => $addressData['zip_code'],
+                'formatted_address' => $addressData['formatted_address'],
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Could not reverse geocode the coordinates.',
         ]);
     }
 
