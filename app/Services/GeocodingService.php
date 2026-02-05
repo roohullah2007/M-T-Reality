@@ -190,7 +190,7 @@ class GeocodingService
                 $address['city'] = $component['long_name'];
             }
             if (in_array('administrative_area_level_1', $types)) {
-                $address['state'] = $component['short_name'];
+                $address['state'] = $component['long_name'];
             }
             if (in_array('postal_code', $types)) {
                 $address['zip_code'] = $component['long_name'];

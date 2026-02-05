@@ -177,7 +177,7 @@ const LocationMapPicker = ({
         }
 
         const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=marker`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}`;
         script.async = true;
         script.defer = true;
         script.onload = () => initializeMap();
