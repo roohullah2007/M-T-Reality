@@ -125,7 +125,7 @@ class AdminPropertyController extends Controller
             'property_title' => 'required|string|max:255',
             'property_type' => 'required|string',
             'status' => 'nullable|string',
-            'listing_status' => 'nullable|string|in:for_sale,for_rent,pending,sold,inactive',
+            'listing_status' => 'nullable|string|in:for_sale,pending,sold,inactive',
             'price' => 'required|numeric|min:0',
             'address' => 'required|string',
             'city' => 'required|string',
@@ -200,7 +200,6 @@ class AdminPropertyController extends Controller
         if (isset($validated['listing_status'])) {
             $statusMap = [
                 'for_sale' => 'for-sale',
-                'for_rent' => 'for-rent',
                 'pending' => 'pending',
                 'sold' => 'sold',
                 'inactive' => 'inactive',

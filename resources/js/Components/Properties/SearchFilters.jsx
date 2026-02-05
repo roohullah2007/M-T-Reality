@@ -32,7 +32,6 @@ const SearchFilters = ({ searchParams, onSearchChange }) => {
   const statuses = [
     { value: 'coming-soon', label: 'Coming Soon' },
     { value: 'for-sale', label: 'For Sale' },
-    { value: 'for-rent', label: 'For Rent' },
     { value: 'pending', label: 'Pending (Under Contract)' },
     { value: 'sold', label: 'Sold' },
   ];

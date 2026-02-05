@@ -22,9 +22,6 @@ const PropertyCard = ({ property, onAuthRequired }) => {
     switch (ls) {
       case 'sold':
         return 'SOLD';
-      case 'for_rent':
-      case 'for-rent':
-        return 'FOR RENT';
       case 'pending':
         return 'PENDING';
       case 'inactive':

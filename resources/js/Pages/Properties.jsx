@@ -239,7 +239,6 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                     style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                   >
                     <option value="for-sale">For Sale</option>
-                    <option value="for-rent">For Rent</option>
                     <option value="pending">Pending</option>
                     <option value="sold">Sold</option>
                     {isAdmin && <option value="inactive">Inactive</option>}
@@ -289,7 +288,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div>
               <h2 className="text-2xl md:text-[32px] font-medium text-[#111] mb-1" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                {searchParams.status === 'sold' ? 'Recently Sold' : searchParams.status === 'for-rent' ? 'For Rent' : searchParams.status === 'pending' ? 'Pending (Under Contract)' : searchParams.status === 'inactive' ? 'Inactive Listings' : 'For Sale'}
+                {searchParams.status === 'sold' ? 'Recently Sold' : searchParams.status === 'pending' ? 'Pending (Under Contract)' : searchParams.status === 'inactive' ? 'Inactive Listings' : 'For Sale'}
               </h2>
               <p className="text-sm text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                 {pagination ? (

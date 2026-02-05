@@ -319,7 +319,6 @@ export default function EditListing({ property }) {
 
     const statusOptions = [
         { value: 'for_sale', label: 'Active (For Sale)' },
-        { value: 'for_rent', label: 'For Rent' },
         { value: 'pending', label: 'Pending (Under Contract)' },
         { value: 'sold', label: 'Sold' },
         { value: 'inactive', label: 'Inactive (Temporarily Off-Market)' },
@@ -555,7 +554,6 @@ export default function EditListing({ property }) {
                                     // Map listing_status to legacy status field
                                     const statusMap = {
                                         'for_sale': 'for-sale',
-                                        'for_rent': 'for-rent',
                                         'pending': 'pending',
                                         'sold': 'sold',
                                         'inactive': 'inactive',

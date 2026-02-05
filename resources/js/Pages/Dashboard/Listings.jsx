@@ -251,11 +251,9 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                             listing.listing_status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
                                                             listing.listing_status === 'sold' ? 'bg-gray-200 text-gray-700' :
                                                             listing.listing_status === 'inactive' ? 'bg-orange-100 text-orange-700' :
-                                                            listing.listing_status === 'for_rent' ? 'bg-blue-100 text-blue-700' :
                                                             'bg-gray-100 text-gray-600'
                                                         }`}>
                                                             {listing.listing_status === 'for_sale' ? 'For Sale' :
-                                                             listing.listing_status === 'for_rent' ? 'For Rent' :
                                                              listing.listing_status === 'pending' ? 'Pending' :
                                                              listing.listing_status === 'sold' ? 'Sold' :
                                                              listing.listing_status === 'inactive' ? 'Inactive' :

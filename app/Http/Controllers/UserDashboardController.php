@@ -165,7 +165,7 @@ class UserDashboardController extends Controller
             'property_title' => 'required|string|max:255',
             'property_type' => 'required|string',
             'status' => 'required|string',
-            'listing_status' => 'required|string|in:for_sale,for_rent,pending,sold,inactive',
+            'listing_status' => 'required|string|in:for_sale,pending,sold,inactive',
             'price' => 'required|numeric|min:0',
             'address' => 'required|string|max:255',
             'city' => 'required|string|max:100',
@@ -200,7 +200,6 @@ class UserDashboardController extends Controller
         // Sync the old status field based on listing_status
         $statusMap = [
             'for_sale' => 'for-sale',
-            'for_rent' => 'for-rent',
             'pending' => 'pending',
             'sold' => 'sold',
             'inactive' => 'inactive',

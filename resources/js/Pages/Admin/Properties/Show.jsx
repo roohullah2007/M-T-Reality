@@ -748,7 +748,6 @@ export default function PropertiesShow({ property, listingStatuses = {} }) {
                                     className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
                                 >
                                     <option value="for_sale">For Sale (Active)</option>
-                                    <option value="for_rent">For Rent</option>
                                     <option value="pending">Pending (Under Contract)</option>
                                     <option value="sold">Sold</option>
                                     <option value="inactive">Inactive (Off-Market)</option>

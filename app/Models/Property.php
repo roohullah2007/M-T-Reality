@@ -16,14 +16,12 @@ class Property extends Model
 
     // Listing status constants
     const STATUS_FOR_SALE = 'for_sale';
-    const STATUS_FOR_RENT = 'for_rent';
     const STATUS_PENDING = 'pending';
     const STATUS_SOLD = 'sold';
     const STATUS_INACTIVE = 'inactive';
 
     const LISTING_STATUSES = [
         self::STATUS_FOR_SALE => 'For Sale',
-        self::STATUS_FOR_RENT => 'For Rent',
         self::STATUS_PENDING => 'Pending (Under Contract)',
         self::STATUS_SOLD => 'Sold',
         self::STATUS_INACTIVE => 'Inactive',
@@ -271,13 +269,6 @@ class Property extends Model
         return $query->where('listing_status', self::STATUS_FOR_SALE);
     }
 
-    /**
-     * Scope for for-rent properties
-     */
-    public function scopeForRent($query)
-    {
-        return $query->where('listing_status', self::STATUS_FOR_RENT);
-    }
 
     /**
      * Scope for pending (under contract) properties

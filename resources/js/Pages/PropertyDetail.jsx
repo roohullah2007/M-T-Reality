@@ -421,7 +421,6 @@ function PropertyDetail({ property }) {
                 const ls = property.listing_status || property.status;
                 switch (ls) {
                   case 'sold': return 'SOLD';
-                  case 'for_rent': case 'for-rent': return 'FOR RENT';
                   case 'pending': return 'PENDING';
                   case 'inactive': return 'INACTIVE';
                   default: return 'FOR SALE';

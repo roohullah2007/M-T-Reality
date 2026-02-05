@@ -279,7 +279,6 @@ class PropertyController extends Controller
         // Map frontend status values to listing_status
         $statusMap = [
             'for-sale' => 'for_sale',
-            'for-rent' => 'for_rent',
             'pending' => 'pending',
             'sold' => 'sold',
             'inactive' => 'inactive',
