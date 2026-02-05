@@ -93,7 +93,7 @@ const PropertyCard = ({ property, onAuthRequired }) => {
 
   return (
     <Link href={`/properties/${property.slug || property.id}`} className="block">
-      <div className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 group w-[300px] h-[330px] flex flex-col">
+      <div className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 group w-[300px] flex flex-col">
         {/* Property Image */}
         <div className="relative h-[180px] overflow-hidden flex-shrink-0">
           <img
@@ -156,13 +156,22 @@ const PropertyCard = ({ property, onAuthRequired }) => {
         </div>
 
         {/* Property Details */}
-        <div className="px-3 pt-2.5 pb-4 h-[150px] flex flex-col">
+        <div className="px-3 pt-2.5 pb-3 flex flex-col">
           {/* Price */}
           <div className="pb-2 mb-2 border-b border-gray-200">
             <span className="font-bold text-base text-[#293056]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
               ${Number(property.price).toLocaleString()}
             </span>
           </div>
+
+          {/* Property Title / Headliner */}
+          {property.property_title && (
+            <div className="pb-2 mb-2 border-b border-gray-200">
+              <p className="text-sm font-semibold text-[#293056] line-clamp-1" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                {property.property_title}
+              </p>
+            </div>
+          )}
 
           {/* Address */}
           <div className="pb-2 mb-2 border-b border-gray-200">

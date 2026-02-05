@@ -62,7 +62,7 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
     }
 
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=marker`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}`;
     script.async = true;
     script.defer = true;
     script.onload = () => initializeMap();
@@ -138,49 +138,34 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
         </div>
       `;
 
-      // Use AdvancedMarkerElement if available, otherwise fallback to regular marker
+      // Use regular marker with custom overlay for HTML price labels
       let marker;
-      if (window.google.maps.marker && window.google.maps.marker.AdvancedMarkerElement) {
-        marker = new window.google.maps.marker.AdvancedMarkerElement({
-          position: { lat, lng },
-          map: mapInstance,
-          content: markerDiv,
-        });
-      } else {
-        // Fallback to regular marker with custom icon
-        marker = new window.google.maps.Marker({
-          position: { lat, lng },
-          map: mapInstance,
-          label: {
-            text: priceLabel,
-            color: 'white',
-            fontSize: '12px',
-            fontWeight: '700',
-          },
-          icon: {
-            path: window.google.maps.SymbolPath.CIRCLE,
-            scale: 0,
-          },
-        });
+      marker = new window.google.maps.Marker({
+        position: { lat, lng },
+        map: mapInstance,
+        icon: {
+          path: window.google.maps.SymbolPath.CIRCLE,
+          scale: 0,
+        },
+      });
 
-        // Create overlay for custom HTML marker
-        const overlay = new window.google.maps.OverlayView();
-        overlay.onAdd = function() {
-          const panes = this.getPanes();
-          panes.overlayMouseTarget.appendChild(markerDiv);
-        };
-        overlay.draw = function() {
-          const projection = this.getProjection();
-          const position = projection.fromLatLngToDivPixel(new window.google.maps.LatLng(lat, lng));
-          markerDiv.style.position = 'absolute';
-          markerDiv.style.left = (position.x - 40) + 'px';
-          markerDiv.style.top = (position.y - 40) + 'px';
-        };
-        overlay.onRemove = function() {
-          markerDiv.parentNode?.removeChild(markerDiv);
-        };
-        overlay.setMap(mapInstance);
-      }
+      // Create overlay for custom HTML marker
+      const overlay = new window.google.maps.OverlayView();
+      overlay.onAdd = function() {
+        const panes = this.getPanes();
+        panes.overlayMouseTarget.appendChild(markerDiv);
+      };
+      overlay.draw = function() {
+        const projection = this.getProjection();
+        const position = projection.fromLatLngToDivPixel(new window.google.maps.LatLng(lat, lng));
+        markerDiv.style.position = 'absolute';
+        markerDiv.style.left = (position.x - 40) + 'px';
+        markerDiv.style.top = (position.y - 40) + 'px';
+      };
+      overlay.onRemove = function() {
+        markerDiv.parentNode?.removeChild(markerDiv);
+      };
+      overlay.setMap(mapInstance);
 
       const photo = property.photos && property.photos.length > 0
         ? property.photos[0]
