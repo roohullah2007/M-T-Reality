@@ -8,6 +8,7 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
   const [mapInstance, setMapInstance] = useState(null);
   const mapInstanceRef = useRef(null);
   const markersRef = useRef([]);
+  const overlaysRef = useRef([]);
   const infoWindowRef = useRef(null);
   const [showListingsPanel, setShowListingsPanel] = useState(false);
   const [mapType, setMapType] = useState('roadmap');
@@ -30,10 +31,14 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
     }
 
     return () => {
-      // Clean up markers
+      // Clean up markers and overlays
       if (markersRef.current) {
         markersRef.current.forEach(marker => marker.setMap(null));
         markersRef.current = [];
+      }
+      if (overlaysRef.current) {
+        overlaysRef.current.forEach(overlay => overlay.setMap(null));
+        overlaysRef.current = [];
       }
       if (infoWindowRef.current) {
         infoWindowRef.current.close();
@@ -100,9 +105,11 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
   const updateMarkers = () => {
     if (!window.google || !window.google.maps || !mapInstance) return;
 
-    // Clear existing markers
+    // Clear existing markers and overlays
     markersRef.current.forEach(marker => marker.setMap(null));
     markersRef.current = [];
+    overlaysRef.current.forEach(overlay => overlay.setMap(null));
+    overlaysRef.current = [];
 
     const validProperties = properties.filter(p => p.latitude && p.longitude);
 
@@ -166,6 +173,7 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
         markerDiv.parentNode?.removeChild(markerDiv);
       };
       overlay.setMap(mapInstance);
+      overlaysRef.current.push(overlay);
 
       const photo = property.photos && property.photos.length > 0
         ? property.photos[0]
@@ -199,11 +207,7 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
         }
       };
 
-      if (marker.addListener) {
-        marker.addListener('click', clickHandler);
-      } else {
-        markerDiv.addEventListener('click', clickHandler);
-      }
+      markerDiv.addEventListener('click', clickHandler);
 
       markersRef.current.push(marker);
     });
