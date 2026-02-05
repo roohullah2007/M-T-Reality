@@ -55,7 +55,7 @@ export default function EditProperty({ property, listingStatuses = {} }) {
         zoning: property.zoning || '',
         year_built: property.year_built || '',
         description: property.description || '',
-        features: property.features || [],
+        features: Array.isArray(property.features) ? property.features : [],
         contact_name: property.contact_name || '',
         contact_email: property.contact_email || '',
         contact_phone: property.contact_phone || '',
@@ -102,17 +102,13 @@ export default function EditProperty({ property, listingStatuses = {} }) {
     const successfulNewPhotos = newPhotoPreviews.filter(p => p.serverPath && !p.error);
     const totalPhotos = photos.length + successfulNewPhotos.length;
 
-    const [featureInput, setFeatureInput] = useState('');
-
-    const handleAddFeature = () => {
-        if (featureInput.trim() && !data.features.includes(featureInput.trim())) {
-            setData('features', [...data.features, featureInput.trim()]);
-            setFeatureInput('');
+    const toggleFeature = (feature) => {
+        const currentFeatures = Array.isArray(data.features) ? data.features : [];
+        if (currentFeatures.includes(feature)) {
+            setData('features', currentFeatures.filter(f => f !== feature));
+        } else {
+            setData('features', [...currentFeatures, feature]);
         }
-    };
-
-    const handleRemoveFeature = (feature) => {
-        setData('features', data.features.filter(f => f !== feature));
     };
 
     const handlePhotoUpload = async (e) => {
@@ -276,10 +272,67 @@ export default function EditProperty({ property, listingStatuses = {} }) {
 
     const propertyTypes = [
         { value: 'single-family-home', label: 'Single Family Home' },
-        { value: 'condos-townhomes-co-ops', label: 'Condo / Townhome' },
+        { value: 'condos-townhomes-co-ops', label: 'Condos/Townhomes/Co-Ops' },
         { value: 'multi-family', label: 'Multi-Family' },
-        { value: 'land', label: 'Land' },
-        { value: 'commercial', label: 'Commercial' },
+        { value: 'land', label: 'Lot/Land' },
+        { value: 'farms-ranches', label: 'Farms/Ranches' },
+        { value: 'mfd-mobile-homes', label: 'Manufactured/Mobile Homes' },
+        { value: 'factory-built', label: 'Factory Built' },
+    ];
+
+    const statusOptions = [
+        { value: 'for_sale', label: 'Active (For Sale)' },
+        { value: 'pending', label: 'Pending (Under Contract)' },
+        { value: 'sold', label: 'Sold' },
+        { value: 'inactive', label: 'Inactive (Temporarily Off-Market)' },
+    ];
+
+    const featureOptions = [
+        'Central AC',
+        'Central Heat',
+        'Fireplace',
+        'Swimming Pool',
+        'Hot Tub',
+        'Garage',
+        'Covered Patio',
+        'Deck',
+        'Balcony',
+        'Walk-In Closet',
+        'Hardwood Floors',
+        'Carpet',
+        'Tile Floors',
+        'Granite Countertops',
+        'Stainless Steel Appliances',
+        'Updated Kitchen',
+        'Updated Bathroom',
+        'Security System',
+        'Sprinkler System',
+        'Fenced Yard',
+        'Mature Trees',
+        'Mountain View',
+        'Lakefront',
+        'Waterfront',
+        'Golf Course',
+        'Guest Quarters',
+    ];
+
+    const landFeatureOptions = [
+        'Fenced',
+        'Mature Trees',
+        'Additional Land Available',
+        'Corner Lot',
+        'Cul-De-Sac',
+        'Farm or Ranch',
+        'Greenbelt',
+        'Golf Course Frontage',
+        'Hunting',
+        'Livestock Allowed',
+        'Mobile Ready',
+        'Pond',
+        'Sidewalk',
+        'Spring/Creek',
+        'Water Frontage',
+        'Zero Lot Line',
     ];
 
     return (
@@ -350,17 +403,33 @@ export default function EditProperty({ property, listingStatuses = {} }) {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Listing Status</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Listing Status *</label>
                             <select
                                 value={data.listing_status}
-                                onChange={e => setData('listing_status', e.target.value)}
+                                onChange={(e) => {
+                                    const newListingStatus = e.target.value;
+                                    const statusMap = {
+                                        'for_sale': 'for-sale',
+                                        'pending': 'pending',
+                                        'sold': 'sold',
+                                        'inactive': 'inactive',
+                                    };
+                                    setData(data => ({
+                                        ...data,
+                                        listing_status: newListingStatus,
+                                        status: statusMap[newListingStatus] || 'for-sale'
+                                    }));
+                                }}
                                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
                             >
-                                <option value="for_sale">For Sale</option>
-                                <option value="pending">Pending (Under Contract)</option>
-                                <option value="sold">Sold</option>
-                                <option value="inactive">Inactive</option>
+                                {statusOptions.map((status) => (
+                                    <option key={status.value} value={status.value}>{status.label}</option>
+                                ))}
                             </select>
+                            {errors.listing_status && <p className="text-red-500 text-sm mt-1">{errors.listing_status}</p>}
+                            {data.listing_status === 'inactive' && (
+                                <p className="text-sm text-amber-600 mt-1">This listing will be hidden from public search while inactive.</p>
+                            )}
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
@@ -621,6 +690,20 @@ export default function EditProperty({ property, listingStatuses = {} }) {
                             </>
                         )}
                     </div>
+
+                    <div className="mt-6">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Description
+                        </label>
+                        <textarea
+                            value={data.description}
+                            onChange={e => setData('description', e.target.value)}
+                            rows={5}
+                            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                            placeholder={data.property_type === 'land' ? 'Describe your lot/land...' : 'Describe your property...'}
+                        />
+                        {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
+                    </div>
                 </div>
 
                 {/* Virtual Tours */}
@@ -674,50 +757,46 @@ export default function EditProperty({ property, listingStatuses = {} }) {
                     </div>
                 </div>
 
-                {/* Description */}
-                <div className="bg-white rounded-xl shadow-sm p-6">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                        <FileText className="w-5 h-5 text-[#A41E34]" />
-                        Description
-                    </h2>
-                    <textarea
-                        value={data.description}
-                        onChange={e => setData('description', e.target.value)}
-                        rows={6}
-                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] resize-none"
-                    />
-                    {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
-                </div>
-
                 {/* Features */}
                 <div className="bg-white rounded-xl shadow-sm p-6">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Features & Amenities</h2>
-                    <div className="flex gap-2 mb-4">
-                        <input
-                            type="text"
-                            value={featureInput}
-                            onChange={e => setFeatureInput(e.target.value)}
-                            onKeyPress={e => e.key === 'Enter' && (e.preventDefault(), handleAddFeature())}
-                            placeholder="Add a feature..."
-                            className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
-                        />
-                        <button
-                            type="button"
-                            onClick={handleAddFeature}
-                            className="px-4 py-2 bg-[#A41E34] text-white rounded-lg hover:bg-[#8B1A2C]"
-                        >
-                            Add
-                        </button>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                        {data.features.map((feature, index) => (
-                            <span key={index} className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
-                                {feature}
-                                <button type="button" onClick={() => handleRemoveFeature(feature)} className="hover:text-red-500">
-                                    <X className="w-3 h-3" />
-                                </button>
-                            </span>
-                        ))}
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                        {data.property_type === 'land' ? 'Land Features' : 'Features & Amenities'}
+                    </h2>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                        {(data.property_type === 'land' ? landFeatureOptions : featureOptions).map((feature) => {
+                            const features = Array.isArray(data.features) ? data.features : [];
+                            const isSelected = features.includes(feature);
+                            return (
+                                <label
+                                    key={feature}
+                                    className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-colors ${
+                                        isSelected
+                                            ? 'border-[#A41E34] bg-[#A41E34]/5 text-[#A41E34]'
+                                            : 'border-gray-200 hover:border-gray-300'
+                                    }`}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={isSelected}
+                                        onChange={() => toggleFeature(feature)}
+                                        className="sr-only"
+                                    />
+                                    <span className={`w-4 h-4 rounded border flex items-center justify-center ${
+                                        isSelected
+                                            ? 'bg-[#A41E34] border-[#A41E34]'
+                                            : 'border-gray-300'
+                                    }`}>
+                                        {isSelected && (
+                                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        )}
+                                    </span>
+                                    <span className="text-sm">{feature}</span>
+                                </label>
+                            );
+                        })}
                     </div>
                 </div>
 
