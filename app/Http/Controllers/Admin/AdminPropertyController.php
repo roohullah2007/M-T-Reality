@@ -159,6 +159,8 @@ class AdminPropertyController extends Controller
             'matterport_url' => 'nullable|string|max:500',
             'video_tour_url' => 'nullable|string|max:500',
             'mls_virtual_tour_url' => 'nullable|string|max:500',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ]);
 
         // For land listings, set bedrooms/bathrooms/sqft to 0 (they don't apply)
