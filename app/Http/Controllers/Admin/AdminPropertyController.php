@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\PropertyApproved;
 use App\Mail\PropertyRejected;
 use App\Models\Property;
+use App\Models\User;
 use App\Models\ActivityLog;
 use App\Services\EmailService;
 use App\Services\ImageService;
@@ -84,6 +85,110 @@ class AdminPropertyController extends Controller
             'filters' => $request->only(['search', 'status', 'approval', 'type', 'featured', 'showcase', 'transferred']),
             'counts' => $counts,
         ]);
+    }
+
+    public function create()
+    {
+        $users = User::where('is_active', true)
+            ->select('id', 'name', 'email', 'role', 'phone')
+            ->orderBy('name')
+            ->get();
+
+        return Inertia::render('Admin/Properties/Create', [
+            'users' => $users,
+            'listingStatuses' => Property::LISTING_STATUSES,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $isLand = $request->input('property_type') === 'land';
+
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'property_title' => 'required|string|max:255',
+            'property_type' => 'required|string',
+            'listing_status' => 'nullable|string|in:for_sale,pending,sold,inactive',
+            'price' => 'required|numeric|min:0',
+            'address' => 'required|string',
+            'city' => 'required|string',
+            'state' => 'required|string',
+            'zip_code' => 'required|string',
+            'subdivision' => 'nullable|string',
+            'school_district' => 'required|string|max:255',
+            'grade_school' => 'nullable|string|max:255',
+            'middle_school' => 'nullable|string|max:255',
+            'high_school' => 'nullable|string|max:255',
+            'bedrooms' => $isLand ? 'nullable|integer|min:0' : 'required|integer|min:0',
+            'full_bathrooms' => 'nullable|integer|min:0',
+            'half_bathrooms' => 'nullable|integer|min:0',
+            'bathrooms' => 'nullable|numeric|min:0',
+            'sqft' => $isLand ? 'nullable|integer|min:0' : 'required|integer|min:0',
+            'lot_size' => $isLand ? 'required|integer|min:0' : 'nullable|integer|min:0',
+            'acres' => 'nullable|numeric|min:0',
+            'zoning' => 'nullable|string|max:100',
+            'year_built' => 'nullable|integer|min:1800|max:' . (date('Y') + 1),
+            'description' => 'required|string',
+            'features' => 'nullable|array',
+            'photos' => 'nullable|array',
+            'contact_name' => 'required|string',
+            'contact_email' => 'required|email',
+            'contact_phone' => 'required|string',
+            'is_featured' => 'boolean',
+            'is_active' => 'boolean',
+            'virtual_tour_url' => 'nullable|string|max:500',
+            'matterport_url' => 'nullable|string|max:500',
+            'video_tour_url' => 'nullable|string|max:500',
+            'mls_virtual_tour_url' => 'nullable|string|max:500',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+        ]);
+
+        // Land property defaults
+        if ($isLand) {
+            $validated['bedrooms'] = 0;
+            $validated['full_bathrooms'] = 0;
+            $validated['half_bathrooms'] = 0;
+            $validated['bathrooms'] = 0;
+            $validated['sqft'] = 0;
+            $validated['year_built'] = null;
+        } else {
+            $validated['full_bathrooms'] = $validated['full_bathrooms'] ?? 0;
+            $validated['half_bathrooms'] = $validated['half_bathrooms'] ?? 0;
+            if (isset($validated['full_bathrooms'])) {
+                $validated['bathrooms'] = ($validated['full_bathrooms']) + (($validated['half_bathrooms']) * 0.5);
+            }
+        }
+
+        // URL fields
+        $urlFields = ['virtual_tour_url', 'matterport_url', 'video_tour_url', 'mls_virtual_tour_url'];
+        foreach ($urlFields as $field) {
+            if (array_key_exists($field, $validated)) {
+                $validated[$field] = !empty($validated[$field]) ? $validated[$field] : null;
+            }
+        }
+
+        // Sync status field
+        $statusMap = [
+            'for_sale' => 'for-sale',
+            'pending' => 'pending',
+            'sold' => 'sold',
+            'inactive' => 'inactive',
+        ];
+        $validated['status'] = $statusMap[$validated['listing_status'] ?? 'for_sale'] ?? 'for-sale';
+        $validated['listing_status'] = $validated['listing_status'] ?? 'for_sale';
+
+        // Auto-approve admin-created properties
+        $validated['approval_status'] = 'approved';
+        $validated['approved_at'] = now();
+        $validated['approved_by'] = auth()->id();
+
+        $property = Property::create($validated);
+
+        ActivityLog::log('property_created', $property, null, $validated, "Admin created property: {$property->property_title}");
+
+        return redirect()->route('admin.properties.show', $property->id)
+            ->with('success', 'Property created successfully.');
     }
 
     public function show(Property $property)

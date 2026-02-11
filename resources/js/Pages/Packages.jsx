@@ -8,6 +8,7 @@ import {
   Play, Layers, Image, HelpCircle
 } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
+import CompanyLogosGrid from '@/Components/Sections/CompanyLogosGrid';
 
 // Pricing data based on square footage
 const PRICING = {
@@ -2601,50 +2602,8 @@ function Packages({ userListings = [] }) {
                 </p>
               </div>
 
-              {/* Syndication Sites Grid - Real Logos */}
-              <div className="grid grid-cols-3 gap-3">
-                {/* Zillow */}
-                <div className="bg-white border border-[#E5E1DC] rounded-xl p-4 text-center hover:shadow-md hover:border-[#006AFF] transition-all">
-                  <div className="h-12 flex items-center justify-center">
-                    <img src="/images/zillow.png" alt="Zillow" className="h-10 w-auto object-contain" />
-                  </div>
-                </div>
-
-                {/* Realtor.com */}
-                <div className="bg-white border border-[#E5E1DC] rounded-xl p-4 text-center hover:shadow-md hover:border-[#D92228] transition-all">
-                  <div className="h-12 flex items-center justify-center">
-                    <img src="/images/realtor.png" alt="Realtor.com" className="h-10 w-auto object-contain" />
-                  </div>
-                </div>
-
-                {/* Trulia */}
-                <div className="bg-white border border-[#E5E1DC] rounded-xl p-4 text-center hover:shadow-md hover:border-[#00ADBB] transition-all">
-                  <div className="h-12 flex items-center justify-center">
-                    <img src="/images/trulia.png" alt="Trulia" className="h-10 w-auto object-contain" />
-                  </div>
-                </div>
-
-                {/* Redfin */}
-                <div className="bg-white border border-[#E5E1DC] rounded-xl p-4 text-center hover:shadow-md hover:border-[#A02021] transition-all">
-                  <div className="h-12 flex items-center justify-center">
-                    <img src="/images/redpin.png" alt="Redfin" className="h-10 w-auto object-contain" />
-                  </div>
-                </div>
-
-                {/* Homes.com */}
-                <div className="bg-white border border-[#E5E1DC] rounded-xl p-4 text-center hover:shadow-md hover:border-[#FF6B00] transition-all">
-                  <div className="h-12 flex items-center justify-center">
-                    <span className="text-[#FF6B00] font-bold text-lg tracking-tight" style={{ fontFamily: 'system-ui' }}>homes.com</span>
-                  </div>
-                </div>
-
-                {/* MLS */}
-                <div className="bg-white border border-[#E5E1DC] rounded-xl p-4 text-center hover:shadow-md hover:border-[#1a365d] transition-all">
-                  <div className="h-12 flex items-center justify-center">
-                    <span className="text-[#1a365d] font-bold text-xl tracking-tight" style={{ fontFamily: 'system-ui' }}>MLS</span>
-                  </div>
-                </div>
-              </div>
+              {/* Syndication Sites Grid - From Database */}
+              <CompanyLogosGrid variant="cards" />
 
               {/* Bottom text */}
               <div className="mt-6 pt-6 border-t border-[#E5E1DC] text-center">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\CompanyLogo;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,6 +36,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'googleMapsApiKey' => config('services.google.maps_api_key'),
+            'companyLogos' => fn () => CompanyLogo::getActive(),
         ];
     }
 }

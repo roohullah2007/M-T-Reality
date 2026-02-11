@@ -103,7 +103,7 @@ export default function PropertiesIndex({ properties, filters = {}, counts = {} 
                     <p className="text-gray-500">Manage all property listings</p>
                 </div>
                 <Link
-                    href="/list-property"
+                    href={route('admin.properties.create')}
                     className="inline-flex items-center gap-2 bg-[#A41E34] text-white px-4 py-2 rounded-lg hover:bg-[#8B1A2C] transition-colors"
                 >
                     <Plus className="w-5 h-5" />

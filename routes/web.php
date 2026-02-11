@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminActivityController;
 use App\Http\Controllers\Admin\AdminMediaOrderController;
+use App\Http\Controllers\Admin\AdminCompanyLogoController;
 use App\Http\Controllers\BuyerInquiryController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\InquiryController;
@@ -181,6 +182,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     // Properties Management
     Route::get('/properties', [AdminPropertyController::class, 'index'])->name('properties.index');
+    Route::get('/properties/create', [AdminPropertyController::class, 'create'])->name('properties.create');
+    Route::post('/properties', [AdminPropertyController::class, 'store'])->name('properties.store');
     Route::get('/properties/{property}', [AdminPropertyController::class, 'show'])->name('properties.show');
     Route::get('/properties/{property}/edit', [AdminPropertyController::class, 'edit'])->name('properties.edit');
     Route::put('/properties/{property}', [AdminPropertyController::class, 'update'])->name('properties.update');
@@ -236,6 +239,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/settings/store', [AdminSettingsController::class, 'store'])->name('settings.store');
     Route::delete('/settings/{setting}', [AdminSettingsController::class, 'destroy'])->name('settings.destroy');
     Route::post('/settings/initialize', [AdminSettingsController::class, 'initializeDefaults'])->name('settings.initialize');
+
+    // Company Logos Management
+    Route::get('/company-logos', [AdminCompanyLogoController::class, 'index'])->name('company-logos.index');
+    Route::post('/company-logos', [AdminCompanyLogoController::class, 'store'])->name('company-logos.store');
+    Route::put('/company-logos/{companyLogo}', [AdminCompanyLogoController::class, 'update'])->name('company-logos.update');
+    Route::delete('/company-logos/{companyLogo}', [AdminCompanyLogoController::class, 'destroy'])->name('company-logos.destroy');
+    Route::post('/company-logos/reorder', [AdminCompanyLogoController::class, 'reorder'])->name('company-logos.reorder');
 
     // Media Orders Management
     Route::get('/media-orders', [AdminMediaOrderController::class, 'index'])->name('media-orders.index');

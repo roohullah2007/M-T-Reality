@@ -56,6 +56,8 @@ const LocationMapPicker = ({
     });
     const [isReverseGeocoding, setIsReverseGeocoding] = useState(false);
     const [mapType, setMapType] = useState('roadmap'); // 'roadmap' or 'satellite'
+    const [latInput, setLatInput] = useState(isValidCoord(latitude) ? parseFloat(latitude).toFixed(6) : '');
+    const [lngInput, setLngInput] = useState(isValidCoord(longitude) ? parseFloat(longitude).toFixed(6) : '');
 
     // Oklahoma default center
     const defaultLat = 35.5;
@@ -205,6 +207,9 @@ const LocationMapPicker = ({
             streetViewControl: false,
             fullscreenControl: false,
             zoomControl: false,
+            gestureHandling: 'greedy',
+            scrollwheel: true,
+            draggable: true,
             styles: [
                 {
                     featureType: 'poi',
@@ -336,6 +341,47 @@ const LocationMapPicker = ({
         }
     };
 
+    // Sync lat/lng input fields whenever currentCoords changes
+    useEffect(() => {
+        if (currentCoords.lat !== null && currentCoords.lng !== null) {
+            setLatInput(currentCoords.lat.toFixed(6));
+            setLngInput(currentCoords.lng.toFixed(6));
+        }
+    }, [currentCoords.lat, currentCoords.lng]);
+
+    // Handle manual coordinate input
+    const handleManualCoordChange = useCallback(() => {
+        const lat = parseFloat(latInput);
+        const lng = parseFloat(lngInput);
+
+        if (isNaN(lat) || isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+            return;
+        }
+
+        setCurrentCoords({ lat, lng });
+
+        if (mapInstanceRef.current) {
+            if (markerRef.current) {
+                markerRef.current.setPosition({ lat, lng });
+            } else {
+                createMarker(lat, lng);
+            }
+            mapInstanceRef.current.setCenter({ lat, lng });
+            mapInstanceRef.current.setZoom(addressZoom);
+        }
+
+        if (onLocationChange) {
+            onLocationChange(lat, lng);
+        }
+    }, [latInput, lngInput, createMarker, onLocationChange]);
+
+    const handleCoordKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleManualCoordChange();
+        }
+    };
+
     const handleZoomIn = () => {
         if (mapInstanceRef.current) {
             mapInstanceRef.current.setZoom(mapInstanceRef.current.getZoom() + 1);
@@ -388,6 +434,34 @@ const LocationMapPicker = ({
                     <span className="text-sm text-amber-700">{geocodeError}</span>
                 </div>
             )}
+
+            {/* Lat/Lng Manual Inputs */}
+            <div className="mb-3 grid grid-cols-2 gap-3">
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
+                    <input
+                        type="text"
+                        value={latInput}
+                        onChange={(e) => setLatInput(e.target.value)}
+                        onBlur={handleManualCoordChange}
+                        onKeyDown={handleCoordKeyDown}
+                        placeholder="e.g., 35.4676"
+                        className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
+                    <input
+                        type="text"
+                        value={lngInput}
+                        onChange={(e) => setLngInput(e.target.value)}
+                        onBlur={handleManualCoordChange}
+                        onKeyDown={handleCoordKeyDown}
+                        placeholder="e.g., -97.5164"
+                        className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                    />
+                </div>
+            </div>
 
             {/* Map Container */}
             <div className="relative w-full rounded-xl overflow-hidden border border-gray-200" style={{ height: '300px' }}>

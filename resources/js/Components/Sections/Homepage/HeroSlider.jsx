@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Camera, Compass, Video, Box, Clapperboard, Sun } from 'lucide-react';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
+import CompanyLogosGrid from '@/Components/Sections/CompanyLogosGrid';
 
 const HeroSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -12,15 +13,6 @@ const HeroSlider = () => {
     { icon: Box, label: 'Matterport 3D', color: '#8B5CF6' },
     { icon: Clapperboard, label: 'Reels/TikTok Video', color: '#F59E0B' },
     { icon: Sun, label: 'Virtual Twilight', color: '#EC4899' }
-  ];
-
-  const mlsLogos = [
-    { name: 'Zillow', logo: 'https://s.zillowstatic.com/pfs/static/z-logo-default.svg' },
-    { name: 'Realtor.com', logo: 'https://static.rdc.moveaws.com/images/logos/rdc-logo-default.svg' },
-    { name: 'Redfin', logo: 'https://ssl.cdn-redfin.com/v488.2.0/images/logos/redfin-logo.svg' },
-    { name: 'Trulia', logo: 'https://www.trulia.com/images/icons/txl3/trulia-logo.svg' },
-    { name: 'Homes.com', logo: '/images/logos/homes-com.png' },
-    { name: 'MLS', logo: '/images/logos/mls-logo.png' }
   ];
 
   const slides = [
@@ -349,21 +341,7 @@ const HeroSlider = () => {
                           >
                             Your listing will appear on
                           </p>
-                          <div className="grid grid-cols-3 gap-4">
-                            {mlsLogos.map((item, idx) => (
-                              <div
-                                key={idx}
-                                className="bg-[#F8F7F5] rounded-xl p-4 flex items-center justify-center h-[70px] hover:bg-[#EEEDEA] transition-all duration-300"
-                              >
-                                <span
-                                  className="text-[#333] text-[14px] font-semibold"
-                                  style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                                >
-                                  {item.name}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
+                          <CompanyLogosGrid variant="text" />
                           <p
                             className="text-[#999] text-[12px] font-medium mt-6 text-center"
                             style={{ fontFamily: 'Instrument Sans, sans-serif' }}

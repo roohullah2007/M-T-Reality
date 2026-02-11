@@ -1,8 +1,13 @@
 import React from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { Users, TrendingUp, DollarSign, Clock } from 'lucide-react';
 
 const MLSSection = () => {
+  const { companyLogos = [] } = usePage().props;
+  const companyNames = companyLogos.length > 0
+    ? companyLogos.filter(l => l.name !== 'MLS').map(l => l.name).join(', ')
+    : 'Zillow, Realtor.com, Trulia, Redfin, and more';
+
   const stats = [
     {
       icon: Users,
@@ -33,7 +38,7 @@ const MLSSection = () => {
   const benefits = [
     {
       title: 'Maximum Exposure',
-      description: 'Your listing syndicates to Zillow, Realtor.com, Trulia, Redfin, and hundreds more sites.'
+      description: `Your listing syndicates to ${companyNames}, and hundreds more sites.`
     },
     {
       title: 'Buyer Agent Access',
