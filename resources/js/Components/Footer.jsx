@@ -1,14 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from '@inertiajs/react';
 
 const Footer = () => {
-  const [email, setEmail] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Email submitted:', email);
-    // Add your email submission logic here
-  };
 
   return (
     <footer className="w-full bg-[#1a1a1a]">
@@ -99,40 +92,46 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Newsletter */}
+          {/* Get Started */}
           <div>
             <h4
               style={{ fontFamily: '"Instrument Sans", sans-serif' }}
               className="text-white text-lg font-medium mb-4"
             >
-              Newsletter
+              Get Started
             </h4>
-            <form onSubmit={handleSubmit} className="mb-3">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                style={{ fontFamily: '"Instrument Sans", sans-serif' }}
-                className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2.5 text-white text-sm placeholder:text-[#DCD8D5]/50 focus:outline-none focus:border-white/40 transition-colors mb-2"
-              />
-              <button
-                type="submit"
-                style={{ fontFamily: '"Instrument Sans", sans-serif' }}
-                className="w-full bg-[#A41E34] text-white rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-300 hover:bg-[#8B1A2C]"
-              >
-                Subscribe
-              </button>
-            </form>
+            <p
+              style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+              className="text-[#DCD8D5] text-sm leading-relaxed mb-4"
+            >
+              List your property for free and save thousands in broker fees. No commissions, no hidden costs.
+            </p>
+            <Link
+              href="/list-property"
+              style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+              className="block w-full bg-[#A41E34] text-white rounded-lg px-4 py-2.5 text-sm font-medium text-center transition-all duration-300 hover:bg-[#8B1A2C] mb-3"
+            >
+              List Your Property Free
+            </Link>
+            <Link
+              href="/our-packages"
+              style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+              className="block w-full bg-white/10 border border-white/20 text-white rounded-lg px-4 py-2.5 text-sm font-medium text-center transition-all duration-300 hover:bg-white/20 mb-4"
+            >
+              View Our Packages
+            </Link>
             <p
               style={{ fontFamily: '"Instrument Sans", sans-serif' }}
               className="text-[#DCD8D5]/70 text-xs leading-relaxed"
             >
-              * By subscribing, you agree to our{' '}
-              <Link href="/privacy-policy" className="underline hover:text-white">
-                Privacy Policy
-              </Link>{' '}
-              and provide consent to receive updates from our company.
+              Questions?{' '}
+              <a href="tel:888-441-6526" className="text-white underline hover:text-[#DCD8D5] transition-colors">
+                Call 888-441-OKBO
+              </a>{' '}
+              or{' '}
+              <Link href="/contact" className="text-white underline hover:text-[#DCD8D5] transition-colors">
+                contact us
+              </Link>
             </p>
           </div>
         </div>
@@ -161,7 +160,7 @@ const Footer = () => {
             style={{ fontFamily: '"Instrument Sans", sans-serif' }}
             className="text-[#DCD8D5]/70 text-sm text-center md:text-left"
           >
-            © 1997-2025 OKByOwner. All Rights Reserved.
+            © 1997-{new Date().getFullYear()} OKByOwner. All Rights Reserved.
           </p>
 
           {/* Social Links */}
