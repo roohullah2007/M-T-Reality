@@ -285,21 +285,28 @@ class PropertyController extends Controller
         ];
 
         $status = $request->status ?? 'for-sale';
-        $listingStatus = $statusMap[$status] ?? 'for_sale';
 
-        // Inactive is only visible to admins
-        if ($listingStatus === 'inactive') {
-            if (!auth()->check() || auth()->user()->role !== 'admin') {
-                $listingStatus = 'for_sale';
-            }
-        }
-
-        // For non-inactive statuses, only show active listings
-        if ($listingStatus !== 'inactive') {
+        // Handle "all" status - show for_sale, pending, and sold
+        if ($status === 'all') {
             $query->where('is_active', true);
-        }
+            $query->whereIn('listing_status', ['for_sale', 'pending', 'sold']);
+        } else {
+            $listingStatus = $statusMap[$status] ?? 'for_sale';
 
-        $query->where('listing_status', $listingStatus);
+            // Inactive is only visible to admins
+            if ($listingStatus === 'inactive') {
+                if (!auth()->check() || auth()->user()->role !== 'admin') {
+                    $listingStatus = 'for_sale';
+                }
+            }
+
+            // For non-inactive statuses, only show active listings
+            if ($listingStatus !== 'inactive') {
+                $query->where('is_active', true);
+            }
+
+            $query->where('listing_status', $listingStatus);
+        }
 
         // Search by keyword
         if ($request->keyword) {

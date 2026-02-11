@@ -558,17 +558,32 @@ function PropertyDetail({ property }) {
                       </div>
                     </>
                   )}
-                  {/* For land properties, show lot size prominently */}
-                  {property.property_type === 'land' && property.lot_size && (
-                    <div className="flex items-center gap-3 col-span-2">
-                      <div className="bg-[#EEEDEA] p-3 rounded-lg">
-                        <Maximize2 className="w-5 h-5 text-[#A41E34]" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-[#666]">Lot Size</p>
-                        <p className="font-semibold text-[#111]">{property.lot_size}</p>
-                      </div>
-                    </div>
+                  {/* For land properties, show lot size and acres prominently */}
+                  {property.property_type === 'land' && (property.lot_size || property.acres) && (
+                    <>
+                      {property.acres && (
+                        <div className="flex items-center gap-3">
+                          <div className="bg-[#EEEDEA] p-3 rounded-lg">
+                            <Maximize2 className="w-5 h-5 text-[#A41E34]" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-[#666]">Acres</p>
+                            <p className="font-semibold text-[#111]">{Number(property.acres).toLocaleString()}</p>
+                          </div>
+                        </div>
+                      )}
+                      {property.lot_size && (
+                        <div className="flex items-center gap-3">
+                          <div className="bg-[#EEEDEA] p-3 rounded-lg">
+                            <Maximize2 className="w-5 h-5 text-[#A41E34]" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-[#666]">Lot Size</p>
+                            <p className="font-semibold text-[#111]">{Number(property.lot_size).toLocaleString()} sq ft</p>
+                          </div>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
 
@@ -578,24 +593,17 @@ function PropertyDetail({ property }) {
                     <p className="text-sm text-[#666]">Property Type</p>
                     <p className="font-semibold text-[#111]">{propertyTypeLabels[property.property_type] || property.property_type}</p>
                   </div>
-                  {/* Show lot size in additional details only for non-land properties */}
+                  {/* Show lot size in additional details for non-land properties */}
                   {property.property_type !== 'land' && property.lot_size && (
                     <div>
                       <p className="text-sm text-[#666]">Lot Size</p>
-                      <p className="font-semibold text-[#111]">{property.lot_size}</p>
+                      <p className="font-semibold text-[#111]">{Number(property.lot_size).toLocaleString()} sq ft{property.acres ? ` (${Number(property.acres).toLocaleString()} Acres)` : ''}</p>
                     </div>
                   )}
                   {property.subdivision && (
                     <div>
                       <p className="text-sm text-[#666]">Subdivision</p>
                       <p className="font-semibold text-[#111]">{property.subdivision}</p>
-                    </div>
-                  )}
-                  {/* Show acres and zoning for land properties */}
-                  {property.property_type === 'land' && property.acres && (
-                    <div>
-                      <p className="text-sm text-[#666]">Acres</p>
-                      <p className="font-semibold text-[#111]">{property.acres}</p>
                     </div>
                   )}
                   {property.property_type === 'land' && property.zoning && (

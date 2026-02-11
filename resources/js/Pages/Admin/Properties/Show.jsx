@@ -579,7 +579,7 @@ export default function PropertiesShow({ property, listingStatuses = {} }) {
                             {property.lot_size && (
                                 <div>
                                     <span className="text-gray-500">Lot Size:</span>
-                                    <span className="ml-2 font-medium text-gray-900">{property.lot_size?.toLocaleString()} sqft</span>
+                                    <span className="ml-2 font-medium text-gray-900">{property.lot_size?.toLocaleString()} sq ft{property.acres ? ` (${Number(property.acres).toLocaleString()} Acres)` : ''}</span>
                                 </div>
                             )}
                             {property.subdivision && (

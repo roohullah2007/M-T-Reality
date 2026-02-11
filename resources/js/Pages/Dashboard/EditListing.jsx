@@ -314,7 +314,6 @@ export default function EditListing({ property }) {
         { value: 'land', label: 'Lot/Land' },
         { value: 'farms-ranches', label: 'Farms/Ranches' },
         { value: 'mfd-mobile-homes', label: 'Manufactured/Mobile Homes' },
-        { value: 'factory-built', label: 'Factory Built' },
     ];
 
     const statusOptions = [

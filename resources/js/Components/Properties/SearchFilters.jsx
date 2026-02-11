@@ -37,12 +37,12 @@ const SearchFilters = ({ searchParams, onSearchChange }) => {
   ];
 
   const propertyTypes = [
+    { value: 'single-family-home', label: 'Single Family Home' },
     { value: 'condos-townhomes-co-ops', label: 'Condos/Townhomes/Co-Ops' },
-    { value: 'factory-built', label: 'Factory Built' },
-    { value: 'farms-ranches', label: 'Farms/Ranches' },
-    { value: 'single-family-home', label: 'Home' },
+    { value: 'multi-family', label: 'Multi-Family' },
     { value: 'land', label: 'Lot/Land' },
-    { value: 'mfd-mobile-homes', label: 'Mfd/Mobile Homes' },
+    { value: 'farms-ranches', label: 'Farms/Ranches' },
+    { value: 'mfd-mobile-homes', label: 'Manufactured/Mobile Homes' },
     { value: 'multi-family', label: 'Multi-Family' },
   ];
 

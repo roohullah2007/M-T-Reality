@@ -114,11 +114,12 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                     onChange={(e) => handleSearchChange('propertyType', e.target.value)}
                   >
                     <option value="">All Types</option>
-                    <option value="house">House</option>
-                    <option value="apartment">Apartment</option>
-                    <option value="condo">Condo</option>
-                    <option value="townhouse">Townhouse</option>
-                    <option value="land">Land</option>
+                    <option value="single-family-home">Single Family Home</option>
+                    <option value="condos-townhomes-co-ops">Condos/Townhomes/Co-Ops</option>
+                    <option value="multi-family">Multi-Family</option>
+                    <option value="land">Lot/Land</option>
+                    <option value="farms-ranches">Farms/Ranches</option>
+                    <option value="mfd-mobile-homes">Manufactured/Mobile Homes</option>
                   </select>
                 </div>
               </div>
@@ -238,6 +239,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                     className="min-w-[160px] pl-10 pr-4 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#999] transition-colors appearance-none bg-white cursor-pointer"
                     style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                   >
+                    <option value="all">All Listings</option>
                     <option value="for-sale">For Sale</option>
                     <option value="pending">Pending</option>
                     <option value="sold">Sold</option>
@@ -288,7 +290,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div>
               <h2 className="text-2xl md:text-[32px] font-medium text-[#111] mb-1" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                {searchParams.status === 'sold' ? 'Recently Sold' : searchParams.status === 'pending' ? 'Pending (Under Contract)' : searchParams.status === 'inactive' ? 'Inactive Listings' : 'For Sale'}
+                {searchParams.status === 'all' ? 'All Listings' : searchParams.status === 'sold' ? 'Recently Sold' : searchParams.status === 'pending' ? 'Pending (Under Contract)' : searchParams.status === 'inactive' ? 'Inactive Listings' : 'For Sale'}
               </h2>
               <p className="text-sm text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                 {pagination ? (

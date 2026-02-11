@@ -189,7 +189,7 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
               <div style="font-weight:700;font-size:16px;color:#A41E34;margin-bottom:4px;">$${Number(property.price).toLocaleString()}</div>
               <div style="font-size:13px;color:#111;margin-bottom:4px;line-height:1.3;">${property.address || ''}</div>
               <div style="font-size:12px;color:#666;">${property.city || ''}, ${property.state || 'OK'} ${property.zip_code || ''}</div>
-              <div style="font-size:12px;color:#555;margin-top:6px;">${property.bedrooms || 0} BD | ${baths} BA | ${property.sqft ? Number(property.sqft).toLocaleString() + ' sqft' : 'N/A'}</div>
+              <div style="font-size:12px;color:#555;margin-top:6px;">${property.bedrooms || 0} BD | ${baths} BA | ${property.sqft ? Number(property.sqft).toLocaleString() + ' sq ft' : 'N/A'}</div>
             </div>
           </a>
         </div>

@@ -186,7 +186,7 @@ export default function Favorites({ favorites, filters = {} }) {
                                     {property.sqft && (
                                         <span className="flex items-center gap-1">
                                             <Square className="w-4 h-4" />
-                                            {Number(property.sqft).toLocaleString()} sqft
+                                            {Number(property.sqft).toLocaleString()} sq ft
                                         </span>
                                     )}
                                 </div>
@@ -265,7 +265,7 @@ export default function Favorites({ favorites, filters = {} }) {
                                         {property.sqft && (
                                             <span className="flex items-center gap-1">
                                                 <Square className="w-4 h-4" />
-                                                {Number(property.sqft).toLocaleString()} sqft
+                                                {Number(property.sqft).toLocaleString()} sq ft
                                             </span>
                                         )}
                                     </div>

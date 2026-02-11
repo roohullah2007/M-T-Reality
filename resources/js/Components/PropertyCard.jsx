@@ -181,11 +181,11 @@ const PropertyCard = ({ property, onAuthRequired }) => {
           <div>
             <p className="text-sm text-[#293056]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
               {property.property_type === 'land' ? (
-                // For land/lot listings, show lot size instead of beds/baths/sqft
-                <>Lot/Land {property.lot_size ? `| ${property.lot_size}` : ''}</>
+                // For land/lot listings, show acres (preferred) or lot size
+                <>Lot/Land {property.acres ? `| ${Number(property.acres).toLocaleString()} Acres` : property.lot_size ? `| ${Number(property.lot_size).toLocaleString()} sq ft` : ''}</>
               ) : (
                 // For all other property types, show beds/baths/sqft
-                <>{property.bedrooms}BD | {(property.full_bathrooms || 0) + (property.half_bathrooms ? property.half_bathrooms * 0.5 : 0)}BA | {property.sqft ? `${Number(property.sqft).toLocaleString()} sqft` : 'Area N/A'}</>
+                <>{property.bedrooms}BD | {(property.full_bathrooms || 0) + (property.half_bathrooms ? property.half_bathrooms * 0.5 : 0)}BA | {property.sqft ? `${Number(property.sqft).toLocaleString()} sq ft` : 'Area N/A'}</>
               )}
             </p>
           </div>
