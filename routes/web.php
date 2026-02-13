@@ -127,6 +127,11 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard')-
     Route::post('/listings/{property}/photos/remove', [UserDashboardController::class, 'removePhoto'])->name('.listings.photos.remove');
     Route::post('/listings/{property}/photos/reorder', [UserDashboardController::class, 'reorderPhotos'])->name('.listings.photos.reorder');
 
+    // Open Houses
+    Route::post('/listings/{property}/open-houses', [UserDashboardController::class, 'storeOpenHouse'])->name('.listings.open-houses.store');
+    Route::put('/listings/{property}/open-houses/{openHouse}', [UserDashboardController::class, 'updateOpenHouse'])->name('.listings.open-houses.update');
+    Route::delete('/listings/{property}/open-houses/{openHouse}', [UserDashboardController::class, 'destroyOpenHouse'])->name('.listings.open-houses.destroy');
+
     // Messages (Inquiries)
     Route::get('/messages', [UserDashboardController::class, 'messages'])->name('.messages');
     Route::post('/messages/{inquiry}/read', [UserDashboardController::class, 'markMessageRead'])->name('.messages.read');
@@ -202,6 +207,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::delete('/properties/{property}/force', [AdminPropertyController::class, 'forceDelete'])->name('properties.force-delete');
     Route::post('/properties/{property}/restore', [AdminPropertyController::class, 'restore'])->name('properties.restore');
 
+    // Open Houses
+    Route::post('/properties/{property}/open-houses', [AdminPropertyController::class, 'storeOpenHouse'])->name('properties.open-houses.store');
+    Route::put('/properties/{property}/open-houses/{openHouse}', [AdminPropertyController::class, 'updateOpenHouse'])->name('properties.open-houses.update');
+    Route::delete('/properties/{property}/open-houses/{openHouse}', [AdminPropertyController::class, 'destroyOpenHouse'])->name('properties.open-houses.destroy');
+
     // Inquiries Management
     Route::get('/inquiries', [AdminInquiryController::class, 'index'])->name('inquiries.index');
     Route::get('/inquiries/{inquiry}', [AdminInquiryController::class, 'show'])->name('inquiries.show');
@@ -256,5 +266,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/media-orders/{mediaOrder}/schedule', [AdminMediaOrderController::class, 'schedule'])->name('media-orders.schedule');
     Route::delete('/media-orders/{mediaOrder}', [AdminMediaOrderController::class, 'destroy'])->name('media-orders.destroy');
 });
+
+// Short URL: /74 redirects to /properties/74-123-main-street
+Route::get('/{propertyId}', function ($propertyId, \Illuminate\Http\Request $request) {
+    $property = \App\Models\Property::findOrFail($propertyId);
+    $queryString = $request->getQueryString();
+    $url = '/properties/' . $property->slug . ($queryString ? '?' . $queryString : '');
+    return redirect()->to($url, 301);
+})->where('propertyId', '[0-9]+')->name('property.shorturl');
 
 require __DIR__.'/auth.php';

@@ -447,7 +447,7 @@ export default function PropertiesShow({ property, listingStatuses = {} }) {
                             <img
                                 src={photos[currentImageIndex]}
                                 alt={property.property_title}
-                                className="w-full h-[400px] object-cover"
+                                className="w-full h-[400px] object-cover object-[center_20%]"
                                 onError={(e) => e.target.src = '/images/property-placeholder.svg'}
                             />
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
-import { Maximize2, Heart, Info, Video, Box } from 'lucide-react';
+import { Maximize2, Heart, Info, Video, Box, Calendar } from 'lucide-react';
 
 const PropertyCard = ({ property, onAuthRequired }) => {
   const { auth } = usePage().props;
@@ -96,7 +96,7 @@ const PropertyCard = ({ property, onAuthRequired }) => {
           <img
             src={propertyImage}
             alt={property.property_title || property.address}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-cover object-[center_20%] transition-transform duration-500 group-hover:scale-105"
             onError={(e) => e.target.src = '/images/property-placeholder.svg'}
           />
           {/* Status Badge */}
@@ -125,6 +125,14 @@ const PropertyCard = ({ property, onAuthRequired }) => {
               </div>
             )}
           </div>
+
+          {/* Open House Badge */}
+          {property.upcoming_open_houses?.length > 0 && (
+            <div className="absolute bottom-4 left-4 bg-green-600 text-white px-2.5 py-1 text-xs font-semibold rounded-full flex items-center gap-1" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+              <Calendar className="w-3 h-3" />
+              Open House {new Date(property.upcoming_open_houses[0].date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+            </div>
+          )}
 
           {/* Action Buttons */}
           <div className="absolute bottom-4 right-4 flex gap-2">

@@ -143,7 +143,7 @@ export default function Favorites({ favorites, filters = {} }) {
                                 <img
                                     src={property.photos?.[0] || property.images?.[0]?.url || '/images/property-placeholder.jpg'}
                                     alt={property.property_title}
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-full object-cover object-[center_20%]"
                                     onError={(e) => e.target.src = '/images/property-placeholder.jpg'}
                                 />
                                 {property.status === 'sold' && (
@@ -217,7 +217,7 @@ export default function Favorites({ favorites, filters = {} }) {
                                     <img
                                         src={property.photos?.[0] || property.images?.[0]?.url || '/images/property-placeholder.jpg'}
                                         alt={property.property_title}
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-full object-cover object-[center_20%]"
                                         onError={(e) => e.target.src = '/images/property-placeholder.jpg'}
                                     />
                                     {property.status === 'sold' && (

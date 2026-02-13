@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\PropertyApproved;
 use App\Mail\PropertyRejected;
 use App\Models\Property;
+use App\Models\OpenHouse;
 use App\Models\User;
 use App\Models\ActivityLog;
 use App\Services\EmailService;
@@ -203,7 +204,7 @@ class AdminPropertyController extends Controller
 
     public function edit(Property $property)
     {
-        $property->load(['user', 'images']);
+        $property->load(['user', 'images', 'openHouses']);
 
         return Inertia::render('Admin/Properties/Edit', [
             'property' => $property,
@@ -618,5 +619,64 @@ class AdminPropertyController extends Controller
         ActivityLog::log('photo_removed', $property, null, ['removed_path' => $photoPath], "Removed photo from property: {$property->property_title}");
 
         return back()->with('success', 'Photo removed successfully.');
+    }
+
+    /**
+     * Store an open house for a property
+     */
+    public function storeOpenHouse(Request $request, Property $property)
+    {
+        $validated = $request->validate([
+            'date' => 'required|date|after_or_equal:today',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
+            'description' => 'nullable|string|max:500',
+        ]);
+
+        $openHouse = $property->openHouses()->create($validated);
+
+        ActivityLog::log('open_house_created', $property, null, $validated, "Added open house on {$validated['date']} for property: {$property->property_title}");
+
+        return back()->with('success', 'Open house added successfully!');
+    }
+
+    /**
+     * Update an open house
+     */
+    public function updateOpenHouse(Request $request, Property $property, OpenHouse $openHouse)
+    {
+        if ($openHouse->property_id !== $property->id) {
+            abort(404);
+        }
+
+        $validated = $request->validate([
+            'date' => 'required|date|after_or_equal:today',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
+            'description' => 'nullable|string|max:500',
+        ]);
+
+        $oldValues = $openHouse->toArray();
+        $openHouse->update($validated);
+
+        ActivityLog::log('open_house_updated', $property, $oldValues, $validated, "Updated open house for property: {$property->property_title}");
+
+        return back()->with('success', 'Open house updated successfully!');
+    }
+
+    /**
+     * Delete an open house
+     */
+    public function destroyOpenHouse(Property $property, OpenHouse $openHouse)
+    {
+        if ($openHouse->property_id !== $property->id) {
+            abort(404);
+        }
+
+        ActivityLog::log('open_house_deleted', $property, $openHouse->toArray(), null, "Deleted open house for property: {$property->property_title}");
+
+        $openHouse->delete();
+
+        return back()->with('success', 'Open house removed successfully!');
     }
 }

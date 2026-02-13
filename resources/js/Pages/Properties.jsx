@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import { MapPin, Home, DollarSign, BedDouble, Bath, ChevronLeft, ChevronRight, Map, LayoutGrid } from 'lucide-react';
+import { MapPin, Home, DollarSign, BedDouble, Bath, ChevronLeft, ChevronRight, Map, LayoutGrid, Calendar } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
 import PropertyCard from '@/Components/PropertyCard';
 import PropertyMap from '@/Components/Properties/PropertyMap';
@@ -19,6 +19,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
     bedrooms: String(filters.bedrooms || ''),
     bathrooms: String(filters.bathrooms || ''),
     schoolDistrict: String(filters.schoolDistrict || ''),
+    hasOpenHouse: String(filters.hasOpenHouse || ''),
     sort: String(filters.sort || 'newest'),
   });
 
@@ -218,6 +219,26 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                   />
                 </div>
               </div>
+
+              {/* Open Houses */}
+              <div>
+                <label className="block text-sm font-medium text-[#111] mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  Open Houses
+                </label>
+                <div className="relative">
+                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
+                  <select
+                    className="w-full pl-10 pr-4 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#A41E34] transition-colors appearance-none bg-white"
+                    style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                    value={searchParams.hasOpenHouse}
+                    onChange={(e) => handleSearchChange('hasOpenHouse', e.target.value)}
+                  >
+                    <option value="">Any</option>
+                    <option value="yes">Has Open House</option>
+                    <option value="this_weekend">This Weekend</option>
+                  </select>
+                </div>
+              </div>
             </div>
 
             {/* Status Dropdown & Action Buttons */}
@@ -262,6 +283,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                       bedrooms: '',
                       bathrooms: '',
                       schoolDistrict: '',
+                      hasOpenHouse: '',
                       sort: 'newest',
                     });
                     router.get('/properties');
@@ -380,6 +402,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                       bedrooms: '',
                       bathrooms: '',
                       schoolDistrict: '',
+                      hasOpenHouse: '',
                       sort: 'newest',
                     });
                     router.get('/properties');

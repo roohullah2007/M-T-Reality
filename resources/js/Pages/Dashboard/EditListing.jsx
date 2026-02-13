@@ -3,6 +3,7 @@ import UserDashboardLayout from '@/Layouts/UserDashboardLayout';
 import { useState, useRef, useCallback } from 'react';
 import axios from 'axios';
 import LocationMapPicker from '@/Components/Properties/LocationMapPicker';
+import OpenHouseManager from '@/Components/OpenHouseManager';
 import {
     ArrowLeft,
     Save,
@@ -1052,6 +1053,15 @@ export default function EditListing({ property }) {
                     </p>
                 </div>
 
+                {/* Open Houses */}
+                <div className="bg-white rounded-2xl shadow-sm p-6">
+                    <OpenHouseManager
+                        property={property}
+                        openHouses={property.open_houses || []}
+                        routePrefix="dashboard.listings"
+                    />
+                </div>
+
                 {/* Contact Information */}
                 <div className="bg-white rounded-2xl shadow-sm p-6">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
@@ -1199,7 +1209,7 @@ export default function EditListing({ property }) {
                                             <img
                                                 src={preview.url}
                                                 alt={preview.name}
-                                                className="w-full h-full object-cover"
+                                                className="w-full h-full object-cover object-[center_20%]"
                                             />
                                         )}
 
@@ -1297,7 +1307,7 @@ export default function EditListing({ property }) {
                                         <img
                                             src={photo}
                                             alt={`Property photo ${index + 1}`}
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full object-cover object-[center_20%]"
                                             onError={(e) => e.target.src = '/images/property-placeholder.svg'}
                                         />
                                         {/* Main Photo Badge */}
@@ -1407,7 +1417,7 @@ export default function EditListing({ property }) {
                                 <img
                                     src={photos[photoToDelete]}
                                     alt="Photo to delete"
-                                    className="w-full h-40 object-cover"
+                                    className="w-full h-40 object-cover object-[center_20%]"
                                 />
                             </div>
                         )}

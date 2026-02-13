@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { MapPin, BedDouble, Bath, Maximize2, Calendar, Home, Heart, Share2, ArrowLeft, Phone, Mail, CheckCircle2, ChevronLeft, ChevronRight, Copy, Check, BadgeCheck, Calculator, DollarSign, Printer, Video, ExternalLink } from 'lucide-react';
+import { MapPin, BedDouble, Bath, Maximize2, Calendar, Home, Heart, Share2, ArrowLeft, Phone, Mail, CheckCircle2, ChevronLeft, ChevronRight, Copy, Check, BadgeCheck, Calculator, DollarSign, Printer, Video, ExternalLink, X } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
 import SinglePropertyMap from '@/Components/Properties/SinglePropertyMap';
 
-function PropertyDetail({ property }) {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+function PropertyDetail({ property, openHouses = [] }) {
+  const [showGalleryModal, setShowGalleryModal] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const [mobileIndex, setMobileIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(() => {
     if (typeof window !== 'undefined') {
       const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
@@ -43,13 +45,44 @@ function PropertyDetail({ property }) {
     ? property.photos
     : ['/images/property-placeholder.svg'];
 
-  const handlePrevImage = () => {
-    setCurrentImageIndex((prev) => (prev === 0 ? photos.length - 1 : prev - 1));
+  const openGallery = (index) => {
+    setGalleryIndex(index);
+    setShowGalleryModal(true);
   };
 
-  const handleNextImage = () => {
-    setCurrentImageIndex((prev) => (prev === photos.length - 1 ? 0 : prev + 1));
+  const closeGallery = () => {
+    setShowGalleryModal(false);
   };
+
+  const galleryPrev = () => {
+    setGalleryIndex((prev) => (prev > 0 ? prev - 1 : prev));
+  };
+
+  const galleryNext = () => {
+    setGalleryIndex((prev) => (prev < photos.length - 1 ? prev + 1 : prev));
+  };
+
+  // Body scroll lock when gallery modal is open
+  useEffect(() => {
+    if (showGalleryModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [showGalleryModal]);
+
+  // Keyboard navigation for gallery modal
+  useEffect(() => {
+    if (!showGalleryModal) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') closeGallery();
+      if (e.key === 'ArrowLeft') galleryPrev();
+      if (e.key === 'ArrowRight') galleryNext();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showGalleryModal, photos.length]);
 
   const handleFavorite = () => {
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
@@ -118,7 +151,7 @@ function PropertyDetail({ property }) {
           .logo { font-size: 24px; font-weight: bold; color: #A41E34; margin-bottom: 10px; }
           .price { font-size: 36px; font-weight: bold; color: #A41E34; margin: 20px 0; }
           .address { font-size: 18px; color: #333; }
-          .photo { width: 100%; height: 300px; object-fit: cover; border-radius: 10px; margin: 20px 0; }
+          .photo { width: 100%; height: 300px; object-fit: cover; object-position: center 20%; border-radius: 10px; margin: 20px 0; }
           .details { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0; }
           .detail-box { text-align: center; padding: 15px; background: #f5f5f5; border-radius: 8px; }
           .detail-label { font-size: 12px; color: #666; text-transform: uppercase; }
@@ -293,34 +326,214 @@ function PropertyDetail({ property }) {
       {/* Image Gallery */}
       <section className="bg-white py-8">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
-          <div className="relative rounded-2xl overflow-hidden">
-            <img
-              src={photos[currentImageIndex]}
-              alt={`${property.property_title} - Image ${currentImageIndex + 1}`}
-              className="w-full h-[400px] md:h-[500px] object-cover"
-              onError={(e) => e.target.src = '/images/property-placeholder.svg'}
-            />
 
-            {/* Image Navigation */}
+          {/* Desktop 3-Image Grid (hidden on mobile) */}
+          <div className="hidden md:grid grid-cols-3 gap-2 rounded-2xl overflow-hidden" style={{ height: '500px' }}>
+            {/* Left - Main Image */}
+            <div className="col-span-2 relative cursor-pointer" onClick={() => openGallery(0)}>
+              <img
+                src={photos[0]}
+                alt={`${property.property_title} - Image 1`}
+                className="w-full h-full object-cover object-[center_20%]"
+                onError={(e) => e.target.src = '/images/property-placeholder.svg'}
+              />
+
+              {/* Status Badge */}
+              <div className={`absolute top-4 left-4 text-white px-4 py-2 rounded-full text-sm font-semibold ${
+                (property.listing_status || property.status) === 'sold' ? 'bg-gray-700' :
+                (property.listing_status || property.status) === 'pending' ? 'bg-yellow-600' :
+                (property.listing_status || property.status) === 'inactive' ? 'bg-gray-500' :
+                'bg-[#A41E34]'
+              }`}>
+                {(() => {
+                  const ls = property.listing_status || property.status;
+                  switch (ls) {
+                    case 'sold': return 'SOLD';
+                    case 'pending': return 'PENDING';
+                    case 'inactive': return 'INACTIVE';
+                    default: return 'FOR SALE';
+                  }
+                })()}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="absolute top-4 right-4 flex gap-2">
+                <button
+                  onClick={(e) => { e.stopPropagation(); handlePrintFlyer(); }}
+                  className="bg-white/90 hover:bg-white p-3 rounded-full transition-all"
+                  title="Print Flyer"
+                >
+                  <Printer className="w-5 h-5 text-gray-800" />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); handleFavorite(); }}
+                  className="bg-white/90 hover:bg-white p-3 rounded-full transition-all"
+                  title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                >
+                  <Heart className={`w-5 h-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-800'}`} />
+                </button>
+                <div className="relative" ref={shareDropdownRef}>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleShare(); }}
+                    className="bg-white/90 hover:bg-white p-3 rounded-full transition-all"
+                    title="Share property"
+                  >
+                    <Share2 className="w-5 h-5 text-gray-800" />
+                  </button>
+                  {showShareDropdown && (
+                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50" onClick={(e) => e.stopPropagation()}>
+                      <button onClick={copyToClipboard} className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left">
+                        {copied ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5 text-gray-600" />}
+                        <span className="text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>{copied ? 'Copied!' : 'Copy Link'}</span>
+                      </button>
+                      <button onClick={shareOnFacebook} className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left">
+                        <svg className="w-5 h-5 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        <span className="text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Facebook</span>
+                      </button>
+                      <button onClick={shareOnTwitter} className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left">
+                        <svg className="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        <span className="text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>X (Twitter)</span>
+                      </button>
+                      <button onClick={shareOnWhatsApp} className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left">
+                        <svg className="w-5 h-5 text-[#25D366]" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        <span className="text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>WhatsApp</span>
+                      </button>
+                      <button onClick={shareViaEmail} className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left">
+                        <Mail className="w-5 h-5 text-gray-600" />
+                        <span className="text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Email</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Media Badges */}
+              <div className="absolute bottom-4 left-4 flex gap-2">
+                {(property.video_tour_url || property.video_url) && (
+                  <a
+                    href={property.video_tour_url || property.video_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="bg-black/70 hover:bg-black/90 text-white px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
+                  >
+                    <Video className="w-3.5 h-3.5" />
+                    Video
+                  </a>
+                )}
+                {(property.matterport_url || property.virtual_tour_url) && (
+                  <a
+                    href={property.matterport_url || property.virtual_tour_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="bg-purple-600/90 hover:bg-purple-700 text-white px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
+                  >
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                    </svg>
+                    3D Tour
+                  </a>
+                )}
+              </div>
+            </div>
+
+            {/* Right Column - Two stacked images */}
+            <div className="flex flex-col gap-2">
+              {/* Top Right Image */}
+              <div className="flex-1 relative cursor-pointer" onClick={() => photos[1] && openGallery(1)}>
+                {photos[1] ? (
+                  <img
+                    src={photos[1]}
+                    alt={`${property.property_title} - Image 2`}
+                    className="w-full h-full object-cover object-[center_20%]"
+                    onError={(e) => e.target.src = '/images/property-placeholder.svg'}
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                    <span className="text-gray-400 text-sm">No image</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Bottom Right Image */}
+              <div className="flex-1 relative cursor-pointer" onClick={() => photos[2] ? openGallery(2) : photos.length >= 1 && openGallery(0)}>
+                {photos[2] ? (
+                  <>
+                    <img
+                      src={photos[2]}
+                      alt={`${property.property_title} - Image 3`}
+                      className="w-full h-full object-cover object-[center_20%]"
+                      onError={(e) => e.target.src = '/images/property-placeholder.svg'}
+                    />
+                    {photos.length > 3 && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); openGallery(0); }}
+                        className="absolute bottom-4 right-4 bg-white hover:bg-gray-100 text-[#111] px-4 py-2 rounded-lg text-sm font-semibold shadow-md transition-colors"
+                        style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                      >
+                        See all {photos.length} photos
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                    <span className="text-gray-400 text-sm">No image</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Carousel (visible on mobile, hidden md+) */}
+          <div className="md:hidden relative rounded-2xl overflow-hidden">
+            <div className="cursor-pointer" onClick={() => openGallery(mobileIndex)}>
+              <img
+                src={photos[mobileIndex]}
+                alt={`${property.property_title} - Image ${mobileIndex + 1}`}
+                className="w-full h-[400px] object-cover object-[center_20%]"
+                onError={(e) => e.target.src = '/images/property-placeholder.svg'}
+              />
+            </div>
+
+            {/* Mobile Navigation Arrows */}
             {photos.length > 1 && (
               <>
                 <button
-                  onClick={handlePrevImage}
+                  onClick={() => setMobileIndex((prev) => (prev === 0 ? photos.length - 1 : prev - 1))}
                   className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full transition-all"
                 >
                   <ChevronLeft className="w-6 h-6" />
                 </button>
                 <button
-                  onClick={handleNextImage}
+                  onClick={() => setMobileIndex((prev) => (prev === photos.length - 1 ? 0 : prev + 1))}
                   className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full transition-all"
                 >
                   <ChevronRight className="w-6 h-6" />
                 </button>
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-4 py-2 rounded-full text-sm">
-                  {currentImageIndex + 1} / {photos.length}
+                  {mobileIndex + 1} / {photos.length}
                 </div>
               </>
             )}
+
+            {/* Status Badge */}
+            <div className={`absolute top-4 left-4 text-white px-4 py-2 rounded-full text-sm font-semibold ${
+              (property.listing_status || property.status) === 'sold' ? 'bg-gray-700' :
+              (property.listing_status || property.status) === 'pending' ? 'bg-yellow-600' :
+              (property.listing_status || property.status) === 'inactive' ? 'bg-gray-500' :
+              'bg-[#A41E34]'
+            }`}>
+              {(() => {
+                const ls = property.listing_status || property.status;
+                switch (ls) {
+                  case 'sold': return 'SOLD';
+                  case 'pending': return 'PENDING';
+                  case 'inactive': return 'INACTIVE';
+                  default: return 'FOR SALE';
+                }
+              })()}
+            </div>
 
             {/* Action Buttons */}
             <div className="absolute top-4 right-4 flex gap-2">
@@ -346,89 +559,34 @@ function PropertyDetail({ property }) {
                 >
                   <Share2 className="w-5 h-5 text-gray-800" />
                 </button>
-
-                {/* Share Dropdown */}
                 {showShareDropdown && (
                   <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
-                    <button
-                      onClick={copyToClipboard}
-                      className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left"
-                    >
-                      {copied ? (
-                        <Check className="w-5 h-5 text-green-500" />
-                      ) : (
-                        <Copy className="w-5 h-5 text-gray-600" />
-                      )}
-                      <span className="text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                        {copied ? 'Copied!' : 'Copy Link'}
-                      </span>
+                    <button onClick={copyToClipboard} className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left">
+                      {copied ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5 text-gray-600" />}
+                      <span className="text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>{copied ? 'Copied!' : 'Copy Link'}</span>
                     </button>
-                    <button
-                      onClick={shareOnFacebook}
-                      className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left"
-                    >
-                      <svg className="w-5 h-5 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                      </svg>
-                      <span className="text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                        Facebook
-                      </span>
+                    <button onClick={shareOnFacebook} className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left">
+                      <svg className="w-5 h-5 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                      <span className="text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Facebook</span>
                     </button>
-                    <button
-                      onClick={shareOnTwitter}
-                      className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left"
-                    >
-                      <svg className="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                      </svg>
-                      <span className="text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                        X (Twitter)
-                      </span>
+                    <button onClick={shareOnTwitter} className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left">
+                      <svg className="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                      <span className="text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>X (Twitter)</span>
                     </button>
-                    <button
-                      onClick={shareOnWhatsApp}
-                      className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left"
-                    >
-                      <svg className="w-5 h-5 text-[#25D366]" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                      </svg>
-                      <span className="text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                        WhatsApp
-                      </span>
+                    <button onClick={shareOnWhatsApp} className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left">
+                      <svg className="w-5 h-5 text-[#25D366]" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                      <span className="text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>WhatsApp</span>
                     </button>
-                    <button
-                      onClick={shareViaEmail}
-                      className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left"
-                    >
+                    <button onClick={shareViaEmail} className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left">
                       <Mail className="w-5 h-5 text-gray-600" />
-                      <span className="text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                        Email
-                      </span>
+                      <span className="text-gray-700" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Email</span>
                     </button>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Status Badge */}
-            <div className={`absolute top-4 left-4 text-white px-4 py-2 rounded-full text-sm font-semibold ${
-              (property.listing_status || property.status) === 'sold' ? 'bg-gray-700' :
-              (property.listing_status || property.status) === 'pending' ? 'bg-yellow-600' :
-              (property.listing_status || property.status) === 'inactive' ? 'bg-gray-500' :
-              'bg-[#A41E34]'
-            }`}>
-              {(() => {
-                const ls = property.listing_status || property.status;
-                switch (ls) {
-                  case 'sold': return 'SOLD';
-                  case 'pending': return 'PENDING';
-                  case 'inactive': return 'INACTIVE';
-                  default: return 'FOR SALE';
-                }
-              })()}
-            </div>
-
-            {/* Media Badges - Clickable */}
+            {/* Media Badges */}
             <div className="absolute bottom-4 left-4 flex gap-2">
               {(property.video_tour_url || property.video_url) && (
                 <a
@@ -457,29 +615,94 @@ function PropertyDetail({ property }) {
             </div>
           </div>
 
-          {/* Thumbnail Gallery */}
+        </div>
+      </section>
+
+      {/* Fullscreen Gallery Modal */}
+      {showGalleryModal && (
+        <div className="fixed inset-0 z-[60] bg-black/95 flex flex-col">
+          {/* Modal Header */}
+          <div className="flex items-center justify-between px-4 sm:px-6 py-4 text-white">
+            <div>
+              <p className="text-sm text-white/70" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                {property.address}, {property.city}, {property.state}
+              </p>
+              <p className="text-sm text-white/50" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                {galleryIndex + 1} of {photos.length}
+              </p>
+            </div>
+            <button
+              onClick={closeGallery}
+              className="p-2 hover:bg-white/10 rounded-full transition-colors"
+            >
+              <X className="w-6 h-6 text-white" />
+            </button>
+          </div>
+
+          {/* Main Image Area */}
+          <div className="flex-1 flex items-center justify-center relative px-4 min-h-0">
+            {/* Left Arrow */}
+            <button
+              onClick={galleryPrev}
+              disabled={galleryIndex === 0}
+              className={`absolute left-4 z-10 p-3 rounded-full transition-all ${
+                galleryIndex === 0
+                  ? 'bg-white/5 text-white/20 cursor-not-allowed'
+                  : 'bg-white/10 hover:bg-white/20 text-white'
+              }`}
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+
+            {/* Image */}
+            <img
+              src={photos[galleryIndex]}
+              alt={`${property.property_title} - Image ${galleryIndex + 1}`}
+              className="max-w-full max-h-full object-contain"
+              onError={(e) => e.target.src = '/images/property-placeholder.svg'}
+            />
+
+            {/* Right Arrow */}
+            <button
+              onClick={galleryNext}
+              disabled={galleryIndex === photos.length - 1}
+              className={`absolute right-4 z-10 p-3 rounded-full transition-all ${
+                galleryIndex === photos.length - 1
+                  ? 'bg-white/5 text-white/20 cursor-not-allowed'
+                  : 'bg-white/10 hover:bg-white/20 text-white'
+              }`}
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          </div>
+
+          {/* Thumbnail Strip */}
           {photos.length > 1 && (
-            <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
-              {photos.map((photo, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentImageIndex(index)}
-                  className={`flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden border-2 transition-all ${
-                    index === currentImageIndex ? 'border-[#A41E34]' : 'border-transparent'
-                  }`}
-                >
-                  <img
-                    src={photo}
-                    alt={`Thumbnail ${index + 1}`}
-                    className="w-full h-full object-cover"
-                    onError={(e) => e.target.src = '/images/property-placeholder.svg'}
-                  />
-                </button>
-              ))}
+            <div className="px-4 sm:px-6 py-4 overflow-x-auto">
+              <div className="flex gap-2 justify-center">
+                {photos.map((photo, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setGalleryIndex(index)}
+                    className={`flex-shrink-0 w-20 h-[60px] rounded-lg overflow-hidden border-2 transition-all ${
+                      index === galleryIndex
+                        ? 'border-blue-500 opacity-100'
+                        : 'border-transparent opacity-50 hover:opacity-80'
+                    }`}
+                  >
+                    <img
+                      src={photo}
+                      alt={`Thumbnail ${index + 1}`}
+                      className="w-full h-full object-cover"
+                      onError={(e) => e.target.src = '/images/property-placeholder.svg'}
+                    />
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>
-      </section>
+      )}
 
       {/* Mobile Sticky CTA Bar */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-50 shadow-lg safe-bottom">
@@ -624,6 +847,44 @@ function PropertyDetail({ property }) {
                   {property.description}
                 </p>
               </div>
+
+              {/* Upcoming Open Houses */}
+              {openHouses.length > 0 && (
+                <div className="bg-white rounded-2xl p-6 mb-6">
+                  <h2 className="text-xl font-semibold text-[#111] mb-4 flex items-center gap-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                    <Calendar className="w-5 h-5 text-[#A41E34]" />
+                    Upcoming Open Houses
+                  </h2>
+                  <div className="space-y-3">
+                    {openHouses.map((oh, idx) => (
+                      <div key={oh.id || idx} className="flex items-start gap-4 p-4 bg-green-50 rounded-xl border-l-4 border-[#A41E34]">
+                        <div className="bg-green-200 p-2.5 rounded-lg flex-shrink-0">
+                          <Calendar className="w-5 h-5 text-green-700" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                            {new Date(oh.date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+                          </p>
+                          <p className="text-sm text-gray-600 mt-0.5">
+                            {(() => {
+                              const fmt = (t) => {
+                                if (!t) return '';
+                                const [h, m] = t.substring(0, 5).split(':');
+                                const hour = parseInt(h);
+                                return `${hour === 0 ? 12 : hour > 12 ? hour - 12 : hour}:${m} ${hour >= 12 ? 'PM' : 'AM'}`;
+                              };
+                              return `${fmt(oh.start_time)} - ${fmt(oh.end_time)}`;
+                            })()}
+                          </p>
+                          {oh.description && (
+                            <p className="text-sm text-gray-500 mt-1">{oh.description}</p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* School Information */}
               {property.school_district && (

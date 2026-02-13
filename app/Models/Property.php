@@ -214,6 +214,25 @@ class Property extends Model
     }
 
     /**
+     * Get open houses for this property
+     */
+    public function openHouses(): HasMany
+    {
+        return $this->hasMany(OpenHouse::class)->orderBy('date')->orderBy('start_time');
+    }
+
+    /**
+     * Get upcoming open houses for this property
+     */
+    public function upcomingOpenHouses(): HasMany
+    {
+        return $this->hasMany(OpenHouse::class)
+            ->where('date', '>=', now()->toDateString())
+            ->orderBy('date')
+            ->orderBy('start_time');
+    }
+
+    /**
      * Scope for active properties
      */
     public function scopeActive($query)

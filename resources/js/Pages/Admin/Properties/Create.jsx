@@ -792,7 +792,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                         {newPhotoPreviews.map((preview) => (
                             <div key={preview.id} className="relative group aspect-square rounded-lg overflow-hidden bg-gray-100">
                                 {preview.url ? (
-                                    <img src={preview.url} alt={preview.name} className="w-full h-full object-cover" />
+                                    <img src={preview.url} alt={preview.name} className="w-full h-full object-cover object-[center_20%]" />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-400">
                                         <Image className="w-8 h-8" />

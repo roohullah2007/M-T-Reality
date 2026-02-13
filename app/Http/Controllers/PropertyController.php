@@ -191,7 +191,8 @@ class PropertyController extends Controller
         $property->incrementViews();
 
         return Inertia::render('PropertyDetail', [
-            'property' => $property
+            'property' => $property,
+            'openHouses' => $property->upcomingOpenHouses()->get(),
         ]);
     }
 
@@ -356,6 +357,27 @@ class PropertyController extends Controller
             $query->where('school_district', 'like', '%' . $request->schoolDistrict . '%');
         }
 
+        // Filter by open house availability
+        if ($request->hasOpenHouse) {
+            if ($request->hasOpenHouse === 'yes') {
+                $query->whereHas('upcomingOpenHouses');
+            } elseif ($request->hasOpenHouse === 'this_weekend') {
+                $saturday = now()->next('Saturday')->toDateString();
+                $sunday = now()->next('Sunday')->toDateString();
+                // If today is Saturday or Sunday, use today/tomorrow
+                if (now()->isSaturday()) {
+                    $saturday = now()->toDateString();
+                    $sunday = now()->addDay()->toDateString();
+                } elseif (now()->isSunday()) {
+                    $saturday = now()->toDateString();
+                    $sunday = now()->toDateString();
+                }
+                $query->whereHas('openHouses', function ($q) use ($saturday, $sunday) {
+                    $q->whereBetween('date', [$saturday, $sunday]);
+                });
+            }
+        }
+
         // Sorting
         $sortBy = $request->sort ?? 'newest';
         switch ($sortBy) {
@@ -378,7 +400,9 @@ class PropertyController extends Controller
         // Clone query for map before pagination
         $mapQuery = clone $query;
 
-        $properties = $query->paginate(12)->withQueryString();
+        $properties = $query->with(['upcomingOpenHouses' => function ($q) {
+            $q->limit(1);
+        }])->paginate(12)->withQueryString();
 
         // Get all properties with coordinates for map (lightweight data)
         // Note: 'slug' is a computed attribute, not a DB column, so we don't select it
@@ -397,7 +421,7 @@ class PropertyController extends Controller
 
         return Inertia::render('Properties', [
             'properties' => $properties,
-            'filters' => $request->only(['keyword', 'location', 'status', 'propertyType', 'priceMin', 'priceMax', 'bedrooms', 'bathrooms', 'schoolDistrict', 'sort']),
+            'filters' => $request->only(['keyword', 'location', 'status', 'propertyType', 'priceMin', 'priceMax', 'bedrooms', 'bathrooms', 'schoolDistrict', 'hasOpenHouse', 'sort']),
             'isAdmin' => $isAdmin,
             'allPropertiesForMap' => $allPropertiesForMap,
         ]);

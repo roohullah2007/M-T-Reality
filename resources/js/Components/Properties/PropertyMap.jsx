@@ -184,7 +184,7 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
       const popupContent = `
         <div style="padding:0;min-width:220px;font-family:'Instrument Sans',sans-serif;">
           <a href="/properties/${property.slug || property.id}" style="text-decoration:none;color:inherit;">
-            <img src="${photo}" alt="${property.property_title || ''}" style="width:100%;height:120px;object-fit:cover;border-radius:8px 8px 0 0;" onerror="this.src='/images/property-placeholder.svg'" />
+            <img src="${photo}" alt="${property.property_title || ''}" style="width:100%;height:120px;object-fit:cover;object-position:center 20%;border-radius:8px 8px 0 0;" onerror="this.src='/images/property-placeholder.svg'" />
             <div style="padding:10px;">
               <div style="font-weight:700;font-size:16px;color:#A41E34;margin-bottom:4px;">$${Number(property.price).toLocaleString()}</div>
               <div style="font-size:13px;color:#111;margin-bottom:4px;line-height:1.3;">${property.address || ''}</div>
@@ -349,7 +349,7 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
                   <img
                     src={photo}
                     alt={property.property_title || ''}
-                    className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
+                    className="w-16 h-16 object-cover object-[center_20%] rounded-lg flex-shrink-0"
                     onError={(e) => e.target.src = '/images/property-placeholder.svg'}
                   />
                   <div className="flex-1 min-w-0">

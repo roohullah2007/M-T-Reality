@@ -6,6 +6,7 @@ use App\Mail\PropertyUpdatedNotification;
 use App\Mail\ServiceRequestReceived;
 use App\Mail\ServiceRequestToAdmin;
 use App\Models\Property;
+use App\Models\OpenHouse;
 use App\Models\Inquiry;
 use App\Models\Favorite;
 use App\Models\ServiceRequest;
@@ -120,7 +121,7 @@ class UserDashboardController extends Controller
         }
 
         return Inertia::render('Dashboard/EditListing', [
-            'property' => $property->load('images'),
+            'property' => $property->load(['images', 'openHouses']),
         ]);
     }
 
@@ -750,5 +751,69 @@ class UserDashboardController extends Controller
         $property->update(['photos' => $reorderedPhotos]);
 
         return back()->with('success', 'Photos reordered successfully.');
+    }
+
+    /**
+     * Store an open house for a listing
+     */
+    public function storeOpenHouse(Request $request, Property $property)
+    {
+        if ($property->user_id !== Auth::id()) {
+            abort(403, 'You do not own this property.');
+        }
+
+        $validated = $request->validate([
+            'date' => 'required|date|after_or_equal:today',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
+            'description' => 'nullable|string|max:500',
+        ]);
+
+        $property->openHouses()->create($validated);
+
+        return back()->with('success', 'Open house added successfully!');
+    }
+
+    /**
+     * Update an open house
+     */
+    public function updateOpenHouse(Request $request, Property $property, OpenHouse $openHouse)
+    {
+        if ($property->user_id !== Auth::id()) {
+            abort(403, 'You do not own this property.');
+        }
+
+        if ($openHouse->property_id !== $property->id) {
+            abort(404);
+        }
+
+        $validated = $request->validate([
+            'date' => 'required|date|after_or_equal:today',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
+            'description' => 'nullable|string|max:500',
+        ]);
+
+        $openHouse->update($validated);
+
+        return back()->with('success', 'Open house updated successfully!');
+    }
+
+    /**
+     * Delete an open house
+     */
+    public function destroyOpenHouse(Property $property, OpenHouse $openHouse)
+    {
+        if ($property->user_id !== Auth::id()) {
+            abort(403, 'You do not own this property.');
+        }
+
+        if ($openHouse->property_id !== $property->id) {
+            abort(404);
+        }
+
+        $openHouse->delete();
+
+        return back()->with('success', 'Open house removed successfully!');
     }
 }

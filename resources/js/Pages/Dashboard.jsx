@@ -273,7 +273,7 @@ function Dashboard({ properties = [], stats = {}, recentInquiries = [] }) {
                                                     <img
                                                         src={listing.photos?.[0] || '/images/property-placeholder.jpg'}
                                                         alt={listing.property_title}
-                                                        className="w-full h-full object-cover"
+                                                        className="w-full h-full object-cover object-[center_20%]"
                                                         onError={(e) => {
                                                             e.target.src = '/images/property-placeholder.jpg';
                                                         }}
