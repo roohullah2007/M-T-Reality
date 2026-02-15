@@ -165,6 +165,13 @@ class PropertyController extends Controller
      */
     public function show(Request $request, Property $property)
     {
+        // Guard: hide unclaimed imported properties from public
+        if ($property->isImported() && !$property->isClaimed()) {
+            if (!auth()->check() || auth()->user()->role !== 'admin') {
+                abort(404);
+            }
+        }
+
         // Redirect to SEO-friendly URL with slug if accessed by ID only
         $currentPath = request()->path();
         $expectedPath = 'properties/' . $property->slug;

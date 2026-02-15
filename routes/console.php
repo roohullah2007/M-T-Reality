@@ -10,3 +10,6 @@ Artisan::command('inspire', function () {
 
 // Schedule cleanup of temporary files (ZIP downloads) every hour
 Schedule::command('cleanup:temp-files')->hourly();
+
+// Clean up expired unclaimed imported properties daily at 3 AM
+Schedule::command('imports:cleanup')->dailyAt('03:00');

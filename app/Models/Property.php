@@ -90,6 +90,16 @@ class Property extends Model
         'mls_number',
         'mls_listed_at',
         'mls_expires_at',
+        // Import/claim fields
+        'import_source',
+        'import_batch_id',
+        'claim_token',
+        'claim_expires_at',
+        'claimed_at',
+        'owner_name',
+        'owner_mailing_address',
+        'owner_phone',
+        'owner_email',
     ];
 
     protected $casts = [
@@ -113,6 +123,8 @@ class Property extends Model
         'is_mls_listed' => 'boolean',
         'mls_listed_at' => 'datetime',
         'mls_expires_at' => 'datetime',
+        'claim_expires_at' => 'datetime',
+        'claimed_at' => 'datetime',
     ];
 
     protected $appends = ['slug'];
@@ -522,5 +534,83 @@ class Property extends Model
     public function hasPendingUpgrade(): bool
     {
         return $this->serviceRequests()->whereIn('status', ['pending', 'approved', 'in_progress'])->exists();
+    }
+
+    /**
+     * Get the import batch this property belongs to
+     */
+    public function importBatch(): BelongsTo
+    {
+        return $this->belongsTo(ImportBatch::class);
+    }
+
+    /**
+     * Scope for imported properties
+     */
+    public function scopeImported($query)
+    {
+        return $query->whereNotNull('import_source');
+    }
+
+    /**
+     * Scope for unclaimed imported properties
+     */
+    public function scopeUnclaimed($query)
+    {
+        return $query->imported()->whereNull('claimed_at');
+    }
+
+    /**
+     * Scope for claimed imported properties
+     */
+    public function scopeClaimed($query)
+    {
+        return $query->imported()->whereNotNull('claimed_at');
+    }
+
+    /**
+     * Scope for expired claim tokens
+     */
+    public function scopeExpiredClaims($query)
+    {
+        return $query->imported()->whereNull('claimed_at')
+            ->where('claim_expires_at', '<=', now());
+    }
+
+    public function isImported(): bool
+    {
+        return !is_null($this->import_source);
+    }
+
+    public function isClaimed(): bool
+    {
+        return !is_null($this->claimed_at);
+    }
+
+    public function isClaimExpired(): bool
+    {
+        return $this->claim_expires_at && $this->claim_expires_at->isPast() && !$this->isClaimed();
+    }
+
+    /**
+     * Claim this imported property for a user
+     */
+    public function claim(User $user): void
+    {
+        $this->update([
+            'user_id' => $user->id,
+            'listing_status' => self::STATUS_FOR_SALE,
+            'status' => 'for-sale',
+            'is_active' => true,
+            'claimed_at' => now(),
+            'contact_name' => $this->owner_name ?? $user->name,
+            'contact_email' => $this->owner_email ?? $user->email,
+            'contact_phone' => $this->owner_phone ?? '',
+        ]);
+
+        // Update batch claimed count
+        if ($this->import_batch_id) {
+            $this->importBatch?->increment('claimed_count');
+        }
     }
 }

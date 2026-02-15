@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Inquiry;
 use App\Models\ContactMessage;
 use App\Models\ActivityLog;
+use App\Models\ImportBatch;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Carbon\Carbon;
@@ -96,6 +97,14 @@ class AdminDashboardController extends Controller
                 ];
             });
 
+        // Import stats
+        $importStats = [
+            'total_imported' => ImportBatch::sum('imported_count'),
+            'total_claimed' => ImportBatch::sum('claimed_count'),
+            'unclaimed' => ImportBatch::sum('imported_count') - ImportBatch::sum('claimed_count'),
+            'active_batches' => ImportBatch::active()->count(),
+        ];
+
         // Monthly stats for charts (last 6 months)
         $monthlyStats = [];
         for ($i = 5; $i >= 0; $i--) {
@@ -121,6 +130,7 @@ class AdminDashboardController extends Controller
             'recentInquiries' => $recentInquiries,
             'recentActivity' => $recentActivity,
             'monthlyStats' => $monthlyStats,
+            'importStats' => $importStats,
         ]);
     }
 }

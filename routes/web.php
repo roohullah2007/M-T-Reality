@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminActivityController;
 use App\Http\Controllers\Admin\AdminMediaOrderController;
 use App\Http\Controllers\Admin\AdminCompanyLogoController;
+use App\Http\Controllers\Admin\AdminImportController;
+use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\BuyerInquiryController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\InquiryController;
@@ -91,6 +93,11 @@ Route::get('/terms-of-use', function () {
 Route::get('/our-packages', [MediaOrderController::class, 'index'])->name('packages');
 Route::get('/packages', [MediaOrderController::class, 'index']); // Alias
 Route::post('/media-order', [MediaOrderController::class, 'store'])->name('media-order.store');
+
+// Claim routes (imported property claiming)
+Route::get('/claim/{token}', [ClaimController::class, 'show'])->name('claim.show');
+Route::post('/claim/{token}', [ClaimController::class, 'claim'])->name('claim.process')->middleware(['auth', 'verified']);
+Route::post('/claim/{token}/register', [ClaimController::class, 'register'])->name('claim.register');
 
 // Property listing routes - require authentication
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -256,6 +263,21 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('/company-logos/{companyLogo}', [AdminCompanyLogoController::class, 'update'])->name('company-logos.update');
     Route::delete('/company-logos/{companyLogo}', [AdminCompanyLogoController::class, 'destroy'])->name('company-logos.destroy');
     Route::post('/company-logos/reorder', [AdminCompanyLogoController::class, 'reorder'])->name('company-logos.reorder');
+
+    // Imports Management
+    Route::get('/imports', [AdminImportController::class, 'index'])->name('imports.index');
+    Route::get('/imports/create', [AdminImportController::class, 'create'])->name('imports.create');
+    Route::post('/imports/preview', [AdminImportController::class, 'preview'])->name('imports.preview');
+    Route::get('/imports/search-zillow', [AdminImportController::class, 'searchZillow'])->name('imports.search-zillow');
+    Route::post('/imports/store-api', [AdminImportController::class, 'storeFromApi'])->name('imports.store-api');
+    Route::post('/imports', [AdminImportController::class, 'store'])->name('imports.store');
+    Route::get('/imports/{batch}', [AdminImportController::class, 'show'])->name('imports.show');
+    Route::post('/imports/{batch}/extend', [AdminImportController::class, 'extendExpiration'])->name('imports.extend');
+    Route::delete('/imports/{batch}', [AdminImportController::class, 'destroy'])->name('imports.destroy');
+    Route::delete('/imports/property/{property}', [AdminImportController::class, 'destroyProperty'])->name('imports.destroy-property');
+    Route::get('/imports/{batch}/letters', [AdminImportController::class, 'generateBatchLetters'])->name('imports.batch-letters');
+    Route::get('/imports/property/{property}/letter', [AdminImportController::class, 'generateLetter'])->name('imports.letter');
+    Route::get('/imports/property/{property}/qr-code', [AdminImportController::class, 'generateQrCode'])->name('imports.qr-code');
 
     // Media Orders Management
     Route::get('/media-orders', [AdminMediaOrderController::class, 'index'])->name('media-orders.index');

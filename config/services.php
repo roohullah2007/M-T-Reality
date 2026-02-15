@@ -42,6 +42,12 @@ return [
         'maps_api_key' => env('GOOGLE_MAPS_API_KEY'),
     ],
 
+    'zillow_rapidapi' => [
+        'key' => env('ZILLOW_RAPIDAPI_KEY'),
+        'host' => env('ZILLOW_RAPIDAPI_HOST', 'real-estate101.p.rapidapi.com'),
+        'images_host' => env('ZILLOW_IMAGES_API_HOST', 'zillow-com1.p.rapidapi.com'),
+    ],
+
     'bunnycdn' => [
         'hostname' => env('BUNNYCDN_HOSTNAME'),
         'username' => env('BUNNYCDN_USERNAME'),

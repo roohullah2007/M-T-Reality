@@ -14,7 +14,8 @@ import {
     Bell,
     Shield,
     UserSearch,
-    ImageIcon
+    ImageIcon,
+    Upload
 } from 'lucide-react';
 
 export default function AdminLayout({ children, title }) {
@@ -30,6 +31,7 @@ export default function AdminLayout({ children, title }) {
         { name: 'Inquiries', href: route('admin.inquiries.index'), icon: MessageSquare, current: route().current('admin.inquiries.*') },
         { name: 'Buyer Leads', href: route('admin.buyer-inquiries.index'), icon: UserSearch, current: route().current('admin.buyer-inquiries.*') },
         { name: 'Messages', href: route('admin.messages.index'), icon: Mail, current: route().current('admin.messages.*') },
+        { name: 'Imports', href: route('admin.imports.index'), icon: Upload, current: route().current('admin.imports.*') },
         { name: 'Company Logos', href: route('admin.company-logos.index'), icon: ImageIcon, current: route().current('admin.company-logos.*') },
         { name: 'Settings', href: route('admin.settings.index'), icon: Settings, current: route().current('admin.settings.*') },
     ];
