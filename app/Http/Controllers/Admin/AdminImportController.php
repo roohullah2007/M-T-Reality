@@ -72,6 +72,17 @@ class AdminImportController extends Controller
             $request->input('listing_type', 'fsbo')
         );
 
+        // Flag listings that are already imported (exist in DB)
+        if ($result['success'] && !empty($result['results'])) {
+            $zillowIds = collect($result['results'])->pluck('zillow_id')->filter()->values()->all();
+            $existingIds = Property::whereIn('zillow_id', $zillowIds)->pluck('zillow_id')->all();
+
+            foreach ($result['results'] as &$listing) {
+                $listing['already_imported'] = in_array($listing['zillow_id'] ?? null, $existingIds);
+            }
+            unset($listing);
+        }
+
         return response()->json($result);
     }
 
@@ -96,6 +107,7 @@ class AdminImportController extends Controller
             'listings.*.lot_size' => 'nullable|numeric',
             'listings.*.image_url' => 'nullable|string|max:2048',
             'listings.*.zillow_id' => 'nullable|string|max:50',
+            'listings.*.zillow_url' => 'nullable|string|max:2048',
             'expiration_days' => 'required|integer|min:1|max:365',
             'notes' => 'nullable|string|max:1000',
         ]);
@@ -118,23 +130,54 @@ class AdminImportController extends Controller
 
         foreach ($listings as $i => $listing) {
             try {
+                // Skip if this zillow_id already exists in the database
+                $zpid = $listing['zillow_id'] ?? null;
+                if ($zpid && Property::where('zillow_id', $zpid)->exists()) {
+                    $failed++;
+                    $errors[] = ['row' => $i + 1, 'message' => "Property (zpid {$zpid}) already imported"];
+                    continue;
+                }
+
                 $isLand = ($listing['property_type'] ?? 'single_family') === 'land';
                 $address = $listing['address'];
                 $city = $listing['city'];
                 $state = $listing['state'] ?? 'Oklahoma';
 
-                // Fetch all images via property detail API (zillow-com1)
+                // Fetch property images and contact info
                 $photos = [];
-                $zpid = $listing['zillow_id'] ?? null;
-                if ($zpid) {
-                    $photos = $zillowService->fetchPropertyImages($zpid);
+                $contact = ['name' => '', 'phone' => '', 'email' => ''];
+
+                $detailUrl = $listing['zillow_url'] ?? null;
+
+                // Primary: scrape all images from the Zillow listing page
+                if ($detailUrl) {
+                    if ($i > 0) {
+                        usleep(2000000); // 2s delay between page fetches
+                    }
+                    $photos = $zillowService->scrapePropertyImages($detailUrl);
                 }
 
-                // Fallback: use search thumbnail upgraded to hi-res
+                // Try to get contact info via API (if API is accessible)
+                if ($zpid) {
+                    if (!empty($photos)) {
+                        usleep(800000); // 0.8s delay
+                    }
+                    $details = $zillowService->fetchPropertyDetails($zpid);
+                    $contact = $details['contact'];
+
+                    // If scraping got no photos, try API images as fallback
+                    if (empty($photos) && !empty($details['images'])) {
+                        $photos = $details['images'];
+                    }
+                }
+
+                // Last fallback: use search thumbnail upgraded to hi-res
                 if (empty($photos) && !empty($listing['image_url'])) {
                     $hiRes = ZillowApiService::upgradeImageUrl($listing['image_url']);
                     $photos = [$hiRes ?? $listing['image_url']];
                 }
+
+                $ownerName = $contact['name'] ?: 'Property Owner';
 
                 $property = Property::create([
                     'property_title' => $address . ', ' . $city,
@@ -152,14 +195,18 @@ class AdminImportController extends Controller
                     'description' => "For sale by owner in {$city}, {$state}.",
                     'photos' => $photos,
                     'features' => [],
-                    'contact_name' => 'Property Owner',
-                    'contact_email' => '',
-                    'contact_phone' => '',
+                    'owner_name' => $ownerName,
+                    'owner_phone' => $contact['phone'],
+                    'owner_email' => $contact['email'],
+                    'contact_name' => $ownerName,
+                    'contact_email' => $contact['email'],
+                    'contact_phone' => $contact['phone'],
                     'listing_status' => 'inactive',
                     'status' => 'inactive',
                     'is_active' => false,
                     'approval_status' => 'approved',
                     'import_source' => 'zillow',
+                    'zillow_id' => $zpid,
                     'import_batch_id' => $batch->id,
                     'claim_token' => Str::uuid()->toString(),
                     'claim_expires_at' => $batch->expires_at,
@@ -351,6 +398,64 @@ class AdminImportController extends Controller
 
         return redirect()->route('admin.imports.index')
             ->with('success', 'Imported property deleted.');
+    }
+
+    /**
+     * Re-fetch images for properties in a batch that have 0-1 photos.
+     */
+    public function refetchImages(ImportBatch $batch)
+    {
+        $zillowService = new ZillowApiService();
+
+        // Get properties with 0-1 photos that have a zillow_id
+        $properties = $batch->properties()
+            ->whereNotNull('zillow_id')
+            ->get()
+            ->filter(function ($p) {
+                $photos = $p->photos ?? [];
+                return count($photos) <= 1;
+            });
+
+        if ($properties->isEmpty()) {
+            return back()->with('info', 'All properties already have multiple images.');
+        }
+
+        $updated = 0;
+        foreach ($properties as $i => $property) {
+            try {
+                if ($i > 0) {
+                    usleep(2500000); // 2.5s delay between page fetches
+                }
+
+                $photos = [];
+
+                // Construct Zillow detail URL from address and zpid
+                $addressSlug = str_replace(' ', '-', $property->address);
+                $citySlug = str_replace(' ', '-', $property->city);
+                $detailUrl = "https://www.zillow.com/homedetails/{$addressSlug}-{$citySlug}-{$property->state}-{$property->zip_code}/{$property->zillow_id}_zpid/";
+
+                // Primary: scrape all images from the Zillow listing page
+                $photos = $zillowService->scrapePropertyImages($detailUrl);
+
+                // Fallback: try API endpoint
+                if (empty($photos)) {
+                    $details = $zillowService->fetchPropertyDetails($property->zillow_id);
+                    $photos = $details['images'];
+                }
+
+                if (count($photos) > count($property->photos ?? [])) {
+                    $property->update(['photos' => $photos]);
+                    $updated++;
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::warning("Re-fetch images failed for property {$property->id}: " . $e->getMessage());
+            }
+        }
+
+        ActivityLog::log('import_batch_refetch_images', $batch, null, null,
+            "Re-fetched images for batch #{$batch->id}: {$updated} properties updated");
+
+        return back()->with('success', "Re-fetched images: {$updated} of {$properties->count()} properties updated with more photos.");
     }
 
     /**

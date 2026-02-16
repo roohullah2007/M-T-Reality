@@ -2,7 +2,7 @@ import { Head, useForm, router } from '@inertiajs/react';
 import { useState } from 'react';
 import axios from 'axios';
 import AdminLayout from '@/Layouts/AdminLayout';
-import { Upload, FileText, AlertCircle, ArrowLeft, Search, Globe, Check, X } from 'lucide-react';
+import { Upload, FileText, AlertCircle, ArrowLeft, Search, Globe, Check, X, Ban } from 'lucide-react';
 import { Link } from '@inertiajs/react';
 
 export default function ImportsCreate({ hasZillowApi }) {
@@ -99,7 +99,11 @@ function ZillowApiTab() {
         }
     };
 
+    const selectableResults = displayResults.filter((l) => !l.already_imported);
+
     const toggleSelect = (index) => {
+        // Prevent selecting already-imported listings
+        if (results.results[index]?.already_imported) return;
         const next = new Set(selectedIds);
         if (next.has(index)) {
             next.delete(index);
@@ -110,13 +114,13 @@ function ZillowApiTab() {
     };
 
     const selectAll = () => {
-        if (!displayResults.length) return;
-        if (selectedIds.size === displayResults.length) {
+        if (!selectableResults.length) return;
+        if (selectedIds.size === selectableResults.length) {
             setSelectedIds(new Set());
         } else {
-            // Store the original index in results.results for each displayed item
+            // Only select items that aren't already imported
             const indices = new Set(
-                displayResults.map((item) => results.results.indexOf(item))
+                selectableResults.map((item) => results.results.indexOf(item))
             );
             setSelectedIds(indices);
         }
@@ -239,7 +243,7 @@ function ZillowApiTab() {
                                     onClick={selectAll}
                                     className="text-xs text-[#A41E34] hover:underline font-medium"
                                 >
-                                    {selectedIds.size === displayResults.length && displayResults.length > 0 ? 'Deselect All' : 'Select All'}
+                                    {selectedIds.size === selectableResults.length && selectableResults.length > 0 ? 'Deselect All' : 'Select All'}
                                 </button>
                                 <span className="text-xs text-gray-400">
                                     {selectedIds.size} selected
@@ -271,24 +275,35 @@ function ZillowApiTab() {
                                 <tbody className="divide-y">
                                     {displayResults.map((listing) => {
                                         const originalIndex = results.results.indexOf(listing);
+                                        const isImported = listing.already_imported;
                                         return (
                                             <tr
                                                 key={originalIndex}
-                                                className={`cursor-pointer transition-colors ${
-                                                    selectedIds.has(originalIndex) ? 'bg-red-50' : 'hover:bg-gray-50'
+                                                className={`transition-colors ${
+                                                    isImported
+                                                        ? 'bg-gray-50 opacity-60 cursor-not-allowed'
+                                                        : selectedIds.has(originalIndex)
+                                                        ? 'bg-red-50 cursor-pointer'
+                                                        : 'hover:bg-gray-50 cursor-pointer'
                                                 }`}
                                                 onClick={() => toggleSelect(originalIndex)}
                                             >
                                                 <td className="px-3 py-2 text-center">
-                                                    <div
-                                                        className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                                                            selectedIds.has(originalIndex)
-                                                                ? 'border-[#A41E34] bg-[#A41E34]'
-                                                                : 'border-gray-300'
-                                                        }`}
-                                                    >
-                                                        {selectedIds.has(originalIndex) && <Check className="w-3 h-3 text-white" />}
-                                                    </div>
+                                                    {isImported ? (
+                                                        <div className="w-5 h-5 rounded border-2 border-gray-300 bg-gray-200 flex items-center justify-center">
+                                                            <Ban className="w-3 h-3 text-gray-400" />
+                                                        </div>
+                                                    ) : (
+                                                        <div
+                                                            className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                                                                selectedIds.has(originalIndex)
+                                                                    ? 'border-[#A41E34] bg-[#A41E34]'
+                                                                    : 'border-gray-300'
+                                                            }`}
+                                                        >
+                                                            {selectedIds.has(originalIndex) && <Check className="w-3 h-3 text-white" />}
+                                                        </div>
+                                                    )}
                                                 </td>
                                                 <td className="px-3 py-2">
                                                     {listing.image_url ? (
@@ -315,7 +330,11 @@ function ZillowApiTab() {
                                                 </td>
                                                 <td className="px-3 py-2 text-gray-600 text-xs">{listing.property_type}</td>
                                                 <td className="px-3 py-2 text-center">
-                                                    {listing.is_fsbo ? (
+                                                    {isImported ? (
+                                                        <span className="inline-block px-1.5 py-0.5 bg-orange-100 text-orange-700 text-xs font-medium rounded">
+                                                            Imported
+                                                        </span>
+                                                    ) : listing.is_fsbo ? (
                                                         <span className="inline-block px-1.5 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded">
                                                             FSBO
                                                         </span>

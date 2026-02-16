@@ -92,6 +92,7 @@ class Property extends Model
         'mls_expires_at',
         // Import/claim fields
         'import_source',
+        'zillow_id',
         'import_batch_id',
         'claim_token',
         'claim_expires_at',

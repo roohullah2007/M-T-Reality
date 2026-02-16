@@ -15,12 +15,15 @@ import {
     Copy,
     QrCode,
     X,
+    User,
+    ImagePlus,
 } from 'lucide-react';
 
 export default function ImportsShow({ batch, properties }) {
     const [showExtendModal, setShowExtendModal] = useState(false);
     const [shareProperty, setShareProperty] = useState(null);
     const [copied, setCopied] = useState(false);
+    const [refetching, setRefetching] = useState(false);
     const extendForm = useForm({ days: 30 });
 
     const isExpired = new Date(batch.expires_at) < new Date();
@@ -41,6 +44,15 @@ export default function ImportsShow({ batch, properties }) {
     const handleDeleteBatch = () => {
         if (confirm('Delete this entire batch and all unclaimed properties? This cannot be undone.')) {
             router.delete(route('admin.imports.destroy', batch.id));
+        }
+    };
+
+    const handleRefetchImages = () => {
+        if (confirm('Re-fetch images from Zillow for properties with 0-1 photos? This may take a while.')) {
+            setRefetching(true);
+            router.post(route('admin.imports.refetch-images', batch.id), {}, {
+                onFinish: () => setRefetching(false),
+            });
         }
     };
 
@@ -157,6 +169,16 @@ export default function ImportsShow({ batch, properties }) {
                     >
                         <CalendarPlus className="w-4 h-4" /> Extend Expiration
                     </button>
+                    {batch.source === 'zillow' && (
+                        <button
+                            onClick={handleRefetchImages}
+                            disabled={refetching}
+                            className="inline-flex items-center gap-1.5 px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium disabled:opacity-50"
+                        >
+                            <ImagePlus className="w-4 h-4" />
+                            {refetching ? 'Fetching Images...' : 'Re-fetch Images'}
+                        </button>
+                    )}
                     <button
                         onClick={handleDeleteBatch}
                         className="inline-flex items-center gap-1.5 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm font-medium ml-auto"
@@ -183,6 +205,7 @@ export default function ImportsShow({ batch, properties }) {
                                 <th className="text-left px-4 py-2 font-medium text-gray-500 text-xs">Property</th>
                                 <th className="text-right px-4 py-2 font-medium text-gray-500 text-xs">Price</th>
                                 <th className="text-center px-4 py-2 font-medium text-gray-500 text-xs">Details</th>
+                                <th className="text-left px-4 py-2 font-medium text-gray-500 text-xs">Owner/Contact</th>
                                 <th className="text-center px-4 py-2 font-medium text-gray-500 text-xs">Status</th>
                                 <th className="text-right px-4 py-2 font-medium text-gray-500 text-xs">Actions</th>
                             </tr>
@@ -192,7 +215,12 @@ export default function ImportsShow({ batch, properties }) {
                                 <tr key={property.id} className="hover:bg-gray-50">
                                     <td className="px-4 py-3">
                                         {property.photos && property.photos.length > 0 ? (
-                                            <img src={property.photos[0]} alt="" className="w-12 h-9 object-cover rounded" />
+                                            <div className="relative">
+                                                <img src={property.photos[0]} alt="" className="w-12 h-9 object-cover rounded" />
+                                                <span className="absolute -top-1 -right-1 bg-gray-700 text-white text-[9px] font-medium rounded-full w-4 h-4 flex items-center justify-center">
+                                                    {property.photos.length}
+                                                </span>
+                                            </div>
                                         ) : (
                                             <div className="w-12 h-9 bg-gray-100 rounded flex items-center justify-center">
                                                 <span className="text-gray-300 text-[10px]">No img</span>
@@ -212,6 +240,26 @@ export default function ImportsShow({ batch, properties }) {
                                         {property.bedrooms > 0 && <span>{property.bedrooms} bd</span>}
                                         {property.bathrooms > 0 && <span> / {property.bathrooms} ba</span>}
                                         {property.sqft > 0 && <span> / {Number(property.sqft).toLocaleString()} sqft</span>}
+                                    </td>
+                                    <td className="px-4 py-3 text-xs text-gray-600">
+                                        {(property.owner_name && property.owner_name !== 'Property Owner') || property.owner_phone || property.owner_email ? (
+                                            <div className="flex items-start gap-1.5">
+                                                <User className="w-3.5 h-3.5 text-gray-400 mt-0.5 shrink-0" />
+                                                <div className="min-w-0">
+                                                    {property.owner_name && property.owner_name !== 'Property Owner' && (
+                                                        <p className="font-medium text-gray-800 truncate">{property.owner_name}</p>
+                                                    )}
+                                                    {property.owner_phone && (
+                                                        <p className="text-gray-500 truncate">{property.owner_phone}</p>
+                                                    )}
+                                                    {property.owner_email && (
+                                                        <p className="text-gray-500 truncate">{property.owner_email}</p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <span className="text-gray-300">—</span>
+                                        )}
                                     </td>
                                     <td className="px-4 py-3 text-center">
                                         {property.claimed_at ? (
