@@ -134,8 +134,8 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
             <section className="bg-white py-6">
                 <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
                     {/* Desktop Grid */}
-                    <div className="hidden md:grid grid-cols-3 gap-2 rounded-2xl overflow-hidden" style={{ height: '450px' }}>
-                        <div className="col-span-2 relative cursor-pointer" onClick={() => openGallery(0)}>
+                    {photos.length === 1 ? (
+                        <div className="hidden md:block rounded-2xl overflow-hidden cursor-pointer" style={{ height: '550px' }} onClick={() => openGallery(0)}>
                             <img
                                 src={photos[0]}
                                 alt={`${property.address} - Image 1`}
@@ -143,30 +143,37 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
                                 onError={(e) => e.target.src = '/images/property-placeholder.svg'}
                             />
                         </div>
-                        <div className="flex flex-col gap-2">
-                            <div className="flex-1 relative cursor-pointer" onClick={() => photos[1] && openGallery(1)}>
-                                {photos[1] ? (
-                                    <img src={photos[1]} alt="Image 2" className="w-full h-full object-cover object-[center_20%]" onError={(e) => e.target.src = '/images/property-placeholder.svg'} />
-                                ) : (
-                                    <div className="w-full h-full bg-gray-200 flex items-center justify-center"><span className="text-gray-400 text-sm">No image</span></div>
-                                )}
+                    ) : (
+                        <div className="hidden md:grid grid-cols-3 gap-2 rounded-2xl overflow-hidden" style={{ height: '450px' }}>
+                            <div className="col-span-2 relative cursor-pointer" onClick={() => openGallery(0)}>
+                                <img
+                                    src={photos[0]}
+                                    alt={`${property.address} - Image 1`}
+                                    className="w-full h-full object-cover object-[center_20%]"
+                                    onError={(e) => e.target.src = '/images/property-placeholder.svg'}
+                                />
                             </div>
-                            <div className="flex-1 relative cursor-pointer" onClick={() => photos[2] ? openGallery(2) : openGallery(0)}>
+                            <div className="flex flex-col gap-2">
+                                <div className="flex-1 relative cursor-pointer" onClick={() => openGallery(1)}>
+                                    <img src={photos[1]} alt="Image 2" className="w-full h-full object-cover object-[center_20%]" onError={(e) => e.target.src = '/images/property-placeholder.svg'} />
+                                </div>
                                 {photos[2] ? (
-                                    <>
+                                    <div className="flex-1 relative cursor-pointer" onClick={() => openGallery(2)}>
                                         <img src={photos[2]} alt="Image 3" className="w-full h-full object-cover object-[center_20%]" onError={(e) => e.target.src = '/images/property-placeholder.svg'} />
                                         {photos.length > 3 && (
                                             <button onClick={(e) => { e.stopPropagation(); openGallery(0); }} className="absolute bottom-4 right-4 bg-white hover:bg-gray-100 text-[#111] px-4 py-2 rounded-lg text-sm font-semibold shadow-md">
                                                 See all {photos.length} photos
                                             </button>
                                         )}
-                                    </>
+                                    </div>
                                 ) : (
-                                    <div className="w-full h-full bg-gray-200 flex items-center justify-center"><span className="text-gray-400 text-sm">No image</span></div>
+                                    <div className="flex-1 relative cursor-pointer" onClick={() => openGallery(0)}>
+                                        <img src={photos[0]} alt="Image 1" className="w-full h-full object-cover object-[center_60%]" onError={(e) => e.target.src = '/images/property-placeholder.svg'} />
+                                    </div>
                                 )}
                             </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* Mobile Carousel */}
                     <div className="md:hidden relative rounded-2xl overflow-hidden">
