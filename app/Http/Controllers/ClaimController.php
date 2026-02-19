@@ -190,6 +190,7 @@ class ClaimController extends Controller
             'longitude' => $property->longitude,
             'owner_name' => $property->owner_name,
             'owner_email' => $property->owner_email,
+            'owner_phone' => $property->owner_phone,
         ];
     }
 }

@@ -55,6 +55,22 @@ class AdminImportController extends Controller
     }
 
     /**
+     * Download a CSV template file with example data.
+     */
+    public function downloadCsvTemplate()
+    {
+        $headers = ['address', 'city', 'state', 'zip_code', 'price', 'bedrooms', 'bathrooms', 'sqft', 'property_type', 'year_built', 'lot_size', 'owner_name', 'owner_phone', 'owner_email', 'owner_address', 'description'];
+        $example = ['123 Main St', 'Tulsa', 'Oklahoma', '74105', '299000', '3', '2', '1800', 'single_family', '1995', '0.25', 'John Smith', '918-555-1234', 'john@example.com', '456 Oak Ave, Tulsa, OK 74105', 'Beautiful 3-bed home in midtown Tulsa'];
+
+        $csv = implode(',', $headers) . "\n" . implode(',', $example) . "\n";
+
+        return response($csv, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="okbyowner-import-template.csv"',
+        ]);
+    }
+
+    /**
      * Search Zillow via API (AJAX endpoint).
      */
     public function searchZillow(Request $request)
@@ -63,13 +79,17 @@ class AdminImportController extends Controller
             'location' => 'required|string|min:2|max:255',
             'listing_type' => 'nullable|string|in:fsbo,all',
             'page' => 'nullable|integer|min:1',
+            'min_price' => 'nullable|integer|min:0',
+            'max_price' => 'nullable|integer|min:0',
         ]);
 
         $service = new ZillowApiService();
         $result = $service->searchByLocation(
             $request->location,
             $request->input('page', 1),
-            $request->input('listing_type', 'fsbo')
+            $request->input('listing_type', 'fsbo'),
+            $request->input('min_price'),
+            $request->input('max_price')
         );
 
         // Flag listings that are already imported (exist in DB)
@@ -279,7 +299,7 @@ class AdminImportController extends Controller
         // Create the batch
         $batch = ImportBatch::create([
             'imported_by' => auth()->id(),
-            'source' => 'zillow',
+            'source' => 'csv',
             'original_filename' => basename($request->temp_path),
             'total_records' => 0,
             'expires_at' => now()->addDays($request->expiration_days),

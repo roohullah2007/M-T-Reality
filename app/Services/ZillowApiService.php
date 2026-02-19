@@ -58,36 +58,41 @@ class ZillowApiService
     }
 
     /**
-     * Search by location (e.g. "Oklahoma City, OK").
+     * Search by location using /api/search/byurl endpoint with constructed Zillow URLs.
      */
-    public function searchByLocation(string $location, int $page = 1, string $listingType = 'fsbo'): array
+    public function searchByLocation(string $location, int $page = 1, string $listingType = 'fsbo', ?int $minPrice = null, ?int $maxPrice = null): array
     {
         if (!$this->isConfigured()) {
             return ['success' => false, 'error' => 'Zillow API not configured'];
         }
 
         try {
-            $params = [
-                'location' => $location,
-                'page' => $page,
-            ];
-
-            if ($listingType === 'fsbo') {
-                $params['listing_type'] = 'fsbo';
-            }
+            $zillowUrl = $this->buildZillowSearchUrl($location, $listingType, $minPrice, $maxPrice);
 
             $response = $this->requestWithRetry(
                 $this->apiHost,
-                "https://{$this->apiHost}/api/search",
-                $params,
+                "https://{$this->apiHost}/api/search/byurl",
+                ['url' => $zillowUrl, 'page' => $page],
                 30
             );
 
             if ($response->failed()) {
                 $body = $response->json();
-                $error = $response->status() === 429
-                    ? 'Rate limited by Zillow API. Please wait a moment and try again.'
-                    : ($body['error'] ?? 'API request failed (HTTP ' . $response->status() . ')');
+                $status = $response->status();
+
+                if ($status === 404 && str_contains($body['message'] ?? $body['error'] ?? '', "doesn't exists")) {
+                    $error = 'Zillow API subscription expired or not active. Please re-subscribe to the Zillow API on RapidAPI.';
+                } elseif ($status === 429) {
+                    $error = 'Rate limited by Zillow API. Please wait a moment and try again.';
+                } elseif ($status === 403) {
+                    $error = 'Zillow API access denied. Please check your RapidAPI key and subscription.';
+                } elseif ($status === 400) {
+                    $error = $body['error'] ?? 'Invalid search. Please try a different location.';
+                } else {
+                    $error = $body['message'] ?? $body['error'] ?? 'API request failed (HTTP ' . $status . ')';
+                }
+
+                Log::warning("Zillow search failed: HTTP {$status} - {$error}");
                 return [
                     'success' => false,
                     'error' => $error,
@@ -96,23 +101,103 @@ class ZillowApiService
 
             $data = $response->json();
 
-            if (!($data['success'] ?? false)) {
+            if (!($data['success'] ?? true) && isset($data['error'])) {
                 return [
                     'success' => false,
-                    'error' => $data['error'] ?? 'Unknown API error',
+                    'error' => $data['error'],
                 ];
             }
 
             return [
                 'success' => true,
                 'totalCount' => $data['totalCount'] ?? 0,
-                'currentPage' => (int) ($data['currentPage'] ?? 1),
+                'currentPage' => (int) ($data['currentPage'] ?? $page),
                 'results' => $this->normalizeResults($data['results'] ?? []),
             ];
         } catch (\Exception $e) {
             Log::error('Zillow API error: ' . $e->getMessage());
             return ['success' => false, 'error' => 'API connection error: ' . $e->getMessage()];
         }
+    }
+
+    /**
+     * Build a Zillow search URL with filters for the byurl endpoint.
+     */
+    protected function buildZillowSearchUrl(string $location, string $listingType, ?int $minPrice, ?int $maxPrice): string
+    {
+        // Convert location to URL slug
+        $slug = $this->locationToSlug($location);
+
+        // Build filterState
+        $filterState = [
+            'sort' => ['value' => 'globalrelevanceex'],
+        ];
+
+        if ($listingType === 'fsbo') {
+            $filterState['fsbo'] = ['value' => true];
+            $filterState['isForSaleByAgent'] = ['value' => false];
+            $filterState['isNewConstruction'] = ['value' => false];
+            $filterState['isAuction'] = ['value' => false];
+            $filterState['isComingSoon'] = ['value' => false];
+            $filterState['isForSaleForeclosure'] = ['value' => false];
+        }
+
+        if ($minPrice || $maxPrice) {
+            $price = [];
+            if ($minPrice) $price['min'] = $minPrice;
+            if ($maxPrice) $price['max'] = $maxPrice;
+            $filterState['price'] = $price;
+        }
+
+        $searchQueryState = [
+            'isMapVisible' => true,
+            'isListVisible' => true,
+            'usersSearchTerm' => $location,
+            'filterState' => $filterState,
+        ];
+
+        // Get viewport bounds via geocoding - required by the API
+        $bounds = GeocodingService::getViewportBounds($location);
+        if ($bounds) {
+            $searchQueryState['mapBounds'] = $bounds;
+        }
+
+        return 'https://www.zillow.com/' . $slug . '/?searchQueryState=' . json_encode($searchQueryState);
+    }
+
+    /**
+     * Convert a user location input to a Zillow URL slug.
+     * Examples: "Tulsa, OK" => "tulsa-ok", "74105" => "74105", "Oklahoma" => "ok"
+     */
+    protected function locationToSlug(string $location): string
+    {
+        $location = trim($location);
+
+        // If it's a zip code, use as-is
+        if (preg_match('/^\d{5}$/', $location)) {
+            return $location;
+        }
+
+        // State name to abbreviation mapping
+        $states = [
+            'oklahoma' => 'ok', 'texas' => 'tx', 'kansas' => 'ks', 'arkansas' => 'ar',
+            'missouri' => 'mo', 'colorado' => 'co', 'new mexico' => 'nm', 'nebraska' => 'ne',
+            'california' => 'ca', 'florida' => 'fl', 'new york' => 'ny', 'georgia' => 'ga',
+        ];
+
+        $lower = strtolower($location);
+
+        // If it's a full state name, return abbreviation
+        if (isset($states[$lower])) {
+            return $states[$lower];
+        }
+
+        // Convert "City, ST" to "city-st" slug
+        $slug = strtolower($location);
+        $slug = preg_replace('/[^a-z0-9\s-]/', '', $slug);
+        $slug = preg_replace('/\s+/', '-', trim($slug));
+
+        return $slug;
     }
 
     /**
@@ -136,7 +221,13 @@ class ZillowApiService
             );
 
             if ($response->failed()) {
-                Log::warning("Zillow /property API failed for zpid {$zpid}: HTTP " . $response->status());
+                $status = $response->status();
+                $body = $response->json();
+                if ($status === 404 && str_contains($body['message'] ?? '', "doesn't exists")) {
+                    Log::error("Zillow API subscription expired - /property returned 404");
+                } else {
+                    Log::warning("Zillow /property API failed for zpid {$zpid}: HTTP {$status}");
+                }
                 return $empty;
             }
 

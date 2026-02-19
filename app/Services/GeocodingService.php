@@ -249,6 +249,56 @@ class GeocodingService
     }
 
     /**
+     * Geocode a location string and return viewport bounds (for Zillow search).
+     * Returns ['north' => float, 'south' => float, 'east' => float, 'west' => float] or null.
+     */
+    public static function getViewportBounds(string $location): ?array
+    {
+        try {
+            $response = Http::timeout(10)
+                ->withHeaders([
+                    'User-Agent' => 'OKByOwner/1.0 (contact@okbyowner.com)',
+                ])
+                ->get('https://nominatim.openstreetmap.org/search', [
+                    'q' => $location . ', USA',
+                    'format' => 'json',
+                    'limit' => 1,
+                ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                if (!empty($data[0]['boundingbox'])) {
+                    // Nominatim boundingbox: [south, north, west, east]
+                    $bb = $data[0]['boundingbox'];
+                    return [
+                        'north' => (float) $bb[1],
+                        'south' => (float) $bb[0],
+                        'east' => (float) $bb[3],
+                        'west' => (float) $bb[2],
+                    ];
+                }
+
+                // Fallback: create bounds from center point
+                if (isset($data[0]['lat'], $data[0]['lon'])) {
+                    $padding = 0.15;
+                    return [
+                        'north' => (float) $data[0]['lat'] + $padding,
+                        'south' => (float) $data[0]['lat'] - $padding,
+                        'east' => (float) $data[0]['lon'] + $padding,
+                        'west' => (float) $data[0]['lon'] - $padding,
+                    ];
+                }
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            Log::error('Geocoding viewport error: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Geocode a property if it doesn't have coordinates
      *
      * @param \App\Models\Property $property

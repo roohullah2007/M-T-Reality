@@ -14,7 +14,7 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
         email: property.owner_email || '',
         password: '',
         password_confirmation: '',
-        phone: '',
+        phone: property.owner_phone || '',
     });
 
     const handleClaim = (e) => {
@@ -98,7 +98,7 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
             <div className="bg-green-600 text-white pt-[73px]">
                 <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-center gap-2 text-sm font-medium">
                     <BadgeCheck className="w-5 h-5" />
-                    Claim your FREE listing on OKByOwner!
+                    We saw your listing on Zillow &mdash; claim your FREE OKByOwner listing for more exposure!
                 </div>
             </div>
 
@@ -420,10 +420,10 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
                                             <BadgeCheck className="w-7 h-7 text-green-600" />
                                         </div>
                                         <h2 className="text-xl font-bold text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                                            Is This Your Property?
+                                            Your FREE Listing Is Ready!
                                         </h2>
                                         <p className="text-sm text-gray-500 mt-1">
-                                            Claim your FREE listing on OKByOwner
+                                            Just add your email and create a password to go live
                                         </p>
                                     </div>
 
@@ -449,7 +449,7 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
                                         </div>
                                     ) : (
                                         <div>
-                                            <p className="text-sm text-gray-600 mb-4">Create a free account to claim this listing</p>
+                                            <p className="text-sm text-gray-600 mb-4">Claim this awesome listing &mdash; it only takes 60 seconds!</p>
                                             <form onSubmit={handleRegister} className="space-y-3">
                                                 <div>
                                                     <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>

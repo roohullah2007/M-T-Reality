@@ -270,6 +270,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/imports/preview', [AdminImportController::class, 'preview'])->name('imports.preview');
     Route::get('/imports/search-zillow', [AdminImportController::class, 'searchZillow'])->name('imports.search-zillow');
     Route::post('/imports/store-api', [AdminImportController::class, 'storeFromApi'])->name('imports.store-api');
+    Route::get('/imports/csv-template', [AdminImportController::class, 'downloadCsvTemplate'])->name('imports.csv-template');
     Route::post('/imports', [AdminImportController::class, 'store'])->name('imports.store');
     Route::get('/imports/{batch}', [AdminImportController::class, 'show'])->name('imports.show');
     Route::post('/imports/{batch}/extend', [AdminImportController::class, 'extendExpiration'])->name('imports.extend');

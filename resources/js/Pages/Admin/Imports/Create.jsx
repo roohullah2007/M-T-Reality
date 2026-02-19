@@ -2,7 +2,7 @@ import { Head, useForm, router } from '@inertiajs/react';
 import { useState } from 'react';
 import axios from 'axios';
 import AdminLayout from '@/Layouts/AdminLayout';
-import { Upload, FileText, AlertCircle, ArrowLeft, Search, Globe, Check, X, Ban } from 'lucide-react';
+import { Upload, FileText, AlertCircle, ArrowLeft, Search, Globe, Check, X, Ban, Download } from 'lucide-react';
 import { Link } from '@inertiajs/react';
 
 export default function ImportsCreate({ hasZillowApi }) {
@@ -54,6 +54,9 @@ export default function ImportsCreate({ hasZillowApi }) {
 
 function ZillowApiTab() {
     const [location, setLocation] = useState('');
+    const [listingType, setListingType] = useState('fsbo');
+    const [minPrice, setMinPrice] = useState('');
+    const [maxPrice, setMaxPrice] = useState('');
     const [showFsboOnly, setShowFsboOnly] = useState(false);
     const [searching, setSearching] = useState(false);
     const [results, setResults] = useState(null);
@@ -78,8 +81,12 @@ function ZillowApiTab() {
         setError('');
 
         try {
+            const params = { location: location.trim(), page, listing_type: listingType };
+            if (minPrice) params.min_price = parseInt(minPrice);
+            if (maxPrice) params.max_price = parseInt(maxPrice);
+
             const { data } = await axios.get(route('admin.imports.search-zillow'), {
-                params: { location: location.trim(), page },
+                params,
             });
 
             if (data.success) {
@@ -148,12 +155,12 @@ function ZillowApiTab() {
                 </p>
 
                 {/* Search */}
-                <div className="flex gap-2 mb-4">
+                <div className="flex gap-2 mb-3">
                     <input
                         type="text"
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
-                        placeholder="e.g. Oklahoma City, OK or 73101"
+                        placeholder="e.g. Tulsa, OK or 74105"
                         className="flex-1 px-3 py-2 border rounded-lg text-sm focus:ring-[#A41E34] focus:border-[#A41E34]"
                         onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                     />
@@ -171,9 +178,45 @@ function ZillowApiTab() {
                     </button>
                 </div>
 
+                {/* Filters */}
+                <div className="flex flex-wrap items-center gap-3 mb-4">
+                    <div className="flex items-center gap-2">
+                        <label className="text-xs font-medium text-gray-500">Listing Type:</label>
+                        <select
+                            value={listingType}
+                            onChange={(e) => setListingType(e.target.value)}
+                            className="px-2 py-1.5 border rounded text-sm focus:ring-[#A41E34] focus:border-[#A41E34]"
+                        >
+                            <option value="fsbo">FSBO Only</option>
+                            <option value="all">All Listings</option>
+                        </select>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <label className="text-xs font-medium text-gray-500">Price Range:</label>
+                        <input
+                            type="number"
+                            value={minPrice}
+                            onChange={(e) => setMinPrice(e.target.value)}
+                            placeholder="Min"
+                            className="w-28 px-2 py-1.5 border rounded text-sm focus:ring-[#A41E34] focus:border-[#A41E34]"
+                        />
+                        <span className="text-gray-400 text-sm">to</span>
+                        <input
+                            type="number"
+                            value={maxPrice}
+                            onChange={(e) => setMaxPrice(e.target.value)}
+                            placeholder="Max"
+                            className="w-28 px-2 py-1.5 border rounded text-sm focus:ring-[#A41E34] focus:border-[#A41E34]"
+                        />
+                    </div>
+                </div>
+
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-700">
-                    <strong>Tip:</strong> Enter a city and state (e.g. "Tulsa, OK"), a zip code (e.g. "74101"),
-                    or a state name (e.g. "Oklahoma") to search for FSBO listings in that area.
+                    <strong>Tip:</strong> Enter a city and state (e.g. "Tulsa, OK"), a zip code (e.g. "74105"),
+                    or a state name (e.g. "Oklahoma"). Use the price range to narrow results.
+                    <br />
+                    <strong>Note:</strong> Some FSBO listings on Zillow may not appear in API results.
+                    For specific listings, use the CSV Upload tab instead.
                 </div>
 
                 {error && (
@@ -227,18 +270,20 @@ function ZillowApiTab() {
                                 </span>
                             </div>
                             <div className="flex items-center gap-3">
-                                <label className="flex items-center gap-1.5 text-xs cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        checked={showFsboOnly}
-                                        onChange={(e) => {
-                                            setShowFsboOnly(e.target.checked);
-                                            setSelectedIds(new Set());
-                                        }}
-                                        className="rounded border-gray-300 text-[#A41E34] focus:ring-[#A41E34]"
-                                    />
-                                    <span className="font-medium text-gray-600">FSBO only</span>
-                                </label>
+                                {listingType === 'all' && (
+                                    <label className="flex items-center gap-1.5 text-xs cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={showFsboOnly}
+                                            onChange={(e) => {
+                                                setShowFsboOnly(e.target.checked);
+                                                setSelectedIds(new Set());
+                                            }}
+                                            className="rounded border-gray-300 text-[#A41E34] focus:ring-[#A41E34]"
+                                        />
+                                        <span className="font-medium text-gray-600">Show FSBO only</span>
+                                    </label>
+                                )}
                                 <button
                                     onClick={selectAll}
                                     className="text-xs text-[#A41E34] hover:underline font-medium"
@@ -516,14 +561,27 @@ function CsvUploadTab() {
 
                     {/* Expected Columns */}
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <h3 className="text-sm font-medium text-blue-800 mb-2 flex items-center gap-1">
-                            <AlertCircle className="w-4 h-4" /> Expected CSV Columns
+                        <h3 className="text-sm font-medium text-blue-800 mb-2 flex items-center justify-between">
+                            <span className="flex items-center gap-1">
+                                <AlertCircle className="w-4 h-4" /> Expected CSV Columns
+                            </span>
+                            <a
+                                href={route('admin.imports.csv-template')}
+                                className="inline-flex items-center gap-1 text-xs font-medium text-[#A41E34] hover:underline"
+                            >
+                                <Download className="w-3.5 h-3.5" /> Download Template
+                            </a>
                         </h3>
                         <p className="text-xs text-blue-700 leading-relaxed">
                             <strong>Required:</strong> address, city, price<br />
                             <strong>Optional:</strong> owner_name, owner_address, owner_phone, owner_email,
                             state, zip_code, bedrooms, bathrooms, sqft, property_type, year_built,
                             lot_size, description
+                        </p>
+                        <p className="text-xs text-blue-600 mt-2">
+                            <strong>Property types:</strong> single_family, condo, townhouse, multi_family, land, mobile_home
+                            <br />
+                            <strong>Note:</strong> State defaults to Oklahoma if not provided.
                         </p>
                     </div>
 
