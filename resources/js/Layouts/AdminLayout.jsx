@@ -15,7 +15,8 @@ import {
     Shield,
     UserSearch,
     ImageIcon,
-    Upload
+    Upload,
+    Package
 } from 'lucide-react';
 
 export default function AdminLayout({ children, title }) {
@@ -32,6 +33,7 @@ export default function AdminLayout({ children, title }) {
         { name: 'Buyer Leads', href: route('admin.buyer-inquiries.index'), icon: UserSearch, current: route().current('admin.buyer-inquiries.*') },
         { name: 'Messages', href: route('admin.messages.index'), icon: Mail, current: route().current('admin.messages.*') },
         { name: 'Imports', href: route('admin.imports.index'), icon: Upload, current: route().current('admin.imports.*') },
+        { name: 'Service Requests', href: route('admin.service-requests.index'), icon: Package, current: route().current('admin.service-requests.*') },
         { name: 'Company Logos', href: route('admin.company-logos.index'), icon: ImageIcon, current: route().current('admin.company-logos.*') },
         { name: 'Settings', href: route('admin.settings.index'), icon: Settings, current: route().current('admin.settings.*') },
     ];

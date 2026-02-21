@@ -206,8 +206,14 @@ class AdminPropertyController extends Controller
     {
         $property->load(['user', 'images', 'openHouses']);
 
+        $users = User::where('is_active', true)
+            ->select('id', 'name', 'email', 'role', 'phone')
+            ->orderBy('name')
+            ->get();
+
         return Inertia::render('Admin/Properties/Edit', [
             'property' => $property,
+            'users' => $users,
             'listingStatuses' => Property::LISTING_STATUSES,
         ]);
     }
@@ -228,6 +234,7 @@ class AdminPropertyController extends Controller
         $isLand = $request->input('property_type') === 'land';
 
         $validated = $request->validate([
+            'user_id' => 'nullable|exists:users,id',
             'property_title' => 'required|string|max:255',
             'property_type' => 'required|string',
             'status' => 'nullable|string',

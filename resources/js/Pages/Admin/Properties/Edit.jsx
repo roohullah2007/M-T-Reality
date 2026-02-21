@@ -27,11 +27,13 @@ import {
     CheckCircle,
     Eye,
     Video,
-    Globe
+    Globe,
+    Users
 } from 'lucide-react';
 
-export default function EditProperty({ property, listingStatuses = {} }) {
+export default function EditProperty({ property, users = [], listingStatuses = {} }) {
     const { data, setData, put, processing, errors } = useForm({
+        user_id: property.user_id || '',
         property_title: property.property_title || '',
         property_type: property.property_type || 'single-family-home',
         status: property.status || 'for-sale',
@@ -171,7 +173,7 @@ export default function EditProperty({ property, listingStatuses = {} }) {
                 const formData = new FormData();
                 formData.append('photo', file);
 
-                const response = await axios.post('/properties/upload-photo', formData, {
+                const response = await axios.post('/upload-photo', formData, {
                     headers: { 'Content-Type': 'multipart/form-data' },
                     onUploadProgress: (progressEvent) => {
                         const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -204,7 +206,7 @@ export default function EditProperty({ property, listingStatuses = {} }) {
     const handleRemoveNewPhoto = async (preview) => {
         if (preview.serverPath) {
             try {
-                await axios.post('/properties/delete-uploaded-photo', { path: preview.serverPath });
+                await axios.post('/delete-uploaded-photo', { path: preview.serverPath });
             } catch (e) { }
         }
         setNewPhotoPreviews(prev => prev.filter(p => p.id !== preview.id));
@@ -263,7 +265,7 @@ export default function EditProperty({ property, listingStatuses = {} }) {
             mls_virtual_tour_url: data.mls_virtual_tour_url || '',
         };
 
-        put(route('admin.properties.update', property.id), submitData, {
+        router.put(route('admin.properties.update', property.id), submitData, {
             preserveScroll: true,
             onSuccess: () => {
                 setNewPhotoPreviews([]);
@@ -373,6 +375,35 @@ export default function EditProperty({ property, listingStatuses = {} }) {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Assign to User */}
+                <div className="bg-white rounded-xl shadow-sm p-6">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <Users className="w-5 h-5 text-[#A41E34]" />
+                        Property Owner
+                    </h2>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Assigned User *</label>
+                        <select
+                            value={data.user_id}
+                            onChange={e => setData('user_id', e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                        >
+                            <option value="">Select a user...</option>
+                            {users.map(user => (
+                                <option key={user.id} value={user.id}>
+                                    {user.name} ({user.email}){user.role === 'admin' ? ' - Admin' : ''}
+                                </option>
+                            ))}
+                        </select>
+                        {errors.user_id && <p className="text-red-500 text-sm mt-1">{errors.user_id}</p>}
+                        {property.user && (
+                            <p className="text-xs text-gray-400 mt-1">
+                                Currently owned by: {property.user.name} ({property.user.email})
+                            </p>
+                        )}
+                    </div>
+                </div>
+
                 {/* Basic Information */}
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">

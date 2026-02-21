@@ -1,4 +1,4 @@
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { useState, useRef, useCallback } from 'react';
 import axios from 'axios';
@@ -234,7 +234,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
             mls_virtual_tour_url: data.mls_virtual_tour_url || '',
         };
 
-        post(route('admin.properties.store'), submitData, {
+        router.post(route('admin.properties.store'), submitData, {
             preserveScroll: true,
             onSuccess: () => {
                 setNewPhotoPreviews([]);

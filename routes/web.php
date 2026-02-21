@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\AdminActivityController;
 use App\Http\Controllers\Admin\AdminMediaOrderController;
 use App\Http\Controllers\Admin\AdminCompanyLogoController;
 use App\Http\Controllers\Admin\AdminImportController;
+use App\Http\Controllers\Admin\AdminServiceRequestController;
 use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\BuyerInquiryController;
 use App\Http\Controllers\ContactController;
@@ -280,6 +281,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/imports/property/{property}/letter', [AdminImportController::class, 'generateLetter'])->name('imports.letter');
     Route::get('/imports/property/{property}/qr-code', [AdminImportController::class, 'generateQrCode'])->name('imports.qr-code');
     Route::post('/imports/{batch}/refetch-images', [AdminImportController::class, 'refetchImages'])->name('imports.refetch-images');
+
+    // Service Requests Management
+    Route::get('/service-requests', [AdminServiceRequestController::class, 'index'])->name('service-requests.index');
+    Route::put('/service-requests/{serviceRequest}/status', [AdminServiceRequestController::class, 'updateStatus'])->name('service-requests.update-status');
+    Route::put('/service-requests/{serviceRequest}/note', [AdminServiceRequestController::class, 'addNote'])->name('service-requests.add-note');
 
     // Media Orders Management
     Route::get('/media-orders', [AdminMediaOrderController::class, 'index'])->name('media-orders.index');
