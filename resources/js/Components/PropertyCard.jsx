@@ -130,7 +130,7 @@ const PropertyCard = ({ property, onAuthRequired }) => {
           {property.upcoming_open_houses?.length > 0 && (
             <div className="absolute bottom-4 left-4 bg-green-600 text-white px-2.5 py-1 text-xs font-semibold rounded-full flex items-center gap-1" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
               <Calendar className="w-3 h-3" />
-              Open House {new Date(property.upcoming_open_houses[0].date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+              Open House {new Date(property.upcoming_open_houses[0].date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
             </div>
           )}
 
