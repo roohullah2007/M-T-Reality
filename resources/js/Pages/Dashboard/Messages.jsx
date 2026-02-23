@@ -136,7 +136,7 @@ export default function Messages({ messages, filters = {}, counts = {} }) {
                                 Inbox
                             </h2>
                             {counts.unread > 0 && (
-                                <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-[#A41E34] text-white">
+                                <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-[#2BBBAD] text-white">
                                     {counts.unread} new
                                 </span>
                             )}
@@ -150,7 +150,7 @@ export default function Messages({ messages, filters = {}, counts = {} }) {
                                 placeholder="Search messages..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                             />
                         </form>
 
@@ -166,7 +166,7 @@ export default function Messages({ messages, filters = {}, counts = {} }) {
                                     onClick={() => handleFilter(f.key)}
                                     className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
                                         (filters.status || 'all') === f.key
-                                            ? 'bg-[#A41E34] text-white'
+                                            ? 'bg-[#2BBBAD] text-white'
                                             : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                     }`}
                                 >
@@ -198,7 +198,7 @@ export default function Messages({ messages, filters = {}, counts = {} }) {
                                         }
                                     }}
                                     className={`w-full p-4 text-left border-b border-gray-100 hover:bg-gray-50 transition-colors ${
-                                        selectedMessage?.id === msg.id ? 'bg-[#A41E34]/5 border-l-2 border-l-[#A41E34]' : ''
+                                        selectedMessage?.id === msg.id ? 'bg-[#2BBBAD]/5 border-l-2 border-l-[#A41E34]' : ''
                                     } ${msg.status === 'new' ? 'bg-blue-50/50' : ''}`}
                                 >
                                     <div className="flex items-start gap-3">
@@ -212,12 +212,12 @@ export default function Messages({ messages, filters = {}, counts = {} }) {
                                                 </span>
                                                 <div className="flex items-center gap-1">
                                                     {msg.status === 'new' && (
-                                                        <span className="w-2 h-2 bg-[#A41E34] rounded-full" />
+                                                        <span className="w-2 h-2 bg-[#2BBBAD] rounded-full" />
                                                     )}
                                                     <span className="text-xs text-gray-400">{formatTime(msg.created_at)}</span>
                                                 </div>
                                             </div>
-                                            <p className="text-xs text-[#A41E34] mt-0.5 truncate">
+                                            <p className="text-xs text-[#2BBBAD] mt-0.5 truncate">
                                                 Re: {msg.property?.property_title || 'Property'}
                                             </p>
                                             <p className="text-sm text-gray-500 mt-1 line-clamp-2">
@@ -266,8 +266,8 @@ export default function Messages({ messages, filters = {}, counts = {} }) {
                             <div className="p-4 sm:p-6 border-b border-gray-100">
                                 <div className="flex items-start justify-between">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 bg-[#A41E34]/10 rounded-full flex items-center justify-center">
-                                            <User className="w-6 h-6 text-[#A41E34]" />
+                                        <div className="w-12 h-12 bg-[#2BBBAD]/10 rounded-full flex items-center justify-center">
+                                            <User className="w-6 h-6 text-[#2BBBAD]" />
                                         </div>
                                         <div>
                                             <div className="flex items-center gap-2">
@@ -277,12 +277,12 @@ export default function Messages({ messages, filters = {}, counts = {} }) {
                                                 {getStatusBadge(selectedMessage.status)}
                                             </div>
                                             <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500 mt-1">
-                                                <a href={`mailto:${selectedMessage.email}`} className="flex items-center gap-1 hover:text-[#A41E34]">
+                                                <a href={`mailto:${selectedMessage.email}`} className="flex items-center gap-1 hover:text-[#2BBBAD]">
                                                     <Mail className="w-4 h-4" />
                                                     {selectedMessage.email}
                                                 </a>
                                                 {selectedMessage.phone && (
-                                                    <a href={`tel:${selectedMessage.phone}`} className="flex items-center gap-1 hover:text-[#A41E34]">
+                                                    <a href={`tel:${selectedMessage.phone}`} className="flex items-center gap-1 hover:text-[#2BBBAD]">
                                                         <Phone className="w-4 h-4" />
                                                         {selectedMessage.phone}
                                                     </a>
@@ -352,7 +352,7 @@ export default function Messages({ messages, filters = {}, counts = {} }) {
                                                 handleMarkResponded(selectedMessage);
                                             }
                                         }}
-                                        className="flex-1 inline-flex items-center justify-center gap-2 bg-[#A41E34] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#8B1A2C] transition-colors"
+                                        className="flex-1 inline-flex items-center justify-center gap-2 bg-[#2BBBAD] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#249E93] transition-colors"
                                     >
                                         <Send className="w-5 h-5" />
                                         Reply via Email

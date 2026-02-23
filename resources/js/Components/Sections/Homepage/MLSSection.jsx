@@ -46,43 +46,43 @@ const MLSSection = () => {
     },
     {
       title: 'Save Thousands',
-      description: 'Pay a flat fee instead of the traditional 3% listing agent commission.'
+      description: 'Our efficient brokerage model means you keep more of your equity at closing.'
     },
     {
-      title: 'Full Control',
-      description: 'You set the price, schedule showings, and negotiate directly with buyers.'
+      title: 'Expert Guidance',
+      description: 'We handle pricing, showings, and negotiations with skilled, experienced professionals.'
     },
     {
       title: 'Professional Credibility',
-      description: 'Buyers and agents take MLS listings more seriously than FSBO-only listings.'
+      description: 'Full brokerage representation gives buyers and agents confidence in your listing.'
     }
   ];
 
   const steps = [
     {
       number: '01',
-      title: 'Choose the MLS option that works best for you.',
-      description: 'Payment will be due after your property is listed on the MLS.'
+      title: 'Schedule a Consultation',
+      description: 'Meet with us to discuss your property, review the local market, and create a customized selling plan.'
     },
     {
       number: '02',
-      title: 'Complete the simple required MLS forms.',
-      description: "You'll receive the forms via DocuSign emails."
+      title: 'Professional Marketing Launch',
+      description: 'We handle photos, listing preparation, and launch your property on the MLS and hundreds of syndicated sites.'
     },
     {
       number: '03',
-      title: 'Enjoy the POWER OF THE MLS as it starts to work for you.',
-      description: 'Once your property is listed on the MLS, agents will contact you directly to schedule showings!'
+      title: 'Maximum Buyer Exposure',
+      description: 'Your listing reaches thousands of active buyers and agents through full MLS syndication and targeted marketing.'
     },
     {
       number: '04',
-      title: 'Start working directly with buyer agents.',
-      description: 'Agents will submit offers directly to you. Remember, all buyer agent commissions are negotiable!'
+      title: 'Expert Negotiation',
+      description: 'We review all offers and negotiate skillfully on your behalf to secure the best possible terms and price.'
     },
     {
       number: '05',
-      title: 'Accept & Close',
-      description: 'Accept your best offer, then close! If you find your own buyer, pay nothing in broker commissions!'
+      title: 'Close with Confidence',
+      description: 'We manage the entire contract-to-close process, ensuring a smooth transaction from accepted offer to closing day.'
     }
   ];
 
@@ -102,19 +102,19 @@ const MLSSection = () => {
             className="text-[32px] md:text-[40px] font-medium text-[#111] mb-4"
             style={{ fontFamily: 'Instrument Sans, sans-serif' }}
           >
-            Get Maximum Exposure by Listing on the MLS
+            Full MLS Exposure & Syndication
           </h2>
           <p
             className="text-[14px] md:text-[16px] text-[#666] font-medium max-w-3xl mx-auto leading-relaxed"
             style={{ fontFamily: 'Instrument Sans, sans-serif' }}
           >
-            Reach More Buyers by Working with Agents.
+            Every M&T Realty Group listing gets full MLS exposure — reaching thousands of buyers and agents across Oklahoma.
           </p>
           <p
             className="text-[14px] md:text-[16px] text-[#666] font-medium max-w-3xl mx-auto leading-relaxed"
             style={{ fontFamily: 'Instrument Sans, sans-serif' }}
           >
-            A local flat-fee MLS listing increases the likelihood of selling your property faster.
+            Your property syndicated to hundreds of real estate websites for maximum visibility.
           </p>
         </div>
 
@@ -127,8 +127,8 @@ const MLSSection = () => {
                 key={index}
                 className="bg-white rounded-2xl p-6 text-center hover:shadow-lg transition-all duration-300"
               >
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-[#A41E34]/10 rounded-xl mb-4">
-                  <IconComponent className="w-6 h-6 text-[#A41E34]" />
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-[#2BBBAD]/10 rounded-xl mb-4">
+                  <IconComponent className="w-6 h-6 text-[#2BBBAD]" />
                 </div>
                 <h4
                   className="text-[32px] md:text-[40px] text-[#111] font-semibold mb-1"
@@ -167,12 +167,12 @@ const MLSSection = () => {
               className="text-[14px] md:text-[16px] text-[#666] mb-6 leading-relaxed"
               style={{ fontFamily: 'Instrument Sans, sans-serif' }}
             >
-              Listing on the MLS significantly increases your chances of selling your house faster. 96.5% of our sellers who have listed and sold on the MLS were referred by a buyer's agent who found the listing on the MLS.
+              The MLS is the most powerful tool for selling your property. Every M&T Realty Group listing is placed on the MLS, giving your home maximum exposure to active buyers and their agents across Oklahoma.
             </p>
             <ul className="space-y-4 mb-8">
               {benefits.map((benefit, index) => (
                 <li key={index} className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-[#A41E34] rounded-full mt-2 flex-shrink-0"></div>
+                  <div className="w-2 h-2 bg-[#2BBBAD] rounded-full mt-2 flex-shrink-0"></div>
                   <p
                     className="text-[14px] text-[#666]"
                     style={{ fontFamily: 'Instrument Sans, sans-serif' }}
@@ -184,10 +184,10 @@ const MLSSection = () => {
             </ul>
             <Link
               href="/our-packages"
-              className="inline-flex items-center gap-[0.4rem] bg-[#A41E34] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#8B1A2C]"
+              className="inline-flex items-center gap-[0.4rem] bg-[#2BBBAD] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#249E93]"
               style={{ fontFamily: 'Instrument Sans, sans-serif' }}
             >
-              <span>View MLS Packages</span>
+              <span>View Our Services</span>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <mask id="mask0_stats" maskUnits="userSpaceOnUse" x="0" y="0" width="20" height="20" style={{ maskType: 'alpha' }}>
                   <rect width="20" height="20" transform="matrix(-1 0 0 1 20 0)" fill="#D9D9D9"></rect>
@@ -205,7 +205,7 @@ const MLSSection = () => {
               className="text-[24px] font-medium text-[#111] mb-6"
               style={{ fontFamily: 'Instrument Sans, sans-serif' }}
             >
-              How a Flat-Fee MLS Listing Works
+              How It Works
             </h3>
             <div className="space-y-4">
               {steps.map((step, index) => (
@@ -214,7 +214,7 @@ const MLSSection = () => {
                   className="bg-white rounded-xl p-5 hover:shadow-lg transition-all duration-300"
                 >
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-[#A41E34] rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 bg-[#2BBBAD] rounded-lg flex items-center justify-center flex-shrink-0">
                       <span className="text-white text-sm font-semibold">{step.number}</span>
                     </div>
                     <div>
@@ -236,12 +236,12 @@ const MLSSection = () => {
               ))}
             </div>
             {/* Highlight Text */}
-            <div className="mt-6 bg-[#A41E34]/10 rounded-xl p-4 border border-[#A41E34]/20">
+            <div className="mt-6 bg-[#2BBBAD]/10 rounded-xl p-4 border border-[#2BBBAD]/20">
               <p
-                className="text-[14px] md:text-[16px] text-[#A41E34] font-semibold text-center"
+                className="text-[14px] md:text-[16px] text-[#2BBBAD] font-semibold text-center"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                If you find your own buyer, pay nothing in broker commissions!
+                Professional service. Proven results. Smarter pricing.
               </p>
             </div>
           </div>

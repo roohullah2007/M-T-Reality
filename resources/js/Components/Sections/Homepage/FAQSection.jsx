@@ -42,43 +42,40 @@ const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState(null);
 
   const faqs = [
-    // Free Listing FAQs
     {
-      category: "Free Listing",
-      question: "How long has OKByOwner.com been around?",
-      answer: "We have been helping sellers market their homes since 1997."
+      category: "Listing Services",
+      question: "What makes M&T Realty Group different from a traditional brokerage?",
+      answer: "M&T Realty Group was intentionally designed to eliminate unnecessary overhead — large offices, franchise fees, and layered management structures — while maintaining full-service representation. The result is professional service, proven results, and smarter pricing for our clients."
     },
     {
-      category: "Free Listing",
-      question: "Why is it free to list on OKByOwner?",
-      answer: "Unlike other national websites that let you list for free, only to give your buyer leads to paying real estate agents. Should you decide to upgrade to professional photos, multimedia, or the MLS, you'll use us, like hundreds of other successful for-sale-by-owners."
-    },
-    // Multimedia FAQs
-    {
-      category: "Multimedia",
-      question: "What is the normal turnaround time after the photographer takes the photos? And do I own the multimedia?",
-      answer: "You can expect a 24-hour turnaround time. Yes, all multimedia is yours to share on other websites."
-    },
-    // Flat Fee MLS FAQs
-    {
-      category: "Flat Fee MLS",
-      question: "Why should I list on the MLS?",
-      answer: "Listing on the MLS dramatically increases your chances of getting your house sold faster. 96.5% of our sellers who have listed and sold on the MLS were referred by a buyer's agent who found the listing on the MLS."
+      category: "Listing Services",
+      question: "What services do you provide when listing my home?",
+      answer: "We provide full-service representation including strategic pricing and market analysis, professional photography and marketing, full MLS exposure and syndication, skilled offer negotiation, contract-to-close transaction management, and direct communication with experienced professionals."
     },
     {
-      category: "Flat Fee MLS",
-      question: "Do I have to pay a buyer's agent a commission?",
-      answer: "No, all commissions are negotiable, as are the price and other terms of an offer. While some buyers may pay their agent directly, others prefer the commission to be paid by the seller, with the commission rolled into the price. It's worth noting that buyers may instruct their agent only to show properties where the seller offers a commission to the buyer's agent."
+      category: "Listing Services",
+      question: "How does your commission structure work?",
+      answer: "We believe commission should reflect service and performance — not outdated business models. Because our brokerage is built on efficiency, our clients typically pay significantly less than traditional listing structures — without sacrificing expertise or support. Contact us for a consultation to discuss your specific situation."
     },
     {
-      category: "Flat Fee MLS",
-      question: "How long does it take for my property to be listed on the MLS?",
-      answer: "Once all paperwork is complete and photos are delivered, you will be listed within two business days. Once listed, you will receive a link to your listing with the MLS number. Payment will be due after you are listed. You can pay by Cash, Check, Credit Card, PayPal, Venmo, or Cash App."
+      category: "Buying",
+      question: "Can M&T Realty Group help me find a home to buy?",
+      answer: "Yes! Browse our in-house listings on the website and contact us about any property that interests you. We're here to help buyers find the right property and guide you through the purchase process."
     },
     {
-      category: "Flat Fee MLS",
-      question: "Can I cancel my MLS listing at any time?",
-      answer: "Yes. You can cancel your listing at any time if you are not under contract with an agent representing a buyer."
+      category: "Selling Process",
+      question: "How do I get started with listing my property?",
+      answer: "Simply schedule a consultation through our website or call us at 918-884-7653. We'll discuss your property, review the local market, and create a customized plan to get your home sold for the best possible price."
+    },
+    {
+      category: "Selling Process",
+      question: "What areas do you serve?",
+      answer: "M&T Realty Group is licensed in Oklahoma and primarily serves the Tulsa metropolitan area and surrounding communities. Contact us to discuss your specific location."
+    },
+    {
+      category: "Mortgage",
+      question: "Do you offer mortgage services?",
+      answer: "M&T Realty proudly partners with T&M Mortgages to provide our buyers with trusted lending solutions, competitive rates, and a smooth, stress-free financing experience."
     }
   ];
 
@@ -109,11 +106,11 @@ const FAQSection = () => {
               style={{ fontFamily: '"Instrument Sans", sans-serif' }}
               className="text-[14px] font-medium text-[#666] mb-10 leading-relaxed"
             >
-              Selling your home by owner can raise many questions. We've provided answers to the most common questions about our For Sale By Owner (FSBO) marketing services, MLS listings, and the home selling process in Oklahoma. Whether you're curious about how to list your property, what costs are involved, or how our website works, you'll find detailed answers below. Can't find an answer to your question? Contact us, and we'll be happy to provide assistance and guidance for your needs.
+              Have questions about working with M&T Realty Group? We've provided answers to the most common questions about our listing services, the selling process, and how our modern brokerage model benefits you. Can't find an answer? Contact us and we'll be happy to help.
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-[0.4rem] bg-[#A41E34] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#8B1A2C]"
+              className="inline-flex items-center gap-[0.4rem] bg-[#2BBBAD] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#249E93]"
               style={{ fontFamily: '"Instrument Sans", sans-serif' }}
             >
               <span>Ask Questions</span>

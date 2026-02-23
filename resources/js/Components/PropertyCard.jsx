@@ -42,7 +42,7 @@ const PropertyCard = ({ property, onAuthRequired }) => {
       case 'inactive':
         return 'bg-gray-500';
       default:
-        return 'bg-[#A41E34]';
+        return 'bg-[#2BBBAD]';
     }
   };
 

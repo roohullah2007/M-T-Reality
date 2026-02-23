@@ -5,7 +5,7 @@ import MainLayout from '@/Layouts/MainLayout';
 function TermsOfUse() {
   return (
     <>
-      <Head title="Terms of Use - OKBYOWNER" />
+      <Head title="Terms of Use" />
 
       {/* Hero Section */}
       <div className="relative pt-0 md:pt-[77px]">
@@ -43,7 +43,7 @@ function TermsOfUse() {
                 className="text-[15px] text-[#666] leading-relaxed mb-4"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                These Terms of Use ("Terms") constitute a legally binding agreement between you and OKBYOWNER ("Company," "we," "us," or "our") concerning your access to and use of the okbyowner.com website and all related services.
+                These Terms of Use ("Terms") constitute a legally binding agreement between you and M&T REALTY GROUP ("Company," "we," "us," or "our") concerning your access to and use of the mandtrealty.com website and all related services.
               </p>
               <p
                 className="text-[15px] text-[#666] leading-relaxed"
@@ -81,7 +81,7 @@ function TermsOfUse() {
                 className="text-[15px] text-[#666] leading-relaxed mb-4"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                OKBYOWNER provides an online platform that allows property owners in Oklahoma to:
+                M&T REALTY GROUP provides an online platform that allows property owners in Oklahoma to:
               </p>
               <ul className="list-disc list-inside text-[15px] text-[#666] leading-relaxed space-y-2 ml-4" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                 <li>List properties for sale by owner (FSBO)</li>
@@ -264,7 +264,7 @@ function TermsOfUse() {
                 className="text-[15px] text-[#666] leading-relaxed mb-4"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                The OKBYOWNER name, logo, website design, and all content created by us are our intellectual property and protected by copyright and trademark laws. You may not use, reproduce, or distribute our intellectual property without written permission.
+                The M&T REALTY GROUP name, logo, website design, and all content created by us are our intellectual property and protected by copyright and trademark laws. You may not use, reproduce, or distribute our intellectual property without written permission.
               </p>
               <p
                 className="text-[15px] text-[#666] leading-relaxed"
@@ -308,7 +308,7 @@ function TermsOfUse() {
                 className="text-[15px] text-[#666] leading-relaxed"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                TO THE MAXIMUM EXTENT PERMITTED BY LAW, OKBYOWNER SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING FROM YOUR USE OF OUR SERVICES. OUR TOTAL LIABILITY SHALL NOT EXCEED THE AMOUNT YOU PAID TO US IN THE TWELVE MONTHS PRECEDING THE CLAIM.
+                TO THE MAXIMUM EXTENT PERMITTED BY LAW, M&T REALTY GROUP SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING FROM YOUR USE OF OUR SERVICES. OUR TOTAL LIABILITY SHALL NOT EXCEED THE AMOUNT YOU PAID TO US IN THE TWELVE MONTHS PRECEDING THE CLAIM.
               </p>
             </section>
 
@@ -324,7 +324,7 @@ function TermsOfUse() {
                 className="text-[15px] text-[#666] leading-relaxed"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                You agree to indemnify, defend, and hold harmless OKBYOWNER and its officers, directors, employees, and agents from any claims, damages, losses, liabilities, and expenses (including attorney's fees) arising from your use of our services, violation of these Terms, or infringement of any third-party rights.
+                You agree to indemnify, defend, and hold harmless M&T REALTY GROUP and its officers, directors, employees, and agents from any claims, damages, losses, liabilities, and expenses (including attorney's fees) arising from your use of our services, violation of these Terms, or infringement of any third-party rights.
               </p>
             </section>
 
@@ -376,10 +376,10 @@ function TermsOfUse() {
               </p>
               <div className="bg-[#EEEDEA] rounded-xl p-6">
                 <p className="text-[15px] text-[#111] font-medium mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  OKBYOWNER
+                  M&T REALTY GROUP
                 </p>
                 <p className="text-[15px] text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Email: legal@okbyowner.com
+                  Email: legal@mandtrealty.com
                 </p>
                 <p className="text-[15px] text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   Phone: 888-441-6526

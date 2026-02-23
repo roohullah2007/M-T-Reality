@@ -5,7 +5,7 @@
 @section('content')
     <h2>Congratulations, {{ $owner->name }}!</h2>
 
-    <p>Your property listing is now live on OKByOwner and visible to Oklahoma home buyers.</p>
+    <p>Your property listing is now live on M&T Realty Group and visible to Oklahoma home buyers.</p>
 
     <div class="property-details">
         <h3>Your Property</h3>
@@ -36,5 +36,5 @@
     <a href="{{ $dashboardUrl }}" class="btn">Go to My Dashboard</a>
     <a href="{{ $propertyUrl }}" class="btn btn-secondary">View My Listing</a>
 
-    <p style="margin-top: 20px;">Thank you for choosing OKByOwner — Oklahoma's #1 For Sale By Owner platform.</p>
+    <p style="margin-top: 20px;">Thank you for choosing M&T Realty Group.</p>
 @endsection

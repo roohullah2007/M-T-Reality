@@ -4,11 +4,12 @@ import { CheckCircle2 } from 'lucide-react';
 
 const SellingSection = () => {
   const benefits = [
-    'List your property completely FREE - No Hidden Fees!',
-    'Keep your Leads - All property inquiries go directly to the seller, not to the agents who pay other sites for the inquiries.',
-    'Share your listing on social media, post open houses, and print flyers.',
-    'Upload your photos, virtual tours, and floor plans.',
-    'Disclosures, Sales Contracts, and more are provided at no additional charge.'
+    'Full-service listing representation from start to close',
+    'Strategic pricing backed by local market data',
+    'Professional photography, marketing, and MLS syndication',
+    'Skilled negotiation to protect your equity',
+    'Direct access to experienced agents — no runarounds',
+    'Commission that reflects service and performance, not outdated models'
   ];
 
   return (
@@ -23,18 +24,9 @@ const SellingSection = () => {
             <div className="relative">
               <img
                 src="https://images.pexels.com/photos/280222/pexels-photo-280222.jpeg?auto=compress&cs=tinysrgb&w=1200"
-                alt="For Sale By Owner Sign in Oklahoma"
+                alt="Beautiful home listing by M&T Realty Group"
                 className="w-full h-[500px] object-cover rounded-2xl shadow-xl"
               />
-
-              {/* For Sale Sign Overlay */}
-              <div className="absolute -bottom-6 -right-6 bg-white rounded-xl shadow-2xl border-4 border-white">
-                <img
-                  src="/images/for-sale.webp"
-                  alt="For Sale By Owner Sign"
-                  className="w-[180px] h-auto object-contain"
-                />
-              </div>
             </div>
           </div>
 
@@ -43,7 +35,7 @@ const SellingSection = () => {
             {/* Badge */}
             <div className="inline-flex items-center bg-[#E5E1DC] rounded-lg px-4 py-2 mb-6">
               <span className="text-[#666] text-sm font-medium" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                Why Choose Us
+                Who We Serve
               </span>
             </div>
 
@@ -51,14 +43,21 @@ const SellingSection = () => {
               className="text-[32px] md:text-[40px] font-semibold leading-[120%] text-[#111] mb-6"
               style={{ fontFamily: '"Instrument Sans", sans-serif' }}
             >
-              Why market your property with us?
+              Smart Sellers Choose M&T Realty Group
             </h2>
+
+            <p
+              style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+              className="text-[14px] font-medium text-[#666] mb-4 leading-relaxed"
+            >
+              Our clients are thoughtful sellers who value professionalism, transparency, and results. They aren't looking for "cheap." They're looking for smart.
+            </p>
 
             <p
               style={{ fontFamily: '"Instrument Sans", sans-serif' }}
               className="text-[14px] font-medium text-[#666] mb-8 leading-relaxed"
             >
-              Since 1997, OK By Owner has been providing sellers with the resources and tools needed to sell their property successfully. Why pay thousands in brokerage commissions when you can do it yourself? Take control of your property sale and keep more money in your pocket.
+              We believe commission should reflect service and performance — not outdated business models. Because our brokerage is built on efficiency, our clients typically pay significantly less than traditional listing structures — without sacrificing expertise or support.
             </p>
 
             {/* Benefits List */}
@@ -79,11 +78,11 @@ const SellingSection = () => {
             </div>
 
             <Link
-              href="/list-property"
-              className="inline-flex items-center gap-[0.4rem] bg-[#A41E34] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#8B1A2C]"
+              href="/contact"
+              className="inline-flex items-center gap-[0.4rem] bg-[#2BBBAD] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#249E93]"
               style={{ fontFamily: '"Instrument Sans", sans-serif' }}
             >
-              <span>List Your Property</span>
+              <span>Schedule Your Consultation</span>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <mask id="mask0_selling_btn" maskUnits="userSpaceOnUse" x="0" y="0" width="20" height="20" style={{ maskType: 'alpha' }}>
                   <rect width="20" height="20" transform="matrix(-1 0 0 1 20 0)" fill="#D9D9D9"></rect>

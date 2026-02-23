@@ -86,7 +86,7 @@ export default function ImportsIndex({ batches, stats, filters }) {
                             href={route('admin.imports.index', tab.key ? { tab: tab.key } : {})}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                                 (filters.tab || '') === tab.key
-                                    ? 'bg-[#A41E34] text-white'
+                                    ? 'bg-[#2BBBAD] text-white'
                                     : 'bg-white text-gray-600 hover:bg-gray-50 border'
                             }`}
                         >
@@ -96,7 +96,7 @@ export default function ImportsIndex({ batches, stats, filters }) {
                 </div>
                 <Link
                     href={route('admin.imports.create')}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#A41E34] text-white rounded-lg hover:bg-[#8a1a2c] transition-colors text-sm font-medium"
+                    className="flex items-center gap-2 px-4 py-2 bg-[#2BBBAD] text-white rounded-lg hover:bg-[#8a1a2c] transition-colors text-sm font-medium"
                 >
                     <Plus className="w-4 h-4" />
                     Import CSV
@@ -212,7 +212,7 @@ export default function ImportsIndex({ batches, stats, filters }) {
                                     href={link.url || '#'}
                                     className={`px-3 py-1 text-sm rounded ${
                                         link.active
-                                            ? 'bg-[#A41E34] text-white'
+                                            ? 'bg-[#2BBBAD] text-white'
                                             : link.url
                                             ? 'text-gray-600 hover:bg-gray-100'
                                             : 'text-gray-300 cursor-not-allowed'

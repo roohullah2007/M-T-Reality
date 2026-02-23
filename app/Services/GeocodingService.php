@@ -77,7 +77,7 @@ class GeocodingService
 
             $response = Http::timeout(10)
                 ->withHeaders([
-                    'User-Agent' => 'OKByOwner/1.0 (contact@okbyowner.com)',
+                    'User-Agent' => 'MandTRealty/1.0 (info@mandtrealty.com)',
                 ])
                 ->get('https://nominatim.openstreetmap.org/search', [
                     'q' => $fullAddress,
@@ -211,7 +211,7 @@ class GeocodingService
         try {
             $response = Http::timeout(10)
                 ->withHeaders([
-                    'User-Agent' => 'OKByOwner/1.0 (contact@okbyowner.com)',
+                    'User-Agent' => 'MandTRealty/1.0 (info@mandtrealty.com)',
                 ])
                 ->get('https://nominatim.openstreetmap.org/reverse', [
                     'lat' => $latitude,
@@ -257,7 +257,7 @@ class GeocodingService
         try {
             $response = Http::timeout(10)
                 ->withHeaders([
-                    'User-Agent' => 'OKByOwner/1.0 (contact@okbyowner.com)',
+                    'User-Agent' => 'MandTRealty/1.0 (info@mandtrealty.com)',
                 ])
                 ->get('https://nominatim.openstreetmap.org/search', [
                     'q' => $location . ', USA',

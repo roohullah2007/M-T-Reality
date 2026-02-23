@@ -4,12 +4,12 @@ import { Clock, Home } from 'lucide-react';
 export default function ClaimExpired({ property }) {
     return (
         <>
-            <Head title="Claim Expired - OKByOwner" />
+            <Head title="Claim Expired - M&T Realty Group" />
             <div className="min-h-screen bg-gray-50 flex flex-col">
                 <header className="bg-white border-b">
                     <div className="max-w-5xl mx-auto px-4 py-4">
-                        <Link href="/" className="text-2xl font-bold text-[#A41E34]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                            OKByOwner
+                        <Link href="/" className="text-2xl font-bold text-[#2BBBAD]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                            M&T Realty Group
                         </Link>
                     </div>
                 </header>
@@ -27,12 +27,12 @@ export default function ClaimExpired({ property }) {
                             </p>
                             <p className="text-sm text-gray-500 mb-6">
                                 Don't worry! You can still list your property for free by creating
-                                an account on OKByOwner.
+                                an account on M&T Realty Group.
                             </p>
                             <div className="space-y-3">
                                 <Link
                                     href={route('register')}
-                                    className="block w-full py-3 bg-[#A41E34] text-white rounded-lg font-semibold hover:bg-[#8a1a2c] transition-colors"
+                                    className="block w-full py-3 bg-[#2BBBAD] text-white rounded-lg font-semibold hover:bg-[#8a1a2c] transition-colors"
                                 >
                                     List My Property Free
                                 </Link>

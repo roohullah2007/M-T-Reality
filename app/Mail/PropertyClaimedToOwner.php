@@ -22,7 +22,7 @@ class PropertyClaimedToOwner extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Property is Live on OKByOwner!',
+            subject: 'Your Property is Live on M&T Realty Group!',
         );
     }
 

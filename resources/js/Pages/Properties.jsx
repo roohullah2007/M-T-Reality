@@ -44,7 +44,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
 
   return (
     <>
-      <Head title="Properties - OKBYOWNER" />
+      <Head title="Our Listings" />
 
       {/* Hero Section */}
       <div className="relative bg-[#EEEDEA] pt-0 md:pt-[77px]">
@@ -93,7 +93,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                   <input
                     type="text"
                     placeholder="City or ZIP"
-                    className="w-full pl-10 pr-4 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#A41E34] transition-colors"
+                    className="w-full pl-10 pr-4 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#2BBBAD] transition-colors"
                     style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                     value={searchParams.location}
                     onChange={(e) => handleSearchChange('location', e.target.value)}
@@ -109,7 +109,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                 <div className="relative">
                   <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
                   <select
-                    className="w-full pl-10 pr-4 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#A41E34] transition-colors appearance-none bg-white"
+                    className="w-full pl-10 pr-4 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#2BBBAD] transition-colors appearance-none bg-white"
                     style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                     value={searchParams.propertyType}
                     onChange={(e) => handleSearchChange('propertyType', e.target.value)}
@@ -136,7 +136,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                     <input
                       type="text"
                       placeholder="Min"
-                      className="w-full pl-10 pr-2 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#A41E34] transition-colors"
+                      className="w-full pl-10 pr-2 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#2BBBAD] transition-colors"
                       style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                       value={searchParams.priceMin}
                       onChange={(e) => handleSearchChange('priceMin', e.target.value)}
@@ -147,7 +147,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                     <input
                       type="text"
                       placeholder="Max"
-                      className="w-full pl-10 pr-2 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#A41E34] transition-colors"
+                      className="w-full pl-10 pr-2 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#2BBBAD] transition-colors"
                       style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                       value={searchParams.priceMax}
                       onChange={(e) => handleSearchChange('priceMax', e.target.value)}
@@ -165,7 +165,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                   <div className="relative flex-1">
                     <BedDouble className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
                     <select
-                      className="w-full pl-10 pr-2 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#A41E34] transition-colors appearance-none bg-white"
+                      className="w-full pl-10 pr-2 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#2BBBAD] transition-colors appearance-none bg-white"
                       style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                       value={searchParams.bedrooms}
                       onChange={(e) => handleSearchChange('bedrooms', e.target.value)}
@@ -181,7 +181,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                   <div className="relative flex-1">
                     <Bath className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
                     <select
-                      className="w-full pl-10 pr-2 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#A41E34] transition-colors appearance-none bg-white"
+                      className="w-full pl-10 pr-2 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#2BBBAD] transition-colors appearance-none bg-white"
                       style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                       value={searchParams.bathrooms}
                       onChange={(e) => handleSearchChange('bathrooms', e.target.value)}
@@ -212,7 +212,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                   <input
                     type="text"
                     placeholder="Search school district"
-                    className="w-full pl-10 pr-4 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#A41E34] transition-colors"
+                    className="w-full pl-10 pr-4 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#2BBBAD] transition-colors"
                     style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                     value={searchParams.schoolDistrict}
                     onChange={(e) => handleSearchChange('schoolDistrict', e.target.value)}
@@ -228,7 +228,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                 <div className="relative">
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
                   <select
-                    className="w-full pl-10 pr-4 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#A41E34] transition-colors appearance-none bg-white"
+                    className="w-full pl-10 pr-4 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#2BBBAD] transition-colors appearance-none bg-white"
                     style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                     value={searchParams.hasOpenHouse}
                     onChange={(e) => handleSearchChange('hasOpenHouse', e.target.value)}
@@ -295,7 +295,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                 </button>
                 <button
                   onClick={handleSearch}
-                  className="px-6 py-2.5 bg-[#A41E34] text-white rounded-xl text-sm font-medium hover:bg-[#8B1A2C] transition-colors"
+                  className="px-6 py-2.5 bg-[#2BBBAD] text-white rounded-xl text-sm font-medium hover:bg-[#249E93] transition-colors"
                   style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                 >
                   Apply Filters
@@ -328,14 +328,14 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
               <div className="flex items-center bg-white border border-[#D0CCC7] rounded-xl overflow-hidden">
                 <button
                   onClick={() => setShowMap(false)}
-                  className={`px-3 py-2 flex items-center gap-1.5 text-sm transition-colors ${!showMap ? 'bg-[#A41E34] text-white' : 'text-[#666] hover:bg-gray-50'}`}
+                  className={`px-3 py-2 flex items-center gap-1.5 text-sm transition-colors ${!showMap ? 'bg-[#2BBBAD] text-white' : 'text-[#666] hover:bg-gray-50'}`}
                   title="Grid View"
                 >
                   <LayoutGrid className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setShowMap(true)}
-                  className={`px-3 py-2 flex items-center gap-1.5 text-sm transition-colors ${showMap ? 'bg-[#A41E34] text-white' : 'text-[#666] hover:bg-gray-50'}`}
+                  className={`px-3 py-2 flex items-center gap-1.5 text-sm transition-colors ${showMap ? 'bg-[#2BBBAD] text-white' : 'text-[#666] hover:bg-gray-50'}`}
                   title="Map View"
                 >
                   <Map className="w-4 h-4" />
@@ -346,7 +346,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                 Sort by:
               </span>
               <select
-                className="px-4 py-2 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#A41E34] transition-colors bg-white"
+                className="px-4 py-2 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#2BBBAD] transition-colors bg-white"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                 value={searchParams.sort}
                 onChange={(e) => handleSortChange(e.target.value)}
@@ -407,7 +407,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                     });
                     router.get('/properties');
                   }}
-                  className="inline-flex items-center gap-2 bg-[#A41E34] text-white px-6 py-3 rounded-full font-medium hover:bg-[#8B1A2C] transition-colors"
+                  className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white px-6 py-3 rounded-full font-medium hover:bg-[#249E93] transition-colors"
                   style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                 >
                   Clear Filters
@@ -461,7 +461,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                         href={`/properties?page=${page}${searchParams.keyword ? `&keyword=${searchParams.keyword}` : ''}${searchParams.sort !== 'newest' ? `&sort=${searchParams.sort}` : ''}`}
                         className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
                           page === pagination.current_page
-                            ? 'bg-[#A41E34] text-white'
+                            ? 'bg-[#2BBBAD] text-white'
                             : 'border border-[#D0CCC7] text-[#111] hover:bg-white'
                         }`}
                         style={{ fontFamily: 'Instrument Sans, sans-serif' }}

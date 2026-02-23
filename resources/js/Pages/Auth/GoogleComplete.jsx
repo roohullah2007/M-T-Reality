@@ -20,8 +20,8 @@ function GoogleComplete({ googleUser }) {
                 <div className="flex justify-center items-center px-8 py-8">
                     <Link href="/">
                         <img
-                            src="/images/okbyowner-logo.png"
-                            alt="OKByOwner"
+                            src="/images/m&t_logo.png"
+                            alt="M&T Realty Group"
                             className="h-10"
                         />
                     </Link>
@@ -51,7 +51,7 @@ function GoogleComplete({ googleUser }) {
                         </div>
 
                         <p className="text-center text-gray-600 mb-8" style={{ fontFamily: '"Poppins", sans-serif' }}>
-                            One last step - tell us how you'll be using OKByOwner
+                            One last step - tell us how you'll be using M&T Realty Group
                         </p>
 
                         <form onSubmit={submit} className="space-y-6">
@@ -66,20 +66,20 @@ function GoogleComplete({ googleUser }) {
                                         onClick={() => setData('user_type', 'buyer')}
                                         className={`flex flex-col items-center gap-2 p-5 rounded-xl border-2 transition-all duration-300 ${
                                             data.user_type === 'buyer'
-                                                ? 'border-[#A41E34] bg-[#A41E34]/5'
+                                                ? 'border-[#2BBBAD] bg-[#2BBBAD]/5'
                                                 : 'border-gray-200 hover:border-gray-300'
                                         }`}
                                     >
                                         <div className={`p-3 rounded-full ${
                                             data.user_type === 'buyer'
-                                                ? 'bg-[#A41E34] text-white'
+                                                ? 'bg-[#2BBBAD] text-white'
                                                 : 'bg-gray-100 text-gray-500'
                                         }`}>
                                             <Search className="w-5 h-5" />
                                         </div>
                                         <span className={`font-semibold ${
                                             data.user_type === 'buyer'
-                                                ? 'text-[#A41E34]'
+                                                ? 'text-[#2BBBAD]'
                                                 : 'text-gray-700'
                                         }`}>
                                             Buyer
@@ -93,20 +93,20 @@ function GoogleComplete({ googleUser }) {
                                         onClick={() => setData('user_type', 'seller')}
                                         className={`flex flex-col items-center gap-2 p-5 rounded-xl border-2 transition-all duration-300 ${
                                             data.user_type === 'seller'
-                                                ? 'border-[#A41E34] bg-[#A41E34]/5'
+                                                ? 'border-[#2BBBAD] bg-[#2BBBAD]/5'
                                                 : 'border-gray-200 hover:border-gray-300'
                                         }`}
                                     >
                                         <div className={`p-3 rounded-full ${
                                             data.user_type === 'seller'
-                                                ? 'bg-[#A41E34] text-white'
+                                                ? 'bg-[#2BBBAD] text-white'
                                                 : 'bg-gray-100 text-gray-500'
                                         }`}>
                                             <Home className="w-5 h-5" />
                                         </div>
                                         <span className={`font-semibold ${
                                             data.user_type === 'seller'
-                                                ? 'text-[#A41E34]'
+                                                ? 'text-[#2BBBAD]'
                                                 : 'text-gray-700'
                                         }`}>
                                             Seller
@@ -133,11 +133,11 @@ function GoogleComplete({ googleUser }) {
                             {/* Terms */}
                             <p className="text-xs text-gray-500 text-center">
                                 By continuing, you agree to our{' '}
-                                <Link href="/terms-of-use" className="text-[#A41E34] hover:underline">
+                                <Link href="/terms-of-use" className="text-[#2BBBAD] hover:underline">
                                     Terms
                                 </Link>{' '}
                                 and{' '}
-                                <Link href="/privacy-policy" className="text-[#A41E34] hover:underline">
+                                <Link href="/privacy-policy" className="text-[#2BBBAD] hover:underline">
                                     Privacy Policy
                                 </Link>
                             </p>

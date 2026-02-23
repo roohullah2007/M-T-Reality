@@ -36,7 +36,7 @@ const PropertiesSection = ({ properties = [] }) => {
             Featured Properties
           </h2>
           <p className="text-[16px] text-[#666] font-medium max-w-2xl mx-auto" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-            Browse our For Sale By Owner properties across Oklahoma
+            Browse our exclusive listings across Oklahoma
           </p>
         </div>
 
@@ -101,14 +101,14 @@ const PropertiesSection = ({ properties = [] }) => {
               No Properties Listed Yet
             </h3>
             <p className="text-[#666] mb-6" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-              Be the first to list your property for sale by owner in Oklahoma. It's free and easy to get started!
+              New listings coming soon. Contact us to learn about our current properties or to list your home with M&T Realty Group.
             </p>
             <Link
-              href="/list-property"
-              className="inline-flex items-center justify-center gap-2 bg-[#A41E34] text-white rounded-full px-8 py-3 font-medium transition-all duration-300 hover:bg-[#8B1A2C]"
+              href="/contact"
+              className="inline-flex items-center justify-center gap-2 bg-[#2BBBAD] text-white rounded-full px-8 py-3 font-medium transition-all duration-300 hover:bg-[#249E93]"
               style={{ fontFamily: 'Instrument Sans, sans-serif' }}
             >
-              List Your Property Free
+              Contact Us
             </Link>
           </div>
         )}
@@ -118,7 +118,7 @@ const PropertiesSection = ({ properties = [] }) => {
           <div className="text-center mt-12">
             <Link
               href="/properties"
-              className="inline-flex items-center justify-center gap-2 bg-[#A41E34] text-white rounded-full px-8 py-3 font-medium transition-all duration-300 hover:bg-[#8B1A2C]"
+              className="inline-flex items-center justify-center gap-2 bg-[#2BBBAD] text-white rounded-full px-8 py-3 font-medium transition-all duration-300 hover:bg-[#249E93]"
               style={{ fontFamily: 'Instrument Sans, sans-serif' }}
             >
               View All Properties

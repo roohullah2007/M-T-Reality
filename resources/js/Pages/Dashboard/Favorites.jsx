@@ -72,7 +72,7 @@ export default function Favorites({ favorites, filters = {} }) {
                 </div>
                 <Link
                     href="/properties"
-                    className="inline-flex items-center gap-2 bg-[#A41E34] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8B1A2C] transition-colors"
+                    className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#249E93] transition-colors"
                 >
                     <Home className="w-5 h-5" />
                     Browse Properties
@@ -89,7 +89,7 @@ export default function Favorites({ favorites, filters = {} }) {
                             placeholder="Search saved properties..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                         />
                     </form>
                     <div className="flex gap-2">
@@ -97,7 +97,7 @@ export default function Favorites({ favorites, filters = {} }) {
                             onClick={() => setViewMode('grid')}
                             className={`p-2.5 rounded-lg transition-colors ${
                                 viewMode === 'grid'
-                                    ? 'bg-[#A41E34] text-white'
+                                    ? 'bg-[#2BBBAD] text-white'
                                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                             }`}
                         >
@@ -107,7 +107,7 @@ export default function Favorites({ favorites, filters = {} }) {
                             onClick={() => setViewMode('list')}
                             className={`p-2.5 rounded-lg transition-colors ${
                                 viewMode === 'list'
-                                    ? 'bg-[#A41E34] text-white'
+                                    ? 'bg-[#2BBBAD] text-white'
                                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                             }`}
                         >
@@ -127,7 +127,7 @@ export default function Favorites({ favorites, filters = {} }) {
                     </p>
                     <Link
                         href="/properties"
-                        className="inline-flex items-center gap-2 bg-[#A41E34] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8B1A2C] transition-colors"
+                        className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#249E93] transition-colors"
                     >
                         <Home className="w-5 h-5" />
                         Browse Properties
@@ -160,7 +160,7 @@ export default function Favorites({ favorites, filters = {} }) {
                                     }}
                                     className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50"
                                 >
-                                    <Heart className="w-5 h-5 text-[#A41E34] fill-[#A41E34]" />
+                                    <Heart className="w-5 h-5 text-[#2BBBAD] fill-[#A41E34]" />
                                 </button>
                             </div>
 
@@ -192,12 +192,12 @@ export default function Favorites({ favorites, filters = {} }) {
                                 </div>
 
                                 <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                                    <span className="text-xl font-bold text-[#A41E34]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                                    <span className="text-xl font-bold text-[#2BBBAD]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
                                         ${Number(property.price).toLocaleString()}
                                     </span>
                                     <Link
                                         href={`/properties/${property.slug || property.id}`}
-                                        className="flex items-center gap-1 text-sm text-gray-600 hover:text-[#A41E34]"
+                                        className="flex items-center gap-1 text-sm text-gray-600 hover:text-[#2BBBAD]"
                                     >
                                         View <ExternalLink className="w-4 h-4" />
                                     </Link>
@@ -271,7 +271,7 @@ export default function Favorites({ favorites, filters = {} }) {
                                     </div>
 
                                     <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
-                                        <span className="text-2xl font-bold text-[#A41E34]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                                        <span className="text-2xl font-bold text-[#2BBBAD]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
                                             ${Number(property.price).toLocaleString()}
                                         </span>
                                         <div className="flex items-center gap-3">
@@ -282,7 +282,7 @@ export default function Favorites({ favorites, filters = {} }) {
                                             )}
                                             <Link
                                                 href={`/properties/${property.slug || property.id}`}
-                                                className="inline-flex items-center gap-1 px-4 py-2 bg-[#A41E34] text-white rounded-lg text-sm font-medium hover:bg-[#8B1A2C] transition-colors"
+                                                className="inline-flex items-center gap-1 px-4 py-2 bg-[#2BBBAD] text-white rounded-lg text-sm font-medium hover:bg-[#249E93] transition-colors"
                                             >
                                                 View Property
                                                 <ExternalLink className="w-4 h-4" />

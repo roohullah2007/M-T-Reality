@@ -83,8 +83,8 @@ function VerifyCode({ email }) {
                 <div className="flex justify-center items-center px-8 py-8">
                     <Link href="/">
                         <img
-                            src="/images/okbyowner-logo.png"
-                            alt="OKByOwner"
+                            src="/images/m&t_logo.png"
+                            alt="M&T Realty Group"
                             className="h-10"
                         />
                     </Link>
@@ -95,8 +95,8 @@ function VerifyCode({ email }) {
                     <div className="w-full max-w-[420px]">
                         {/* Icon */}
                         <div className="flex justify-center mb-6">
-                            <div className="w-20 h-20 bg-[#A41E34]/10 rounded-full flex items-center justify-center">
-                                <Mail className="w-10 h-10 text-[#A41E34]" />
+                            <div className="w-20 h-20 bg-[#2BBBAD]/10 rounded-full flex items-center justify-center">
+                                <Mail className="w-10 h-10 text-[#2BBBAD]" />
                             </div>
                         </div>
 
@@ -145,7 +145,7 @@ function VerifyCode({ email }) {
                                         onChange={(e) => handleDigitChange(index, e.target.value)}
                                         onKeyDown={(e) => handleKeyDown(index, e)}
                                         onPaste={handlePaste}
-                                        className="w-12 h-14 sm:w-14 sm:h-16 text-center text-2xl font-bold border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#A41E34] focus:ring-2 focus:ring-[#A41E34]/20 transition-all"
+                                        className="w-12 h-14 sm:w-14 sm:h-16 text-center text-2xl font-bold border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#A41E34]/20 transition-all"
                                         autoComplete="off"
                                     />
                                 ))}
@@ -155,7 +155,7 @@ function VerifyCode({ email }) {
                             <button
                                 type="submit"
                                 disabled={processing || data.code.replace(/\s/g, '').length !== 6}
-                                className="w-full py-3 px-4 bg-[#A41E34] text-white rounded-full text-sm font-semibold hover:bg-[#8B1A2C] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full py-3 px-4 bg-[#2BBBAD] text-white rounded-full text-sm font-semibold hover:bg-[#249E93] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {processing ? 'Verifying...' : 'Verify Email'}
                             </button>
@@ -170,7 +170,7 @@ function VerifyCode({ email }) {
                                 type="button"
                                 onClick={resendCode}
                                 disabled={resending}
-                                className="inline-flex items-center gap-2 text-[#A41E34] font-medium text-sm hover:underline disabled:opacity-50"
+                                className="inline-flex items-center gap-2 text-[#2BBBAD] font-medium text-sm hover:underline disabled:opacity-50"
                             >
                                 <RefreshCw className={`w-4 h-4 ${resending ? 'animate-spin' : ''}`} />
                                 {resending ? 'Sending...' : 'Resend Code'}
@@ -182,7 +182,7 @@ function VerifyCode({ email }) {
                             <p className="text-xs text-gray-500 text-center">
                                 The code expires in 15 minutes. Check your spam folder if you don't see the email.
                                 <br />
-                                <span className="text-gray-400">Code sent from noreply@updates.okbyowner.com</span>
+                                <span className="text-gray-400">Code sent from noreply@mandtrealty.com</span>
                             </p>
                         </div>
 
@@ -193,7 +193,7 @@ function VerifyCode({ email }) {
                                 href={route('logout')}
                                 method="post"
                                 as="button"
-                                className="text-[#A41E34] font-medium hover:underline"
+                                className="text-[#2BBBAD] font-medium hover:underline"
                             >
                                 Sign out and try again
                             </Link>

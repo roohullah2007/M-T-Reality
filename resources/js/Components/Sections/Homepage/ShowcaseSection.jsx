@@ -29,7 +29,7 @@ const ShowcaseSection = () => {
               </p>
               <Link
                 href="/sellers"
-                className="inline-flex items-center gap-2 bg-white text-[#111] rounded-full px-5 py-3 font-medium text-sm hover:bg-[#A41E34] hover:text-white transition-all duration-300 w-fit"
+                className="inline-flex items-center gap-2 bg-white text-[#111] rounded-full px-5 py-3 font-medium text-sm hover:bg-[#2BBBAD] hover:text-white transition-all duration-300 w-fit"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
                 Learn More
@@ -61,7 +61,7 @@ const ShowcaseSection = () => {
               </p>
               <Link
                 href="/buyers"
-                className="inline-flex items-center gap-2 bg-white text-[#111] rounded-full px-5 py-3 font-medium text-sm hover:bg-[#A41E34] hover:text-white transition-all duration-300 w-fit"
+                className="inline-flex items-center gap-2 bg-white text-[#111] rounded-full px-5 py-3 font-medium text-sm hover:bg-[#2BBBAD] hover:text-white transition-all duration-300 w-fit"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
                 Learn More

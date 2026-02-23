@@ -41,7 +41,7 @@ class ImageService
     /**
      * Email address for photo submissions
      */
-    public const PHOTOS_EMAIL = 'photos@okbyowner.com';
+    public const PHOTOS_EMAIL = 'photos@mandtrealty.com';
 
     /**
      * Number of photos that triggers queue processing

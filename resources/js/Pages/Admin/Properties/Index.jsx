@@ -104,7 +104,7 @@ export default function PropertiesIndex({ properties, filters = {}, counts = {} 
                 </div>
                 <Link
                     href={route('admin.properties.create')}
-                    className="inline-flex items-center gap-2 bg-[#A41E34] text-white px-4 py-2 rounded-lg hover:bg-[#8B1A2C] transition-colors"
+                    className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white px-4 py-2 rounded-lg hover:bg-[#249E93] transition-colors"
                 >
                     <Plus className="w-5 h-5" />
                     Add Property
@@ -119,7 +119,7 @@ export default function PropertiesIndex({ properties, filters = {}, counts = {} 
                         onClick={() => handleFilter('approval', tab.key)}
                         className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
                             (filters.approval || '') === tab.key
-                                ? 'bg-[#A41E34] text-white'
+                                ? 'bg-[#2BBBAD] text-white'
                                 : 'bg-white text-gray-600 hover:bg-gray-50'
                         }`}
                     >
@@ -138,7 +138,7 @@ export default function PropertiesIndex({ properties, filters = {}, counts = {} 
                             placeholder="Search properties..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                         />
                     </div>
                     <button
@@ -181,7 +181,7 @@ export default function PropertiesIndex({ properties, filters = {}, counts = {} 
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className="font-semibold text-[#A41E34]">
+                                            <span className="font-semibold text-[#2BBBAD]">
                                                 ${Number(property.price).toLocaleString()}
                                             </span>
                                         </td>

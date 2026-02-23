@@ -76,18 +76,18 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
 
     return (
         <>
-            <Head title={`Claim Your Listing - ${property.address} - OKByOwner`} />
+            <Head title={`Claim Your Listing - ${property.address} - M&T Realty Group`} />
 
             {/* Header */}
             <header className="bg-white border-b fixed top-0 left-0 right-0 z-30">
                 <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-                    <Link href="/" className="text-2xl font-bold text-[#A41E34]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                        OKByOwner
+                    <Link href="/" className="text-2xl font-bold text-[#2BBBAD]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                        M&T Realty Group
                     </Link>
                     <div className="flex items-center gap-3">
                         {!isAuthenticated && (
                             <Link href={route('login')} className="text-sm text-gray-600 hover:text-gray-900">
-                                Already have an account? <span className="font-medium text-[#A41E34]">Log in</span>
+                                Already have an account? <span className="font-medium text-[#2BBBAD]">Log in</span>
                             </Link>
                         )}
                     </div>
@@ -98,7 +98,7 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
             <div className="bg-green-600 text-white pt-[73px]">
                 <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-center gap-2 text-sm font-medium">
                     <BadgeCheck className="w-5 h-5" />
-                    We saw your listing on Zillow &mdash; claim your FREE OKByOwner listing for more exposure!
+                    We saw your listing on Zillow &mdash; claim your FREE M&T Realty Group listing for more exposure!
                 </div>
             </div>
 
@@ -120,7 +120,7 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
                         </div>
                         <div className="flex items-center gap-4">
                             <span
-                                className="text-[28px] md:text-[36px] font-bold text-[#A41E34]"
+                                className="text-[28px] md:text-[36px] font-bold text-[#2BBBAD]"
                                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                             >
                                 {formatPrice(property.price)}
@@ -239,9 +239,9 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
                 <div className="flex gap-3 items-center">
                     <div className="flex-1">
                         <p className="text-xs text-gray-500">Claim your listing</p>
-                        <p className="font-bold text-[#A41E34]">{formatPrice(property.price)}</p>
+                        <p className="font-bold text-[#2BBBAD]">{formatPrice(property.price)}</p>
                     </div>
-                    <a href="#claim-form" className="flex items-center justify-center gap-2 bg-[#A41E34] text-white py-3 px-6 rounded-xl font-semibold hover:bg-[#8B1A2C] transition-colors" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                    <a href="#claim-form" className="flex items-center justify-center gap-2 bg-[#2BBBAD] text-white py-3 px-6 rounded-xl font-semibold hover:bg-[#249E93] transition-colors" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                         <BadgeCheck className="w-5 h-5" />
                         Claim Now
                     </a>
@@ -263,14 +263,14 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
                                     {property.property_type !== 'land' && (
                                         <>
                                             <div className="flex items-center gap-3">
-                                                <div className="bg-[#EEEDEA] p-3 rounded-lg"><BedDouble className="w-5 h-5 text-[#A41E34]" /></div>
+                                                <div className="bg-[#EEEDEA] p-3 rounded-lg"><BedDouble className="w-5 h-5 text-[#2BBBAD]" /></div>
                                                 <div>
                                                     <p className="text-sm text-[#666]">Bedrooms</p>
                                                     <p className="font-semibold text-[#111]">{property.bedrooms}</p>
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-3">
-                                                <div className="bg-[#EEEDEA] p-3 rounded-lg"><Bath className="w-5 h-5 text-[#A41E34]" /></div>
+                                                <div className="bg-[#EEEDEA] p-3 rounded-lg"><Bath className="w-5 h-5 text-[#2BBBAD]" /></div>
                                                 <div>
                                                     <p className="text-sm text-[#666]">Bathrooms</p>
                                                     <p className="font-semibold text-[#111]">
@@ -279,14 +279,14 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-3">
-                                                <div className="bg-[#EEEDEA] p-3 rounded-lg"><Maximize2 className="w-5 h-5 text-[#A41E34]" /></div>
+                                                <div className="bg-[#EEEDEA] p-3 rounded-lg"><Maximize2 className="w-5 h-5 text-[#2BBBAD]" /></div>
                                                 <div>
                                                     <p className="text-sm text-[#666]">Square Feet</p>
                                                     <p className="font-semibold text-[#111]">{property.sqft ? property.sqft.toLocaleString() : 'N/A'}</p>
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-3">
-                                                <div className="bg-[#EEEDEA] p-3 rounded-lg"><Calendar className="w-5 h-5 text-[#A41E34]" /></div>
+                                                <div className="bg-[#EEEDEA] p-3 rounded-lg"><Calendar className="w-5 h-5 text-[#2BBBAD]" /></div>
                                                 <div>
                                                     <p className="text-sm text-[#666]">Year Built</p>
                                                     <p className="font-semibold text-[#111]">{property.year_built || 'N/A'}</p>
@@ -298,7 +298,7 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
                                         <>
                                             {property.acres && (
                                                 <div className="flex items-center gap-3">
-                                                    <div className="bg-[#EEEDEA] p-3 rounded-lg"><Maximize2 className="w-5 h-5 text-[#A41E34]" /></div>
+                                                    <div className="bg-[#EEEDEA] p-3 rounded-lg"><Maximize2 className="w-5 h-5 text-[#2BBBAD]" /></div>
                                                     <div>
                                                         <p className="text-sm text-[#666]">Acres</p>
                                                         <p className="font-semibold text-[#111]">{Number(property.acres).toLocaleString()}</p>
@@ -307,7 +307,7 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
                                             )}
                                             {property.lot_size && (
                                                 <div className="flex items-center gap-3">
-                                                    <div className="bg-[#EEEDEA] p-3 rounded-lg"><Maximize2 className="w-5 h-5 text-[#A41E34]" /></div>
+                                                    <div className="bg-[#EEEDEA] p-3 rounded-lg"><Maximize2 className="w-5 h-5 text-[#2BBBAD]" /></div>
                                                     <div>
                                                         <p className="text-sm text-[#666]">Lot Size</p>
                                                         <p className="font-semibold text-[#111]">{Number(property.lot_size).toLocaleString()} sq ft</p>
@@ -396,7 +396,7 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
                                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                                         {property.features.map((feature, i) => (
                                             <div key={i} className="flex items-center gap-2 text-[#666]">
-                                                <CheckCircle2 className="w-4 h-4 text-[#A41E34] flex-shrink-0" />
+                                                <CheckCircle2 className="w-4 h-4 text-[#2BBBAD] flex-shrink-0" />
                                                 <span style={{ fontFamily: 'Instrument Sans, sans-serif' }}>{feature}</span>
                                             </div>
                                         ))}
@@ -444,7 +444,7 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
                                                 <button
                                                     type="submit"
                                                     disabled={claimForm.processing}
-                                                    className="w-full py-3.5 bg-[#A41E34] text-white rounded-xl font-semibold hover:bg-[#8a1a2c] disabled:opacity-50 transition-colors text-lg"
+                                                    className="w-full py-3.5 bg-[#2BBBAD] text-white rounded-xl font-semibold hover:bg-[#8a1a2c] disabled:opacity-50 transition-colors text-lg"
                                                     style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                                                 >
                                                     {claimForm.processing ? 'Claiming...' : 'Claim My Listing'}
@@ -460,31 +460,31 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
                                             <form onSubmit={handleRegister} className="space-y-3">
                                                 <div>
                                                     <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                                                    <input type="text" value={registerForm.data.name} onChange={(e) => registerForm.setData('name', e.target.value)} className="w-full px-3 py-2.5 border rounded-xl focus:ring-[#A41E34] focus:border-[#A41E34]" required />
+                                                    <input type="text" value={registerForm.data.name} onChange={(e) => registerForm.setData('name', e.target.value)} className="w-full px-3 py-2.5 border rounded-xl focus:ring-[#A41E34] focus:border-[#2BBBAD]" required />
                                                     {registerForm.errors.name && <p className="text-xs text-red-600 mt-1">{registerForm.errors.name}</p>}
                                                 </div>
                                                 <div>
                                                     <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                                                    <input type="email" value={registerForm.data.email} onChange={(e) => registerForm.setData('email', e.target.value)} className="w-full px-3 py-2.5 border rounded-xl focus:ring-[#A41E34] focus:border-[#A41E34]" required />
+                                                    <input type="email" value={registerForm.data.email} onChange={(e) => registerForm.setData('email', e.target.value)} className="w-full px-3 py-2.5 border rounded-xl focus:ring-[#A41E34] focus:border-[#2BBBAD]" required />
                                                     {registerForm.errors.email && <p className="text-xs text-red-600 mt-1">{registerForm.errors.email}</p>}
                                                 </div>
                                                 <div>
                                                     <label className="block text-sm font-medium text-gray-700 mb-1">Phone <span className="text-gray-400">(optional)</span></label>
-                                                    <input type="tel" value={registerForm.data.phone} onChange={(e) => registerForm.setData('phone', e.target.value)} className="w-full px-3 py-2.5 border rounded-xl focus:ring-[#A41E34] focus:border-[#A41E34]" />
+                                                    <input type="tel" value={registerForm.data.phone} onChange={(e) => registerForm.setData('phone', e.target.value)} className="w-full px-3 py-2.5 border rounded-xl focus:ring-[#A41E34] focus:border-[#2BBBAD]" />
                                                 </div>
                                                 <div>
                                                     <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                                                    <input type="password" value={registerForm.data.password} onChange={(e) => registerForm.setData('password', e.target.value)} className="w-full px-3 py-2.5 border rounded-xl focus:ring-[#A41E34] focus:border-[#A41E34]" required />
+                                                    <input type="password" value={registerForm.data.password} onChange={(e) => registerForm.setData('password', e.target.value)} className="w-full px-3 py-2.5 border rounded-xl focus:ring-[#A41E34] focus:border-[#2BBBAD]" required />
                                                     {registerForm.errors.password && <p className="text-xs text-red-600 mt-1">{registerForm.errors.password}</p>}
                                                 </div>
                                                 <div>
                                                     <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-                                                    <input type="password" value={registerForm.data.password_confirmation} onChange={(e) => registerForm.setData('password_confirmation', e.target.value)} className="w-full px-3 py-2.5 border rounded-xl focus:ring-[#A41E34] focus:border-[#A41E34]" required />
+                                                    <input type="password" value={registerForm.data.password_confirmation} onChange={(e) => registerForm.setData('password_confirmation', e.target.value)} className="w-full px-3 py-2.5 border rounded-xl focus:ring-[#A41E34] focus:border-[#2BBBAD]" required />
                                                 </div>
                                                 <button
                                                     type="submit"
                                                     disabled={registerForm.processing}
-                                                    className="w-full py-3.5 bg-[#A41E34] text-white rounded-xl font-semibold hover:bg-[#8a1a2c] disabled:opacity-50 transition-colors text-lg"
+                                                    className="w-full py-3.5 bg-[#2BBBAD] text-white rounded-xl font-semibold hover:bg-[#8a1a2c] disabled:opacity-50 transition-colors text-lg"
                                                     style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                                                 >
                                                     {registerForm.processing ? 'Creating Account...' : 'Create Account & Claim'}

@@ -5,7 +5,7 @@ import MainLayout from '@/Layouts/MainLayout';
 function PrivacyPolicy() {
   return (
     <>
-      <Head title="Privacy Policy - OKBYOWNER" />
+      <Head title="Privacy Policy" />
 
       {/* Hero Section */}
       <div className="relative pt-0 md:pt-[77px]">
@@ -43,7 +43,7 @@ function PrivacyPolicy() {
                 className="text-[15px] text-[#666] leading-relaxed mb-4"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                OKBYOWNER ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website okbyowner.com and use our services.
+                M&T REALTY GROUP ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website mandtrealty.com and use our services.
               </p>
               <p
                 className="text-[15px] text-[#666] leading-relaxed"
@@ -276,10 +276,10 @@ function PrivacyPolicy() {
               </p>
               <div className="bg-[#EEEDEA] rounded-xl p-6">
                 <p className="text-[15px] text-[#111] font-medium mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  OKBYOWNER
+                  M&T REALTY GROUP
                 </p>
                 <p className="text-[15px] text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Email: privacy@okbyowner.com
+                  Email: privacy@mandtrealty.com
                 </p>
                 <p className="text-[15px] text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   Phone: 888-441-6526

@@ -136,7 +136,7 @@ export default function SettingsIndex({ settings = {} }) {
                             onChange={(e) => handleSettingChange(setting.key, e.target.checked ? '1' : '0')}
                             className="sr-only peer"
                         />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#A41E34]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#A41E34]"></div>
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#A41E34]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#2BBBAD]"></div>
                     </label>
                 );
             case 'integer':
@@ -145,7 +145,7 @@ export default function SettingsIndex({ settings = {} }) {
                         type="number"
                         value={value}
                         onChange={(e) => handleSettingChange(setting.key, e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                     />
                 );
             case 'json':
@@ -154,7 +154,7 @@ export default function SettingsIndex({ settings = {} }) {
                         value={typeof value === 'object' ? JSON.stringify(value, null, 2) : value}
                         onChange={(e) => handleSettingChange(setting.key, e.target.value)}
                         rows="4"
-                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34] font-mono text-sm"
+                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD] font-mono text-sm"
                         placeholder="Enter valid JSON..."
                     />
                 );
@@ -165,7 +165,7 @@ export default function SettingsIndex({ settings = {} }) {
                             value={value}
                             onChange={(e) => handleSettingChange(setting.key, e.target.value)}
                             rows="3"
-                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                         />
                     );
                 }
@@ -174,7 +174,7 @@ export default function SettingsIndex({ settings = {} }) {
                         type="text"
                         value={value}
                         onChange={(e) => handleSettingChange(setting.key, e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                     />
                 );
         }
@@ -205,7 +205,7 @@ export default function SettingsIndex({ settings = {} }) {
                     </button>
                     <button
                         onClick={() => setShowAddModal(true)}
-                        className="inline-flex items-center gap-2 bg-[#A41E34] text-white px-4 py-2 rounded-lg hover:bg-[#8B1A2C] transition-colors"
+                        className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white px-4 py-2 rounded-lg hover:bg-[#249E93] transition-colors"
                     >
                         <Plus className="w-5 h-5" />
                         Add Setting
@@ -229,7 +229,7 @@ export default function SettingsIndex({ settings = {} }) {
                     <p className="text-gray-500 mb-6">Get started by initializing default settings or adding custom ones.</p>
                     <button
                         onClick={initializeDefaults}
-                        className="inline-flex items-center gap-2 bg-[#A41E34] text-white px-6 py-3 rounded-lg hover:bg-[#8B1A2C] transition-colors"
+                        className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white px-6 py-3 rounded-lg hover:bg-[#249E93] transition-colors"
                     >
                         <RefreshCw className="w-5 h-5" />
                         Initialize Default Settings
@@ -248,7 +248,7 @@ export default function SettingsIndex({ settings = {} }) {
                                     onClick={() => setActiveTab(tab.key)}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
                                         activeTab === tab.key
-                                            ? 'bg-[#A41E34] text-white'
+                                            ? 'bg-[#2BBBAD] text-white'
                                             : 'bg-white text-gray-600 hover:bg-gray-50'
                                     }`}
                                 >
@@ -326,7 +326,7 @@ export default function SettingsIndex({ settings = {} }) {
                                     disabled={!hasChanges || saving}
                                     className={`inline-flex items-center gap-2 px-6 py-2 rounded-lg transition-colors ${
                                         hasChanges
-                                            ? 'bg-[#A41E34] text-white hover:bg-[#8B1A2C]'
+                                            ? 'bg-[#2BBBAD] text-white hover:bg-[#249E93]'
                                             : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                                     }`}
                                 >
@@ -361,7 +361,7 @@ export default function SettingsIndex({ settings = {} }) {
                                         type="text"
                                         value={newSetting.key}
                                         onChange={(e) => setNewSetting('key', e.target.value.toLowerCase().replace(/\s+/g, '_'))}
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                         placeholder="setting_key"
                                         required
                                     />
@@ -372,7 +372,7 @@ export default function SettingsIndex({ settings = {} }) {
                                         type="text"
                                         value={newSetting.label}
                                         onChange={(e) => setNewSetting('label', e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                         placeholder="Display Label"
                                     />
                                 </div>
@@ -384,7 +384,7 @@ export default function SettingsIndex({ settings = {} }) {
                                     <select
                                         value={newSetting.type}
                                         onChange={(e) => setNewSetting('type', e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                     >
                                         <option value="string">String</option>
                                         <option value="boolean">Boolean</option>
@@ -397,7 +397,7 @@ export default function SettingsIndex({ settings = {} }) {
                                     <select
                                         value={newSetting.group}
                                         onChange={(e) => setNewSetting('group', e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                     >
                                         <option value="general">General</option>
                                         <option value="property">Property</option>
@@ -413,7 +413,7 @@ export default function SettingsIndex({ settings = {} }) {
                                     type="text"
                                     value={newSetting.value}
                                     onChange={(e) => setNewSetting('value', e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                     placeholder="Setting value"
                                 />
                             </div>
@@ -424,7 +424,7 @@ export default function SettingsIndex({ settings = {} }) {
                                     value={newSetting.description}
                                     onChange={(e) => setNewSetting('description', e.target.value)}
                                     rows="2"
-                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                     placeholder="Optional description..."
                                 />
                             </div>
@@ -440,7 +440,7 @@ export default function SettingsIndex({ settings = {} }) {
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className="px-4 py-2 bg-[#A41E34] text-white rounded-lg hover:bg-[#8B1A2C] disabled:opacity-50"
+                                    className="px-4 py-2 bg-[#2BBBAD] text-white rounded-lg hover:bg-[#249E93] disabled:opacity-50"
                                 >
                                     {processing ? 'Creating...' : 'Create Setting'}
                                 </button>

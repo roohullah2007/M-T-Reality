@@ -78,7 +78,7 @@ export default function UsersIndex({ users, filters }) {
                 </div>
                 <Link
                     href={route('admin.users.create')}
-                    className="inline-flex items-center gap-2 bg-[#A41E34] text-white px-4 py-2 rounded-lg hover:bg-[#8B1A2C] transition-colors"
+                    className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white px-4 py-2 rounded-lg hover:bg-[#249E93] transition-colors"
                 >
                     <Plus className="w-5 h-5" />
                     Add User
@@ -95,7 +95,7 @@ export default function UsersIndex({ users, filters }) {
                             placeholder="Search users..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                         />
                     </div>
                     <select
@@ -104,7 +104,7 @@ export default function UsersIndex({ users, filters }) {
                             setSelectedRole(e.target.value);
                             handleFilter('role', e.target.value);
                         }}
-                        className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                        className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                     >
                         <option value="">All Roles</option>
                         <option value="admin">Admin</option>
@@ -118,7 +118,7 @@ export default function UsersIndex({ users, filters }) {
                             setSelectedStatus(e.target.value);
                             handleFilter('status', e.target.value);
                         }}
-                        className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                        className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                     >
                         <option value="">All Status</option>
                         <option value="active">Active</option>
@@ -171,7 +171,7 @@ export default function UsersIndex({ users, filters }) {
                                     <tr key={user.id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 bg-[#A41E34] rounded-full flex items-center justify-center text-white font-semibold">
+                                                <div className="w-10 h-10 bg-[#2BBBAD] rounded-full flex items-center justify-center text-white font-semibold">
                                                     {user.name.charAt(0).toUpperCase()}
                                                 </div>
                                                 <div>

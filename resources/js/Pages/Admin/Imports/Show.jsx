@@ -281,7 +281,7 @@ export default function ImportsShow({ batch, properties }) {
                                             {!property.claimed_at && new Date(property.claim_expires_at) >= new Date() && (
                                                 <button
                                                     onClick={() => handleShare(property)}
-                                                    className="p-1.5 text-gray-400 hover:text-[#A41E34] hover:bg-red-50 rounded"
+                                                    className="p-1.5 text-gray-400 hover:text-[#2BBBAD] hover:bg-red-50 rounded"
                                                     title="Share Claim Link"
                                                 >
                                                     <Share2 className="w-4 h-4" />
@@ -344,7 +344,7 @@ export default function ImportsShow({ batch, properties }) {
                                     href={link.url || '#'}
                                     className={`px-3 py-1 text-sm rounded ${
                                         link.active
-                                            ? 'bg-[#A41E34] text-white'
+                                            ? 'bg-[#2BBBAD] text-white'
                                             : link.url
                                             ? 'text-gray-600 hover:bg-gray-100'
                                             : 'text-gray-300 cursor-not-allowed'
@@ -378,7 +378,7 @@ export default function ImportsShow({ batch, properties }) {
                                 <p className="text-sm text-gray-500">
                                     {shareProperty.city}, {shareProperty.state} {shareProperty.zip_code}
                                 </p>
-                                <p className="text-sm font-medium text-[#A41E34] mt-1">
+                                <p className="text-sm font-medium text-[#2BBBAD] mt-1">
                                     ${Number(shareProperty.price).toLocaleString()}
                                 </p>
                             </div>
@@ -399,7 +399,7 @@ export default function ImportsShow({ batch, properties }) {
                                         className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                                             copied
                                                 ? 'bg-green-100 text-green-700'
-                                                : 'bg-[#A41E34] text-white hover:bg-[#8a1a2c]'
+                                                : 'bg-[#2BBBAD] text-white hover:bg-[#8a1a2c]'
                                         }`}
                                     >
                                         {copied ? (

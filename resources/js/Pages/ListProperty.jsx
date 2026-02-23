@@ -412,7 +412,7 @@ function ListProperty() {
 
   return (
     <>
-      <Head title="List Your Property - OKBYOWNER" />
+      <Head title="List Your Property" />
 
       {/* Hero Section */}
       <div className="relative pt-0 md:pt-[77px]">
@@ -467,7 +467,7 @@ function ListProperty() {
                     Property Listed Successfully!
                   </h3>
                   <p className="text-green-700 mb-4" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
-                    Thank you for listing your property with OKByOwner. Your listing is now pending approval and will be reviewed by our team within 24-48 hours.
+                    Thank you for listing your property with M&T Realty Group. Your listing is now pending approval and will be reviewed by our team within 24-48 hours.
                   </p>
                   <p className="text-green-600 text-sm mb-6" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
                     You will receive an email notification once your listing is approved and live on our website.
@@ -965,7 +965,7 @@ function ListProperty() {
                       type="checkbox"
                       checked={data.features.includes(feature)}
                       onChange={() => handleFeatureToggle(feature)}
-                      className="w-5 h-5 text-[#A41E34] rounded border-[#D0CCC7] focus:ring-[#A41E34]"
+                      className="w-5 h-5 text-[#2BBBAD] rounded border-[#D0CCC7] focus:ring-[#A41E34]"
                     />
                     <span className="text-sm text-[#111]" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
                       {feature}
@@ -1022,7 +1022,7 @@ function ListProperty() {
                   <div className="flex items-center gap-3">
                     {photoPreviews.some(p => p.uploading) && (
                       <div className="flex items-center gap-2 text-sm text-[#666]">
-                        <Loader2 className="w-4 h-4 animate-spin text-[#A41E34]" />
+                        <Loader2 className="w-4 h-4 animate-spin text-[#2BBBAD]" />
                         <span style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
                           Uploading {photoPreviews.filter(p => p.uploading).length} photo(s)...
                         </span>
@@ -1112,7 +1112,7 @@ function ListProperty() {
 
                         {/* Main Photo Badge */}
                         {index === mainPhotoIndex && !preview.uploading && !preview.error && (
-                          <span className="absolute top-2 left-2 bg-[#A41E34] text-white text-[10px] px-2 py-1 rounded-full font-medium">
+                          <span className="absolute top-2 left-2 bg-[#2BBBAD] text-white text-[10px] px-2 py-1 rounded-full font-medium">
                             Main Photo
                           </span>
                         )}
@@ -1163,16 +1163,16 @@ function ListProperty() {
                 onDrop={handleDrop}
                 className={`border-2 border-dashed rounded-xl p-6 md:p-8 text-center transition-all ${
                   isDragActive
-                    ? 'border-[#A41E34] bg-[#A41E34]/10 scale-[1.02]'
+                    ? 'border-[#2BBBAD] bg-[#2BBBAD]/10 scale-[1.02]'
                     : isUploading || photoPreviews.length >= maxPhotos
                       ? 'border-[#D0CCC7] opacity-50 cursor-not-allowed'
-                      : 'border-[#D0CCC7] hover:border-[#A41E34] hover:bg-[#A41E34]/5 cursor-pointer'
+                      : 'border-[#D0CCC7] hover:border-[#2BBBAD] hover:bg-[#2BBBAD]/5 cursor-pointer'
                 }`}
               >
                 {isUploading ? (
-                  <Loader2 className="w-10 h-10 text-[#A41E34] mx-auto mb-3 animate-spin" />
+                  <Loader2 className="w-10 h-10 text-[#2BBBAD] mx-auto mb-3 animate-spin" />
                 ) : isDragActive ? (
-                  <Upload className="w-10 h-10 text-[#A41E34] mx-auto mb-3 animate-bounce" />
+                  <Upload className="w-10 h-10 text-[#2BBBAD] mx-auto mb-3 animate-bounce" />
                 ) : (
                   <Upload className="w-10 h-10 text-[#666] mx-auto mb-3" />
                 )}
@@ -1216,8 +1216,8 @@ function ListProperty() {
                     </p>
                     <p className="text-sm text-blue-700 mt-1" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
                       Send up to 50 photos to{' '}
-                      <a href="mailto:photos@okbyowner.com" className="font-semibold underline hover:text-blue-900">
-                        photos@okbyowner.com
+                      <a href="mailto:photos@mandtrealty.com" className="font-semibold underline hover:text-blue-900">
+                        photos@mandtrealty.com
                       </a>{' '}
                       with your property address in the subject line.
                     </p>
@@ -1295,7 +1295,7 @@ function ListProperty() {
               <button
                 type="submit"
                 disabled={processing || isUploading || photoPreviews.some(p => p.uploading)}
-                className="inline-flex items-center gap-3 bg-[#A41E34] hover:bg-[#8B1829] text-white px-8 py-4 rounded-full font-medium text-lg transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-3 bg-[#2BBBAD] hover:bg-[#8B1829] text-white px-8 py-4 rounded-full font-medium text-lg transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ fontFamily: '"Instrument Sans", sans-serif' }}
               >
                 {processing ? (
@@ -1324,8 +1324,8 @@ function ListProperty() {
       {processing && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-8 max-w-md mx-4 text-center shadow-2xl">
-            <div className="w-16 h-16 bg-[#A41E34]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Loader2 className="w-8 h-8 text-[#A41E34] animate-spin" />
+            <div className="w-16 h-16 bg-[#2BBBAD]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Loader2 className="w-8 h-8 text-[#2BBBAD] animate-spin" />
             </div>
             <h3 className="text-xl font-semibold text-[#111] mb-2" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
               Submitting Your Listing
@@ -1334,7 +1334,7 @@ function ListProperty() {
               Please wait while we submit your listing. Your photos have already been uploaded.
             </p>
             <div className="flex items-center justify-center gap-2 text-sm text-[#888]">
-              <div className="w-2 h-2 bg-[#A41E34] rounded-full animate-pulse"></div>
+              <div className="w-2 h-2 bg-[#2BBBAD] rounded-full animate-pulse"></div>
               <span style={{ fontFamily: '"Instrument Sans", sans-serif' }}>Do not close or refresh this page</span>
             </div>
           </div>

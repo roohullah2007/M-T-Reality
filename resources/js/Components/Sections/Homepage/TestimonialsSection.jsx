@@ -7,30 +7,24 @@ const TestimonialsSection = () => {
   const testimonials = [
     {
       id: 1,
-      company: "Oklahoma City Homeowner",
-      companyIcon: "okc",
-      quote: "OKByOwner saved us over $15,000 in commission fees when we sold our home. The MLS listing got our property in front of thousands of buyers, and the process was so much easier than we expected. We had full control and expert support every step of the way.",
-      name: "Sarah Mitchell",
-      role: "Sold home in Oklahoma City",
-      avatar: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=200"
+      company: "Tulsa Homeowner",
+      quote: "M&T Realty Group made selling our home seamless. They handled everything — pricing strategy, professional photos, MLS listing, negotiations — and we saved thousands compared to a traditional brokerage. We couldn't be happier with the results.",
+      name: "Sarah M.",
+      role: "Sold home in Tulsa"
     },
     {
       id: 2,
-      company: "Tulsa Property Seller",
-      companyIcon: "tulsa",
-      quote: "I was skeptical about selling without a realtor, but OKByOwner made it incredibly simple. The free listing, professional tools, and responsive support team gave me everything I needed. We sold in just 45 days and kept thousands more in our pocket.",
-      name: "Michael Torres",
-      role: "Sold home in Tulsa",
-      avatar: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=200"
+      company: "Oklahoma City Seller",
+      quote: "Terry and Michele are true professionals. They were always available, transparent about every step, and their marketing was top-notch. Our home sold quickly and for more than we expected. Highly recommend M&T Realty Group.",
+      name: "Michael T.",
+      role: "Sold home in Oklahoma City"
     },
     {
       id: 3,
-      company: "Norman Home Seller",
-      companyIcon: "norman",
-      quote: "The platform is user-friendly and the marketing tools are top-notch. We listed our home for free, got great exposure through the MLS, and had multiple offers within weeks. This is the future of home selling in Oklahoma!",
-      name: "Jennifer Adams",
-      role: "Sold home in Norman",
-      avatar: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=200"
+      company: "Broken Arrow Seller",
+      quote: "We were impressed by how hands-on and knowledgeable the M&T team was throughout the entire process. From listing to closing, they kept us informed and made smart decisions that protected our investment. Five stars all the way.",
+      name: "Jennifer A.",
+      role: "Sold home in Broken Arrow"
     }
   ];
 
@@ -62,7 +56,7 @@ const TestimonialsSection = () => {
               className="text-[40px] md:text-[48px] font-medium text-[#111] leading-tight"
               style={{ fontFamily: 'Instrument Sans, sans-serif' }}
             >
-              What Oklahoma Homeowners are Saying
+              What Our Clients Are Saying
             </h2>
           </div>
 
@@ -87,7 +81,7 @@ const TestimonialsSection = () => {
 
         {/* Testimonials Slider */}
         <div className="overflow-hidden">
-          <div 
+          <div
             className="flex gap-6 transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${currentSlide * (518 + 24)}px)` }}
           >

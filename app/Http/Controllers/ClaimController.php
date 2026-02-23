@@ -80,7 +80,7 @@ class ClaimController extends Controller
         $this->sendClaimEmails($property, $user);
 
         return redirect()->route('dashboard')
-            ->with('success', 'Congratulations! Your property listing is now live on OKByOwner. We\'ll send you FREE QR code stickers!');
+            ->with('success', 'Congratulations! Your property listing is now live on M&T Realty Group. We\'ll send you a confirmation email!');
     }
 
     /**

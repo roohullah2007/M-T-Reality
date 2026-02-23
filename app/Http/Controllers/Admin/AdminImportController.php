@@ -66,7 +66,7 @@ class AdminImportController extends Controller
 
         return response($csv, 200, [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="okbyowner-import-template.csv"',
+            'Content-Disposition' => 'attachment; filename="mnt-realty-import-template.csv"',
         ]);
     }
 

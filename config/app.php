@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'OKByOwner'),
+    'name' => env('APP_NAME', 'M&T Realty Group'),
 
     /*
     |--------------------------------------------------------------------------

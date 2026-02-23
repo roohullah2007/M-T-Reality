@@ -114,7 +114,7 @@ function Dashboard({ properties = [], stats = {}, recentInquiries = [] }) {
                     {/* User Info */}
                     <div className="p-4 border-b border-gray-100">
                         <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 bg-[#A41E34] rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                            <div className="w-12 h-12 bg-[#2BBBAD] rounded-full flex items-center justify-center text-white font-semibold text-lg">
                                 {user.name.charAt(0).toUpperCase()}
                             </div>
                             <div className="flex-1 min-w-0">
@@ -137,7 +137,7 @@ function Dashboard({ properties = [], stats = {}, recentInquiries = [] }) {
                                 href={item.href}
                                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${
                                     item.current
-                                        ? 'bg-[#A41E34] text-white'
+                                        ? 'bg-[#1a1a1a] text-white'
                                         : 'text-gray-600 hover:bg-gray-100'
                                 }`}
                                 style={{ fontFamily: '"Instrument Sans", sans-serif' }}
@@ -243,7 +243,7 @@ function Dashboard({ properties = [], stats = {}, recentInquiries = [] }) {
                                 </h2>
                                 <Link
                                     href={route('dashboard.listings')}
-                                    className="text-[#A41E34] font-medium text-sm hover:underline flex items-center gap-1"
+                                    className="text-[#2BBBAD] font-medium text-sm hover:underline flex items-center gap-1"
                                     style={{ fontFamily: '"Poppins", sans-serif' }}
                                 >
                                     View All
@@ -258,7 +258,7 @@ function Dashboard({ properties = [], stats = {}, recentInquiries = [] }) {
                                     <p className="text-gray-500 mb-6">Start by adding your first property listing</p>
                                     <Link
                                         href="/list-property"
-                                        className="inline-flex items-center gap-2 bg-[#A41E34] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8B1A2C] transition-colors"
+                                        className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#249E93] transition-colors"
                                     >
                                         <Plus className="w-5 h-5" />
                                         Add Your First Listing
@@ -317,7 +317,7 @@ function Dashboard({ properties = [], stats = {}, recentInquiries = [] }) {
                                                     </div>
                                                     <div className="flex flex-wrap items-center gap-3 mt-3">
                                                         <span
-                                                            className="text-lg font-bold text-[#A41E34]"
+                                                            className="text-lg font-bold text-[#2BBBAD]"
                                                             style={{ fontFamily: '"Instrument Sans", sans-serif' }}
                                                         >
                                                             ${Number(listing.price).toLocaleString()}
@@ -355,7 +355,7 @@ function Dashboard({ properties = [], stats = {}, recentInquiries = [] }) {
                                 </h2>
                                 <Link
                                     href={route('dashboard.messages')}
-                                    className="text-[#A41E34] font-medium text-sm hover:underline flex items-center gap-1"
+                                    className="text-[#2BBBAD] font-medium text-sm hover:underline flex items-center gap-1"
                                     style={{ fontFamily: '"Poppins", sans-serif' }}
                                 >
                                     View All
@@ -394,10 +394,10 @@ function Dashboard({ properties = [], stats = {}, recentInquiries = [] }) {
                                                             {inquiry.name}
                                                         </h4>
                                                         {inquiry.status === 'new' && (
-                                                            <span className="w-2 h-2 bg-[#A41E34] rounded-full flex-shrink-0" />
+                                                            <span className="w-2 h-2 bg-[#2BBBAD] rounded-full flex-shrink-0" />
                                                         )}
                                                     </div>
-                                                    <p className="text-xs text-[#A41E34] mt-0.5 truncate">
+                                                    <p className="text-xs text-[#2BBBAD] mt-0.5 truncate">
                                                         Re: {inquiry.property?.property_title}
                                                     </p>
                                                     <p className="text-sm text-gray-600 mt-1 line-clamp-2">
@@ -417,7 +417,7 @@ function Dashboard({ properties = [], stats = {}, recentInquiries = [] }) {
                                 <div className="p-4 border-t border-gray-100">
                                     <Link
                                         href={route('dashboard.messages')}
-                                        className="w-full py-3 text-center text-[#A41E34] font-medium rounded-xl hover:bg-gray-50 transition-colors block"
+                                        className="w-full py-3 text-center text-[#2BBBAD] font-medium rounded-xl hover:bg-gray-50 transition-colors block"
                                         style={{ fontFamily: '"Instrument Sans", sans-serif' }}
                                     >
                                         View All Messages
@@ -438,13 +438,13 @@ function Dashboard({ properties = [], stats = {}, recentInquiries = [] }) {
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                             <Link
                                 href="/list-property"
-                                className="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[#A41E34] hover:bg-[#A41E34]/5 transition-all duration-300 group"
+                                className="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[#2BBBAD] hover:bg-[#2BBBAD]/5 transition-all duration-300 group"
                             >
-                                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-[#A41E34] transition-colors">
+                                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-[#2BBBAD] transition-colors">
                                     <Plus className="w-6 h-6 text-gray-500 group-hover:text-white transition-colors" />
                                 </div>
                                 <span
-                                    className="text-sm font-medium text-gray-600 group-hover:text-[#A41E34] transition-colors text-center"
+                                    className="text-sm font-medium text-gray-600 group-hover:text-[#2BBBAD] transition-colors text-center"
                                     style={{ fontFamily: '"Instrument Sans", sans-serif' }}
                                 >
                                     Add Listing
@@ -452,13 +452,13 @@ function Dashboard({ properties = [], stats = {}, recentInquiries = [] }) {
                             </Link>
                             <Link
                                 href="/our-packages"
-                                className="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[#A41E34] hover:bg-[#A41E34]/5 transition-all duration-300 group"
+                                className="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[#2BBBAD] hover:bg-[#2BBBAD]/5 transition-all duration-300 group"
                             >
-                                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-[#A41E34] transition-colors">
+                                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-[#2BBBAD] transition-colors">
                                     <Camera className="w-6 h-6 text-gray-500 group-hover:text-white transition-colors" />
                                 </div>
                                 <span
-                                    className="text-sm font-medium text-gray-600 group-hover:text-[#A41E34] transition-colors text-center"
+                                    className="text-sm font-medium text-gray-600 group-hover:text-[#2BBBAD] transition-colors text-center"
                                     style={{ fontFamily: '"Instrument Sans", sans-serif' }}
                                 >
                                     Photos & Media
@@ -466,13 +466,13 @@ function Dashboard({ properties = [], stats = {}, recentInquiries = [] }) {
                             </Link>
                             <Link
                                 href="/properties"
-                                className="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[#A41E34] hover:bg-[#A41E34]/5 transition-all duration-300 group"
+                                className="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[#2BBBAD] hover:bg-[#2BBBAD]/5 transition-all duration-300 group"
                             >
-                                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-[#A41E34] transition-colors">
+                                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-[#2BBBAD] transition-colors">
                                     <Home className="w-6 h-6 text-gray-500 group-hover:text-white transition-colors" />
                                 </div>
                                 <span
-                                    className="text-sm font-medium text-gray-600 group-hover:text-[#A41E34] transition-colors text-center"
+                                    className="text-sm font-medium text-gray-600 group-hover:text-[#2BBBAD] transition-colors text-center"
                                     style={{ fontFamily: '"Instrument Sans", sans-serif' }}
                                 >
                                     Browse Properties
@@ -480,13 +480,13 @@ function Dashboard({ properties = [], stats = {}, recentInquiries = [] }) {
                             </Link>
                             <Link
                                 href={route('profile.edit')}
-                                className="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[#A41E34] hover:bg-[#A41E34]/5 transition-all duration-300 group"
+                                className="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[#2BBBAD] hover:bg-[#2BBBAD]/5 transition-all duration-300 group"
                             >
-                                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-[#A41E34] transition-colors">
+                                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-[#2BBBAD] transition-colors">
                                     <User className="w-6 h-6 text-gray-500 group-hover:text-white transition-colors" />
                                 </div>
                                 <span
-                                    className="text-sm font-medium text-gray-600 group-hover:text-[#A41E34] transition-colors text-center"
+                                    className="text-sm font-medium text-gray-600 group-hover:text-[#2BBBAD] transition-colors text-center"
                                     style={{ fontFamily: '"Instrument Sans", sans-serif' }}
                                 >
                                     Edit Profile
@@ -494,13 +494,13 @@ function Dashboard({ properties = [], stats = {}, recentInquiries = [] }) {
                             </Link>
                             <Link
                                 href="/contact"
-                                className="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[#A41E34] hover:bg-[#A41E34]/5 transition-all duration-300 group"
+                                className="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[#2BBBAD] hover:bg-[#2BBBAD]/5 transition-all duration-300 group"
                             >
-                                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-[#A41E34] transition-colors">
+                                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-[#2BBBAD] transition-colors">
                                     <Mail className="w-6 h-6 text-gray-500 group-hover:text-white transition-colors" />
                                 </div>
                                 <span
-                                    className="text-sm font-medium text-gray-600 group-hover:text-[#A41E34] transition-colors text-center"
+                                    className="text-sm font-medium text-gray-600 group-hover:text-[#2BBBAD] transition-colors text-center"
                                     style={{ fontFamily: '"Instrument Sans", sans-serif' }}
                                 >
                                     Get Support

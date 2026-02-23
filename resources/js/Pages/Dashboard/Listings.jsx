@@ -148,7 +148,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                 </div>
                 <Link
                     href="/list-property"
-                    className="inline-flex items-center gap-2 bg-[#A41E34] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8B1A2C] transition-colors"
+                    className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#249E93] transition-colors"
                 >
                     <Plus className="w-5 h-5" />
                     Add New Listing
@@ -168,7 +168,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                         onClick={() => handleFilter(tab.key)}
                         className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
                             (filters.status || 'all') === tab.key
-                                ? 'bg-[#A41E34] text-white'
+                                ? 'bg-[#2BBBAD] text-white'
                                 : 'bg-white text-gray-600 hover:bg-gray-50'
                         }`}
                     >
@@ -187,7 +187,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                             placeholder="Search listings..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                         />
                     </div>
                     <button
@@ -211,7 +211,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                     </p>
                     <Link
                         href="/list-property"
-                        className="inline-flex items-center gap-2 bg-[#A41E34] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8B1A2C] transition-colors"
+                        className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#249E93] transition-colors"
                     >
                         <Plus className="w-5 h-5" />
                         Add Your First Listing
@@ -273,7 +273,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                     {listing.address}, {listing.city}
                                                 </p>
                                             </div>
-                                            <span className="text-lg font-bold text-[#A41E34] flex-shrink-0" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
+                                            <span className="text-lg font-bold text-[#2BBBAD] flex-shrink-0" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
                                                 ${Number(listing.price).toLocaleString()}
                                             </span>
                                         </div>
@@ -326,7 +326,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                     setQrListing(listing);
                                                     setShowQrModal(true);
                                                 }}
-                                                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-white bg-[#A41E34] hover:bg-[#8B1A2C] rounded-lg transition-colors"
+                                                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-white bg-[#2BBBAD] hover:bg-[#249E93] rounded-lg transition-colors"
                                             >
                                                 <QrCode className="w-3.5 h-3.5" />
                                                 QR Code
@@ -510,7 +510,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                             <a
                                 href={route('dashboard.listings.qrcode', qrListing.id)}
                                 download={`qr-sticker-${qrListing.id}.png`}
-                                className="inline-flex items-center gap-2 bg-[#A41E34] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8B1A2C] transition-colors"
+                                className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#249E93] transition-colors"
                             >
                                 <Download className="w-5 h-5" />
                                 Download Sticker (PNG)
@@ -551,7 +551,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                     </p>
                                     <button
                                         onClick={closeOrderModal}
-                                        className="inline-flex items-center gap-2 bg-[#A41E34] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8B1A2C] transition-colors"
+                                        className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#249E93] transition-colors"
                                     >
                                         Done
                                     </button>
@@ -589,7 +589,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                 type="text"
                                                 value={orderForm.data.shipping_name}
                                                 onChange={(e) => orderForm.setData('shipping_name', e.target.value)}
-                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                                 required
                                             />
                                             {orderForm.errors.shipping_name && (
@@ -605,7 +605,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                 type="text"
                                                 value={orderForm.data.shipping_address}
                                                 onChange={(e) => orderForm.setData('shipping_address', e.target.value)}
-                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                                 required
                                             />
                                             {orderForm.errors.shipping_address && (
@@ -622,7 +622,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                     type="text"
                                                     value={orderForm.data.shipping_city}
                                                     onChange={(e) => orderForm.setData('shipping_city', e.target.value)}
-                                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                                     required
                                                 />
                                             </div>
@@ -634,7 +634,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                     type="text"
                                                     value={orderForm.data.shipping_zip}
                                                     onChange={(e) => orderForm.setData('shipping_zip', e.target.value)}
-                                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                                     required
                                                 />
                                             </div>
@@ -648,7 +648,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                 type="tel"
                                                 value={orderForm.data.shipping_phone}
                                                 onChange={(e) => orderForm.setData('shipping_phone', e.target.value)}
-                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                                 required
                                             />
                                         </div>
@@ -660,7 +660,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                             <select
                                                 value={orderForm.data.quantity}
                                                 onChange={(e) => orderForm.setData('quantity', parseInt(e.target.value))}
-                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                             >
                                                 <option value={2}>2 stickers</option>
                                                 <option value={4}>4 stickers</option>
@@ -676,7 +676,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                 value={orderForm.data.notes}
                                                 onChange={(e) => orderForm.setData('notes', e.target.value)}
                                                 rows={2}
-                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                                 placeholder="Any special delivery instructions..."
                                             />
                                         </div>
@@ -692,7 +692,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                             <button
                                                 type="submit"
                                                 disabled={orderForm.processing}
-                                                className="flex-1 inline-flex items-center justify-center gap-2 bg-[#A41E34] text-white px-4 py-3 rounded-xl font-semibold hover:bg-[#8B1A2C] transition-colors disabled:opacity-50"
+                                                className="flex-1 inline-flex items-center justify-center gap-2 bg-[#2BBBAD] text-white px-4 py-3 rounded-xl font-semibold hover:bg-[#249E93] transition-colors disabled:opacity-50"
                                             >
                                                 {orderForm.processing ? (
                                                     <>

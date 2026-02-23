@@ -11,10 +11,10 @@ const PropertyList = ({ properties }) => {
       {/* Results Header */}
       <div className="mb-6 flex items-center justify-between bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
         <h2 className="text-xl font-medium text-gray-900" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-          <span className="text-[#A41E34]">{properties.length}</span> Properties Found
+          <span className="text-[#2BBBAD]">{properties.length}</span> Properties Found
         </h2>
         <select
-          className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#A41E34] focus:border-transparent bg-white cursor-pointer hover:border-[#A41E34] transition-colors"
+          className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#A41E34] focus:border-transparent bg-white cursor-pointer hover:border-[#2BBBAD] transition-colors"
           style={{ fontFamily: 'Instrument Sans, sans-serif' }}
         >
           <option>Sort by: Newest</option>

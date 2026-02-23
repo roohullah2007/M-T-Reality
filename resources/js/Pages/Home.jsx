@@ -12,7 +12,7 @@ import FAQSection from '@/Components/Sections/Homepage/FAQSection';
 export default function Home({ featuredProperties = [] }) {
   return (
     <>
-      <Head title="Home - OKBYOWNER" />
+      <Head title="Home" />
 
       {/* Hero Section */}
       <HeroSection />

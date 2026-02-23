@@ -46,8 +46,8 @@ function Register() {
                 <div className="flex justify-center items-center px-8 py-8">
                     <Link href="/">
                         <img
-                            src="/images/okbyowner-logo.png"
-                            alt="OKByOwner"
+                            src="/images/m&t_logo.png"
+                            alt="M&T Realty Group"
                             className="h-10"
                         />
                     </Link>
@@ -63,7 +63,7 @@ function Register() {
                             Create your account
                         </h1>
                         <p className="text-gray-500 text-center mb-8" style={{ fontFamily: '"Poppins", sans-serif' }}>
-                            Join OKByOwner to start your journey
+                            Join M&T Realty Group to get started
                         </p>
 
                         {/* Google Sign Up Button */}
@@ -102,20 +102,20 @@ function Register() {
                                         onClick={() => setData('user_type', 'buyer')}
                                         className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all duration-300 ${
                                             data.user_type === 'buyer'
-                                                ? 'border-[#A41E34] bg-[#A41E34]/5'
+                                                ? 'border-[#2BBBAD] bg-[#2BBBAD]/5'
                                                 : 'border-gray-200 hover:border-gray-300'
                                         }`}
                                     >
                                         <div className={`p-2 rounded-full ${
                                             data.user_type === 'buyer'
-                                                ? 'bg-[#A41E34] text-white'
+                                                ? 'bg-[#2BBBAD] text-white'
                                                 : 'bg-gray-100 text-gray-500'
                                         }`}>
                                             <Search className="w-4 h-4" />
                                         </div>
                                         <span className={`font-semibold text-sm ${
                                             data.user_type === 'buyer'
-                                                ? 'text-[#A41E34]'
+                                                ? 'text-[#2BBBAD]'
                                                 : 'text-gray-700'
                                         }`}>
                                             Buyer
@@ -126,20 +126,20 @@ function Register() {
                                         onClick={() => setData('user_type', 'seller')}
                                         className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all duration-300 ${
                                             data.user_type === 'seller'
-                                                ? 'border-[#A41E34] bg-[#A41E34]/5'
+                                                ? 'border-[#2BBBAD] bg-[#2BBBAD]/5'
                                                 : 'border-gray-200 hover:border-gray-300'
                                         }`}
                                     >
                                         <div className={`p-2 rounded-full ${
                                             data.user_type === 'seller'
-                                                ? 'bg-[#A41E34] text-white'
+                                                ? 'bg-[#2BBBAD] text-white'
                                                 : 'bg-gray-100 text-gray-500'
                                         }`}>
                                             <Home className="w-4 h-4" />
                                         </div>
                                         <span className={`font-semibold text-sm ${
                                             data.user_type === 'seller'
-                                                ? 'text-[#A41E34]'
+                                                ? 'text-[#2BBBAD]'
                                                 : 'text-gray-700'
                                         }`}>
                                             Seller
@@ -161,7 +161,7 @@ function Register() {
                                     type="text"
                                     name="name"
                                     value={data.name}
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#A41E34] focus:ring-2 focus:ring-[#A41E34]/20 transition-all"
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#A41E34]/20 transition-all"
                                     placeholder="John Doe"
                                     autoComplete="name"
                                     autoFocus
@@ -183,7 +183,7 @@ function Register() {
                                     type="email"
                                     name="email"
                                     value={data.email}
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#A41E34] focus:ring-2 focus:ring-[#A41E34]/20 transition-all"
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#A41E34]/20 transition-all"
                                     placeholder="you@example.com"
                                     autoComplete="username"
                                     onChange={(e) => setData('email', e.target.value)}
@@ -205,7 +205,7 @@ function Register() {
                                         type={showPassword ? 'text' : 'password'}
                                         name="password"
                                         value={data.password}
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#A41E34] focus:ring-2 focus:ring-[#A41E34]/20 transition-all pr-12"
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#A41E34]/20 transition-all pr-12"
                                         placeholder="Create a strong password"
                                         autoComplete="new-password"
                                         onChange={(e) => setData('password', e.target.value)}
@@ -259,7 +259,7 @@ function Register() {
                                         type={showConfirmPassword ? 'text' : 'password'}
                                         name="password_confirmation"
                                         value={data.password_confirmation}
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#A41E34] focus:ring-2 focus:ring-[#A41E34]/20 transition-all pr-12"
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#A41E34]/20 transition-all pr-12"
                                         placeholder="Confirm your password"
                                         autoComplete="new-password"
                                         onChange={(e) => setData('password_confirmation', e.target.value)}
@@ -306,11 +306,11 @@ function Register() {
                             {/* Terms */}
                             <p className="text-xs text-gray-500 text-center">
                                 By creating an account, you agree to our{' '}
-                                <Link href="/terms-of-use" className="text-[#A41E34] hover:underline">
+                                <Link href="/terms-of-use" className="text-[#2BBBAD] hover:underline">
                                     Terms
                                 </Link>{' '}
                                 and{' '}
-                                <Link href="/privacy-policy" className="text-[#A41E34] hover:underline">
+                                <Link href="/privacy-policy" className="text-[#2BBBAD] hover:underline">
                                     Privacy Policy
                                 </Link>
                             </p>
@@ -318,7 +318,7 @@ function Register() {
 
                         <p className="mt-6 text-center text-sm text-gray-600">
                             Already have an account?{' '}
-                            <Link href={route('login')} className="text-[#A41E34] font-medium hover:underline">
+                            <Link href={route('login')} className="text-[#2BBBAD] font-medium hover:underline">
                                 Sign in
                             </Link>
                         </p>

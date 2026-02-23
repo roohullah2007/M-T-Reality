@@ -78,6 +78,18 @@ Route::get('/faqs', function () {
     return Inertia::render('FAQs');
 })->name('faqs');
 
+Route::get('/how-it-works', function () {
+    return Inertia::render('HowItWorks');
+})->name('how-it-works');
+
+Route::get('/why-our-model-works', function () {
+    return Inertia::render('WhyOurModelWorks');
+})->name('why-our-model-works');
+
+Route::get('/testimonials', function () {
+    return Inertia::render('Testimonials');
+})->name('testimonials');
+
 Route::get('/mortgages', function () {
     return Inertia::render('Mortgages');
 })->name('mortgages');

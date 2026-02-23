@@ -33,7 +33,7 @@ function Sellers() {
   ];
 
   const freeListingFeatures = [
-    'Property listing on OKByOwner.com',
+    'Property listing on mandtrealty.com',
     'Up to 25 photos',
     'Detailed property description',
     'Direct buyer contact form',
@@ -158,13 +158,13 @@ function Sellers() {
   const testimonials = [
     {
       id: 1,
-      quote: "OKByOwner saved us over $15,000 in commission fees when we sold our home. The MLS listing got our property in front of thousands of buyers, and the process was so much easier than we expected. We had full control and expert support every step of the way.",
+      quote: "M&T Realty Group saved us over $15,000 in commission fees when we sold our home. The MLS listing got our property in front of thousands of buyers, and the process was so much easier than we expected. We had full control and expert support every step of the way.",
       name: "Sarah Mitchell",
       role: "Sold home in Oklahoma City"
     },
     {
       id: 2,
-      quote: "I was skeptical about selling without a realtor, but OKByOwner made it incredibly simple. The free listing, professional tools, and responsive support team gave me everything I needed. We sold in just 45 days and kept thousands more in our pocket.",
+      quote: "I was skeptical about selling without a realtor, but M&T Realty Group made it incredibly simple. The free listing, professional tools, and responsive support team gave me everything I needed. We sold in just 45 days and kept thousands more in our pocket.",
       name: "Michael Torres",
       role: "Sold home in Tulsa"
     },
@@ -178,7 +178,7 @@ function Sellers() {
 
   return (
     <>
-      <Head title="Sellers - OKBYOWNER" />
+      <Head title="Sellers" />
 
       {/* Hero Section */}
       <div className="relative pt-0 md:pt-[77px]">
@@ -217,7 +217,7 @@ function Sellers() {
               <div className="flex flex-col sm:flex-row gap-[0.4rem] mb-12">
                 <Link
                   href="/list-property"
-                  className="button inline-flex items-center gap-[0.4rem] bg-[#A41E34] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#8B1A2C]"
+                  className="button inline-flex items-center gap-[0.4rem] bg-[#2BBBAD] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#249E93]"
                   style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                 >
                   <span>List Your Property</span>
@@ -315,7 +315,7 @@ function Sellers() {
                 className="text-[24px] md:text-[28px] text-[#111] font-medium leading-tight mb-6"
                 style={{ fontFamily: 'Instrument Sans, sans-serif', fontWeight: 500 }}
               >
-                Selling your home shouldn't cost a fortune. OKByOwner empowers Oklahoma homeowners to list, market, and sell their properties without paying hefty broker commissions.
+                Selling your home shouldn't cost a fortune. M&T Realty Group empowers Oklahoma homeowners to list, market, and sell their properties without paying hefty broker commissions.
               </h2>
 
               {/* Subheading */}
@@ -329,7 +329,7 @@ function Sellers() {
               {/* Button */}
               <Link
                 href="/list-property"
-                className="inline-flex items-center gap-[0.4rem] bg-[#A41E34] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#8B1A2C]"
+                className="inline-flex items-center gap-[0.4rem] bg-[#2BBBAD] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#249E93]"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
                 <span>List Your Property</span>
@@ -388,7 +388,7 @@ function Sellers() {
             {/* Left Side - Content */}
             <div>
               {/* Badge */}
-              <div className="inline-flex items-center bg-[#A41E34] rounded-lg px-4 py-2 mb-6">
+              <div className="inline-flex items-center bg-[#2BBBAD] rounded-lg px-4 py-2 mb-6">
                 <span className="text-white text-sm font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   FREE
                 </span>
@@ -415,7 +415,7 @@ function Sellers() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
                 {freeListingFeatures.map((feature, index) => (
                   <div key={index} className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-[#A41E34] flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-[#2BBBAD] flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                       {feature}
                     </span>
@@ -426,7 +426,7 @@ function Sellers() {
               {/* CTA Button */}
               <Link
                 href="/list-property"
-                className="inline-flex items-center gap-[0.4rem] bg-[#A41E34] text-white rounded-full px-6 py-3 font-medium transition-all duration-300 hover:bg-[#8B1A2C]"
+                className="inline-flex items-center gap-[0.4rem] bg-[#2BBBAD] text-white rounded-full px-6 py-3 font-medium transition-all duration-300 hover:bg-[#249E93]"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
                 <span>Start Your Free Listing</span>
@@ -445,7 +445,7 @@ function Sellers() {
               </div>
               {/* Price Tag */}
               <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl p-6 shadow-xl">
-                <div className="text-[#A41E34] text-4xl font-bold" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>$0</div>
+                <div className="text-[#2BBBAD] text-4xl font-bold" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>$0</div>
                 <div className="text-[#666] text-sm" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Forever Free</div>
               </div>
             </div>
@@ -515,7 +515,7 @@ function Sellers() {
               <div className="relative bg-white rounded-2xl p-8 shadow-lg">
                 <div className="text-center mb-6">
                   <div className="bg-[#F5F3F0] rounded-2xl p-4 mb-4 inline-block">
-                    <img src="/images/okbyowner-logo.png" alt="OKByOwner" className="h-12 w-auto" />
+                    <img src="/images/m&t_logo.png" alt="M&T Realty Group" className="h-12 w-auto" />
                   </div>
                   <h4 className="text-lg font-semibold text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                     Your MLS Listing
@@ -529,7 +529,7 @@ function Sellers() {
 
                 <div className="mt-6 pt-6 border-t border-[#E5E1DC] text-center">
                   <p className="text-sm text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                    <span className="font-semibold text-[#A41E34]">+100 more</span> real estate websites
+                    <span className="font-semibold text-[#2BBBAD]">+100 more</span> real estate websites
                   </p>
                 </div>
               </div>
@@ -568,7 +568,7 @@ function Sellers() {
                   return (
                     <div key={index} className="flex items-start gap-4">
                       <div className="bg-white p-2 rounded-lg flex-shrink-0">
-                        <IconComponent className="w-5 h-5 text-[#A41E34]" />
+                        <IconComponent className="w-5 h-5 text-[#2BBBAD]" />
                       </div>
                       <div>
                         <h4 className="text-[#111] font-medium mb-1" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
@@ -586,7 +586,7 @@ function Sellers() {
               {/* CTA Button */}
               <Link
                 href="/our-packages"
-                className="inline-flex items-center gap-[0.4rem] bg-[#A41E34] text-white rounded-full px-6 py-3 font-medium transition-all duration-300 hover:bg-[#8B1A2C]"
+                className="inline-flex items-center gap-[0.4rem] bg-[#2BBBAD] text-white rounded-full px-6 py-3 font-medium transition-all duration-300 hover:bg-[#249E93]"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
                 <span>Learn About MLS Options</span>
@@ -624,7 +624,7 @@ function Sellers() {
                   Feature
                 </div>
                 <div className="text-white font-medium text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  OKByOwner
+                  M&T Realty Group
                 </div>
                 <div className="text-white font-medium text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   Flat Fee MLS
@@ -643,7 +643,7 @@ function Sellers() {
                   <div className="text-[#111] font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                     {row.feature}
                   </div>
-                  <div className="text-[#A41E34] font-medium text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  <div className="text-[#2BBBAD] font-medium text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                     {row.okByOwner}
                   </div>
                   <div className="text-[#666] text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
@@ -687,7 +687,7 @@ function Sellers() {
                     <div className="bg-[#E5E1DC] p-3 rounded-xl w-fit mb-4">
                       <IconComponent className="w-6 h-6 text-[#3D3D3D]" />
                     </div>
-                    <div className="text-[#A41E34] text-sm font-medium mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                    <div className="text-[#2BBBAD] text-sm font-medium mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                       STEP {item.step}
                     </div>
                     <h3 className="text-xl font-medium text-[#111] mb-3" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
@@ -789,11 +789,11 @@ function Sellers() {
                 className="text-[14px] font-medium text-[#666] mb-10 leading-relaxed"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                Have questions? We've got answers. Learn more about selling your property through OKByOwner.
+                Have questions? We've got answers. Learn more about selling your property through M&T Realty Group.
               </p>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-[0.4rem] bg-[#A41E34] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#8B1A2C]"
+                className="inline-flex items-center gap-[0.4rem] bg-[#2BBBAD] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#249E93]"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
                 <span>Ask Questions</span>
@@ -859,7 +859,7 @@ function Sellers() {
           </p>
           <Link
             href="/list-property"
-            className="inline-flex items-center gap-2 bg-[#A41E34] text-white rounded-full px-8 py-4 font-medium text-lg transition-all duration-300 hover:bg-[#8B1A2C] hover:shadow-lg"
+            className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white rounded-full px-8 py-4 font-medium text-lg transition-all duration-300 hover:bg-[#249E93] hover:shadow-lg"
             style={{ fontFamily: 'Instrument Sans, sans-serif' }}
           >
             Start Listing for Free

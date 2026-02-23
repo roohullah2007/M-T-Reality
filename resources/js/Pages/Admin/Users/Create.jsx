@@ -53,7 +53,7 @@ export default function CreateUser() {
                                 type="text"
                                 value={data.name}
                                 onChange={(e) => setData('name', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                 placeholder="John Doe"
                             />
                             {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
@@ -68,7 +68,7 @@ export default function CreateUser() {
                                 type="email"
                                 value={data.email}
                                 onChange={(e) => setData('email', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                 placeholder="john@example.com"
                             />
                             {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
@@ -83,7 +83,7 @@ export default function CreateUser() {
                                 type="password"
                                 value={data.password}
                                 onChange={(e) => setData('password', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                 placeholder="••••••••"
                             />
                             {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
@@ -98,7 +98,7 @@ export default function CreateUser() {
                                 type="password"
                                 value={data.password_confirmation}
                                 onChange={(e) => setData('password_confirmation', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                 placeholder="••••••••"
                             />
                         </div>
@@ -111,7 +111,7 @@ export default function CreateUser() {
                             <select
                                 value={data.role}
                                 onChange={(e) => setData('role', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                             >
                                 <option value="buyer">Buyer</option>
                                 <option value="seller">Seller</option>
@@ -130,7 +130,7 @@ export default function CreateUser() {
                                 type="text"
                                 value={data.phone}
                                 onChange={(e) => setData('phone', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                 placeholder="(555) 123-4567"
                             />
                             {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
@@ -145,7 +145,7 @@ export default function CreateUser() {
                                 type="text"
                                 value={data.address}
                                 onChange={(e) => setData('address', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                 placeholder="123 Main Street"
                             />
                         </div>
@@ -159,7 +159,7 @@ export default function CreateUser() {
                                 type="text"
                                 value={data.city}
                                 onChange={(e) => setData('city', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                 placeholder="Oklahoma City"
                             />
                         </div>
@@ -173,7 +173,7 @@ export default function CreateUser() {
                                 type="text"
                                 value={data.state}
                                 onChange={(e) => setData('state', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                 placeholder="Oklahoma"
                             />
                         </div>
@@ -187,7 +187,7 @@ export default function CreateUser() {
                                 type="text"
                                 value={data.zip_code}
                                 onChange={(e) => setData('zip_code', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                 placeholder="73102"
                             />
                         </div>
@@ -199,7 +199,7 @@ export default function CreateUser() {
                                     type="checkbox"
                                     checked={data.is_active}
                                     onChange={(e) => setData('is_active', e.target.checked)}
-                                    className="w-5 h-5 text-[#A41E34] border-gray-300 rounded focus:ring-[#A41E34]"
+                                    className="w-5 h-5 text-[#2BBBAD] border-gray-300 rounded focus:ring-[#A41E34]"
                                 />
                                 <span className="text-sm font-medium text-gray-700">Active Account</span>
                             </label>
@@ -217,7 +217,7 @@ export default function CreateUser() {
                         <button
                             type="submit"
                             disabled={processing}
-                            className="px-6 py-2 bg-[#A41E34] text-white rounded-lg hover:bg-[#8B1A2C] transition-colors disabled:opacity-50"
+                            className="px-6 py-2 bg-[#2BBBAD] text-white rounded-lg hover:bg-[#249E93] transition-colors disabled:opacity-50"
                         >
                             {processing ? 'Creating...' : 'Create User'}
                         </button>

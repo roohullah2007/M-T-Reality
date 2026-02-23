@@ -78,8 +78,8 @@ const StatsSection = () => {
                 key={index}
                 className="bg-white rounded-2xl p-6 text-center hover:shadow-lg transition-all duration-300"
               >
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-[#A41E34]/10 rounded-xl mb-4">
-                  <IconComponent className="w-6 h-6 text-[#A41E34]" />
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-[#2BBBAD]/10 rounded-xl mb-4">
+                  <IconComponent className="w-6 h-6 text-[#2BBBAD]" />
                 </div>
                 <h4
                   className="text-[32px] md:text-[40px] text-[#111] font-semibold mb-1"
@@ -124,31 +124,31 @@ const StatsSection = () => {
             </p>
             <ul className="space-y-4 mb-8">
               <li className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-[#A41E34] rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-[#2BBBAD] rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-[14px] text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   <strong className="text-[#111]">Maximum Exposure:</strong> Your listing syndicates to Zillow, Realtor.com, Trulia, Redfin, and hundreds more sites.
                 </p>
               </li>
               <li className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-[#A41E34] rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-[#2BBBAD] rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-[14px] text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   <strong className="text-[#111]">Buyer Agent Access:</strong> Agents actively searching for properties for their clients will find your home.
                 </p>
               </li>
               <li className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-[#A41E34] rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-[#2BBBAD] rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-[14px] text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   <strong className="text-[#111]">Save Thousands:</strong> Pay a flat fee instead of the traditional 3% listing agent commission.
                 </p>
               </li>
               <li className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-[#A41E34] rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-[#2BBBAD] rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-[14px] text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   <strong className="text-[#111]">Full Control:</strong> You set the price, schedule showings, and negotiate directly with buyers.
                 </p>
               </li>
               <li className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-[#A41E34] rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-[#2BBBAD] rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-[14px] text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   <strong className="text-[#111]">Professional Credibility:</strong> Buyers and agents take MLS listings more seriously than FSBO-only listings.
                 </p>
@@ -157,7 +157,7 @@ const StatsSection = () => {
 
             <Link
               href="/sellers"
-              className="inline-flex items-center gap-[0.4rem] bg-[#A41E34] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#8B1A2C]"
+              className="inline-flex items-center gap-[0.4rem] bg-[#2BBBAD] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#249E93]"
               style={{ fontFamily: 'Instrument Sans, sans-serif' }}
             >
               <span>View MLS Packages</span>
@@ -187,7 +187,7 @@ const StatsSection = () => {
                   className="bg-white rounded-xl p-5 hover:shadow-lg transition-all duration-300"
                 >
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-[#A41E34] rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 bg-[#2BBBAD] rounded-lg flex items-center justify-center flex-shrink-0">
                       <span className="text-white text-sm font-semibold">{step.number}</span>
                     </div>
                     <div>
@@ -209,7 +209,7 @@ const StatsSection = () => {
               ))}
             </div>
 
-            <div className="mt-6 p-4 bg-[#A41E34]/5 rounded-xl border border-[#A41E34]/20">
+            <div className="mt-6 p-4 bg-[#2BBBAD]/5 rounded-xl border border-[#2BBBAD]/20">
               <p className="text-[14px] text-[#666] text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                 <strong className="text-[#111]">Powered by FFMLSOK</strong> - Oklahoma's trusted flat-fee MLS listing service
               </p>

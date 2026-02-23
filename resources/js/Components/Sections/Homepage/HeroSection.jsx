@@ -9,30 +9,30 @@ const HeroSection = () => {
   const slides = [
     {
       id: 1,
-      headlineTop: 'Sell Your Oklahoma Home',
-      headlineBottom: 'Save Thousands in Fees',
-      description: 'List your property for FREE on our platform. No commissions, no hidden fees. Join thousands of Oklahoma homeowners who\'ve successfully sold without a realtor.',
+      headlineTop: 'Sell Smarter.',
+      headlineBottom: 'Keep More of Your Equity.',
+      description: 'Full-service real estate representation — without outdated overhead. M&T Realty Group is a modern brokerage built for today\'s market. We deliver expert strategy, professional marketing, and skilled negotiation.',
       image: 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1920',
-      ctaPrimary: { text: 'List Your Property', href: '/list-property' },
-      ctaSecondary: { text: 'Browse Properties', href: '/properties', icon: Search }
+      ctaPrimary: { text: 'Schedule a Consultation', href: '/contact' },
+      ctaSecondary: { text: 'Browse Our Listings', href: '/properties', icon: Search }
     },
     {
       id: 2,
-      headlineTop: 'Stand Out with',
-      headlineBottom: 'Pro Photos & Tours',
-      description: 'HDR photography, video walkthroughs, Matterport 3D tours, drone aerials, and virtual twilight. Make your listing shine.',
+      headlineTop: 'Professional Service.',
+      headlineBottom: 'Proven Results.',
+      description: 'Strategic pricing, professional photography, full MLS exposure, skilled negotiation, and contract-to-close management. Same service. Streamlined structure.',
       image: 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1920',
-      ctaPrimary: { text: 'View Media Packages', href: '/our-packages' },
-      ctaSecondary: { text: 'See Examples', href: '#services', icon: Search }
+      ctaPrimary: { text: 'Our Services', href: '/our-packages' },
+      ctaSecondary: { text: 'Learn How It Works', href: '/how-it-works', icon: Search }
     },
     {
       id: 3,
-      headlineTop: 'Get on the MLS',
-      headlineBottom: 'Keep Your Equity',
-      description: 'Your listing on Zillow, Realtor.com, Redfin, and 100+ sites. Flat fee, no percentage.',
+      headlineTop: 'The Modern',
+      headlineBottom: 'Brokerage Model',
+      description: 'We believe commission should reflect service and performance — not outdated business models. Our lean structure means our clients typically pay significantly less than traditional listing fees.',
       image: 'https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1920',
-      ctaPrimary: { text: 'Learn About MLS', href: '/our-packages' },
-      ctaSecondary: { text: 'How It Works', href: '/sellers', icon: Search }
+      ctaPrimary: { text: 'Get Started', href: '/sellers' },
+      ctaSecondary: { text: 'About Us', href: '/about', icon: Search }
     }
   ];
 
@@ -74,7 +74,7 @@ const HeroSection = () => {
           >
             <img
               src={slide.image}
-              alt={slide.headline}
+              alt=""
               className="w-full h-full object-cover"
             />
             {/* Overlay */}
@@ -125,7 +125,7 @@ const HeroSection = () => {
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
                       <Link
                         href={slide.ctaPrimary.href}
-                        className="inline-flex items-center justify-center gap-2 bg-[#A41E34] text-white rounded-full px-6 py-3.5 font-semibold text-[15px] leading-[120%] transition-all duration-300 hover:bg-[#8B1A2C] hover:shadow-lg hover:shadow-[#A41E34]/25"
+                        className="inline-flex items-center justify-center gap-2 bg-[#2BBBAD] text-white rounded-full px-6 py-3.5 font-semibold text-[15px] leading-[120%] transition-all duration-300 hover:bg-[#249E93] hover:shadow-lg hover:shadow-[#2BBBAD]/25"
                         style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                       >
                         <span>{slide.ctaPrimary.text}</span>
@@ -173,7 +173,7 @@ const HeroSection = () => {
                 {/* Progress bar for active slide */}
                 {index === currentSlide && !isPaused && (
                   <div
-                    className="absolute inset-0 bg-[#A41E34] rounded-full origin-left"
+                    className="absolute inset-0 bg-[#2BBBAD] rounded-full origin-left"
                     style={{
                       animation: 'progress 5s linear forwards'
                     }}

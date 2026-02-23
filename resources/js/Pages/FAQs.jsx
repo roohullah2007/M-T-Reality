@@ -52,19 +52,19 @@ function FAQs() {
       icon: Home,
       faqs: [
         {
-          question: "What is OKByOwner?",
-          answer: "OKByOwner is Oklahoma's leading For Sale By Owner (FSBO) platform that allows homeowners to list, market, and sell their properties without paying traditional realtor commissions. We provide all the tools and resources you need to sell your home successfully."
+          question: "What is M&T Realty Group?",
+          answer: "M&T Realty Group is a modern real estate brokerage in Oklahoma that provides full-service listing representation with an efficient, streamlined structure. We deliver expert strategy, professional marketing, and skilled negotiation while helping our clients keep more of their equity."
         },
         {
           question: "How do I get started listing my property?",
           answer: "Simply click on 'List Your Property' button, create a free account, and follow our step-by-step listing process. You'll add property details, upload photos, set your price, and your listing will be live within minutes."
         },
         {
-          question: "Do I need to be a licensed realtor to use OKByOwner?",
-          answer: "No, you don't need any license or real estate experience. OKByOwner is specifically designed for homeowners who want to sell their property themselves. We provide all the guidance and tools you need."
+          question: "Do I need real estate experience to work with M&T Realty Group?",
+          answer: "No, you don't need any real estate experience. M&T Realty Group handles everything for you — from pricing strategy to closing. We provide full-service representation so you can sell with confidence."
         },
         {
-          question: "What areas does OKByOwner serve?",
+          question: "What areas does M&T Realty Group serve?",
           answer: "We serve all of Oklahoma, including major cities like Oklahoma City, Tulsa, Norman, Broken Arrow, Edmond, and all surrounding areas throughout the state."
         }
       ]
@@ -83,7 +83,7 @@ function FAQs() {
         },
         {
           question: "How much money can I save by selling FSBO?",
-          answer: "Traditional real estate commissions typically range from 5-6% of your home's sale price. On a $300,000 home, that's $15,000-$18,000 in commissions. By selling with OKByOwner, you keep that money in your pocket."
+          answer: "Traditional real estate commissions typically range from 5-6% of your home's sale price. On a $300,000 home, that's $15,000-$18,000 in commissions. By working with M&T Realty Group, you keep that money in your pocket."
         },
         {
           question: "Do I need to offer a buyer's agent commission?",
@@ -147,7 +147,7 @@ function FAQs() {
 
   return (
     <>
-      <Head title="Frequently Asked Questions - OKBYOWNER" />
+      <Head title="FAQs" />
 
       {/* Hero Section */}
       <div className="relative pt-0 md:pt-[77px]">
@@ -192,7 +192,7 @@ function FAQs() {
               {/* CTA Button */}
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 bg-[#A41E34] text-white rounded-full px-6 py-4 font-medium transition-all duration-300 hover:bg-[#8B1A2C] hover:shadow-lg"
+                className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white rounded-full px-6 py-4 font-medium transition-all duration-300 hover:bg-[#249E93] hover:shadow-lg"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
                 <span>Contact Support</span>
@@ -256,7 +256,7 @@ function FAQs() {
       })}
 
       {/* Still Have Questions CTA */}
-      <section className="bg-[#A41E34] py-16 md:py-20">
+      <section className="bg-[#2BBBAD] py-16 md:py-20">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 text-center">
           <h2
             className="text-white text-[32px] md:text-[48px] font-medium mb-4"
@@ -273,7 +273,7 @@ function FAQs() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center gap-2 bg-white text-[#A41E34] rounded-full px-8 py-4 font-medium transition-all duration-300 hover:bg-white/90"
+              className="inline-flex items-center justify-center gap-2 bg-white text-[#2BBBAD] rounded-full px-8 py-4 font-medium transition-all duration-300 hover:bg-white/90"
               style={{ fontFamily: 'Instrument Sans, sans-serif' }}
             >
               Contact Us

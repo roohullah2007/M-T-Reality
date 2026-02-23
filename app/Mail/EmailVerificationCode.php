@@ -28,7 +28,7 @@ class EmailVerificationCode extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('noreply@updates.okbyowner.com', 'OK By Owner'),
+            from: new Address('noreply@mandtrealty.com', 'M&T Realty Group'),
             subject: 'Your Verification Code: ' . $this->code,
         );
     }

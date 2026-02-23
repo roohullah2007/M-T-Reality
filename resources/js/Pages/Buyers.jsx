@@ -104,7 +104,7 @@ function Buyers() {
 
   return (
     <>
-      <Head title="Buyers - OKBYOWNER" />
+      <Head title="Buyers" />
 
       {/* Hero Section */}
       <div className="relative pt-0 md:pt-[77px]">
@@ -142,7 +142,7 @@ function Buyers() {
               <div className="flex flex-col sm:flex-row gap-[0.4rem] mb-12">
                 <Link
                   href="/properties"
-                  className="button inline-flex items-center gap-[0.4rem] bg-[#A41E34] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#8B1A2C]"
+                  className="button inline-flex items-center gap-[0.4rem] bg-[#2BBBAD] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#249E93]"
                   style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                 >
                   <Search className="w-5 h-5" />
@@ -226,7 +226,7 @@ function Buyers() {
                 className="text-[24px] md:text-[28px] text-[#111] font-medium leading-tight mb-6"
                 style={{ fontFamily: 'Instrument Sans, sans-serif', fontWeight: 500 }}
               >
-                Buying a home directly from the owner saves you money and gives you more control over the process. OKByOwner connects you with sellers across Oklahoma.
+                Buying a home directly from the owner saves you money and gives you more control over the process. M&T Realty Group connects you with sellers across Oklahoma.
               </h2>
 
               {/* Subheading */}
@@ -240,7 +240,7 @@ function Buyers() {
               {/* Button */}
               <Link
                 href="/properties"
-                className="inline-flex items-center gap-[0.4rem] bg-[#A41E34] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#8B1A2C]"
+                className="inline-flex items-center gap-[0.4rem] bg-[#2BBBAD] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#249E93]"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
                 <span>View Properties</span>
@@ -310,7 +310,7 @@ function Buyers() {
             {howItWorks.map((item, index) => (
               <div key={index} className="relative">
                 <div className="bg-[#EEEDEA] rounded-2xl p-6 h-full hover:shadow-lg transition-all duration-300">
-                  <div className="text-[#A41E34] text-5xl font-medium mb-4 opacity-20" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  <div className="text-[#2BBBAD] text-5xl font-medium mb-4 opacity-20" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                     {item.step}
                   </div>
                   <h3 className="text-xl font-medium text-[#111] mb-3" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
@@ -350,7 +350,7 @@ function Buyers() {
             {preApprovalSteps.map((item, index) => (
               <div key={index} className="relative">
                 <div className="bg-white rounded-2xl p-6 h-full hover:shadow-lg transition-all duration-300">
-                  <div className="text-[#A41E34] text-5xl font-medium mb-4 opacity-20" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  <div className="text-[#2BBBAD] text-5xl font-medium mb-4 opacity-20" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                     {item.step}
                   </div>
                   <h3 className="text-xl font-medium text-[#111] mb-3" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
@@ -396,7 +396,7 @@ function Buyers() {
                   href="https://tandmmortgages.morty.com/get-started/mortgage?loan_officer=terry-hassell"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-white text-[#A41E34] rounded-full px-8 py-4 font-semibold hover:bg-gray-100 transition-all duration-300"
+                  className="inline-flex items-center gap-2 bg-white text-[#2BBBAD] rounded-full px-8 py-4 font-semibold hover:bg-gray-100 transition-all duration-300"
                   style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                 >
                   Get Pre-Approved Now
@@ -492,7 +492,7 @@ function Buyers() {
                 Frequently Asked<br />Questions
               </h2>
               <p className="text-[16px] text-[#666] font-medium leading-relaxed" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                Have questions? We've got answers. Learn more about buying properties through OKByOwner.
+                Have questions? We've got answers. Learn more about buying properties through M&T Realty Group.
               </p>
             </div>
 

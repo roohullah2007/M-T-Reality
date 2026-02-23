@@ -84,7 +84,7 @@ class AdminSettingsController extends Controller
             // General Settings
             ['key' => 'site_name', 'value' => 'OK BY OWNER', 'type' => 'string', 'group' => 'general', 'label' => 'Site Name'],
             ['key' => 'site_tagline', 'value' => 'For Sale By Owner Real Estate', 'type' => 'string', 'group' => 'general', 'label' => 'Site Tagline'],
-            ['key' => 'contact_email', 'value' => 'info@okbyowner.com', 'type' => 'string', 'group' => 'general', 'label' => 'Contact Email'],
+            ['key' => 'contact_email', 'value' => 'info@mandtrealty.com', 'type' => 'string', 'group' => 'general', 'label' => 'Contact Email'],
             ['key' => 'contact_phone', 'value' => '(555) 123-4567', 'type' => 'string', 'group' => 'general', 'label' => 'Contact Phone'],
             ['key' => 'address', 'value' => 'Oklahoma City, OK', 'type' => 'string', 'group' => 'general', 'label' => 'Address'],
 
@@ -95,7 +95,7 @@ class AdminSettingsController extends Controller
 
             // Email Settings
             ['key' => 'email_notifications', 'value' => '1', 'type' => 'boolean', 'group' => 'email', 'label' => 'Enable Email Notifications'],
-            ['key' => 'admin_email', 'value' => 'hello@okbyowner.com', 'type' => 'string', 'group' => 'email', 'label' => 'Admin Email'],
+            ['key' => 'admin_email', 'value' => 'info@mandtrealty.com', 'type' => 'string', 'group' => 'email', 'label' => 'Admin Email'],
 
             // SEO Settings
             ['key' => 'meta_title', 'value' => 'OK BY OWNER - For Sale By Owner Real Estate in Oklahoma', 'type' => 'string', 'group' => 'seo', 'label' => 'Meta Title'],

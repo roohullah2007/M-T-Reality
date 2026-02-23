@@ -143,14 +143,14 @@ function Index({ orders, counts, filters }) {
                 onClick={() => handleStatusFilter(tab.key)}
                 className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
                   selectedStatus === tab.key
-                    ? 'border-[#A41E34] text-[#A41E34]'
+                    ? 'border-[#2BBBAD] text-[#2BBBAD]'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
                 {tab.label}
                 <span className={`ml-2 py-0.5 px-2.5 rounded-full text-xs ${
                   selectedStatus === tab.key
-                    ? 'bg-[#A41E34]/10 text-[#A41E34]'
+                    ? 'bg-[#2BBBAD]/10 text-[#2BBBAD]'
                     : 'bg-gray-100 text-gray-900'
                 }`}>
                   {tab.count}
@@ -170,12 +170,12 @@ function Index({ orders, counts, filters }) {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search by address, email, or name..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
               />
             </div>
             <button
               type="submit"
-              className="px-4 py-2 bg-[#A41E34] text-white rounded-lg hover:bg-[#8B1A2C] transition-colors"
+              className="px-4 py-2 bg-[#2BBBAD] text-white rounded-lg hover:bg-[#249E93] transition-colors"
             >
               Search
             </button>
@@ -291,7 +291,7 @@ function Index({ orders, counts, filters }) {
                     <td className="px-6 py-4 text-right">
                       <Link
                         href={`/admin/media-orders/${order.id}`}
-                        className="text-[#A41E34] hover:text-[#8B1A2C] font-medium text-sm"
+                        className="text-[#2BBBAD] hover:text-[#8B1A2C] font-medium text-sm"
                       >
                         View Details
                       </Link>
@@ -330,7 +330,7 @@ function Index({ orders, counts, filters }) {
                   href={link.url || '#'}
                   className={`px-3 py-2 text-sm rounded-lg ${
                     link.active
-                      ? 'bg-[#A41E34] text-white'
+                      ? 'bg-[#2BBBAD] text-white'
                       : link.url
                       ? 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
                       : 'bg-gray-100 text-gray-400 cursor-not-allowed'

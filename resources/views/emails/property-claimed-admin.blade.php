@@ -5,7 +5,7 @@
 @section('content')
     <h2>An imported property has been claimed</h2>
 
-    <p>Good news! A homeowner has claimed their imported listing on OKByOwner.</p>
+    <p>Good news! A homeowner has claimed their imported listing on M&T Realty Group.</p>
 
     <div class="property-details">
         <h3>Property Details</h3>

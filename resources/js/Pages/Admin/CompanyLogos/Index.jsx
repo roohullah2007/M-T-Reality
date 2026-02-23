@@ -166,7 +166,7 @@ export default function CompanyLogosIndex({ logos = [] }) {
                 </div>
                 <button
                     onClick={openAddModal}
-                    className="inline-flex items-center gap-2 bg-[#A41E34] text-white px-4 py-2 rounded-lg hover:bg-[#8B1A2C] transition-colors"
+                    className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white px-4 py-2 rounded-lg hover:bg-[#249E93] transition-colors"
                 >
                     <Plus className="w-5 h-5" />
                     Add Logo
@@ -294,7 +294,7 @@ export default function CompanyLogosIndex({ logos = [] }) {
                                     value={formData.name}
                                     onChange={e => setFormData({ ...formData, name: e.target.value })}
                                     required
-                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                     placeholder="e.g., Zillow"
                                 />
                             </div>
@@ -305,7 +305,7 @@ export default function CompanyLogosIndex({ logos = [] }) {
                                     type="file"
                                     accept="image/*"
                                     onChange={handleImageChange}
-                                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#A41E34]/10 file:text-[#A41E34] hover:file:bg-[#A41E34]/20"
+                                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#2BBBAD]/10 file:text-[#2BBBAD] hover:file:bg-[#2BBBAD]/20"
                                 />
                                 {imagePreview && (
                                     <div className="mt-2 p-2 bg-gray-50 rounded-lg inline-block">
@@ -323,7 +323,7 @@ export default function CompanyLogosIndex({ logos = [] }) {
                                             type="text"
                                             value={formData.text_logo}
                                             onChange={e => setFormData({ ...formData, text_logo: e.target.value })}
-                                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                             placeholder="e.g., homes.com"
                                         />
                                     </div>
@@ -333,7 +333,7 @@ export default function CompanyLogosIndex({ logos = [] }) {
                                             type="text"
                                             value={formData.text_color}
                                             onChange={e => setFormData({ ...formData, text_color: e.target.value })}
-                                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                             placeholder="e.g., #FF6B00"
                                         />
                                     </div>
@@ -342,7 +342,7 @@ export default function CompanyLogosIndex({ logos = [] }) {
                                         <select
                                             value={formData.text_size}
                                             onChange={e => setFormData({ ...formData, text_size: e.target.value })}
-                                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                         >
                                             <option value="">Default</option>
                                             <option value="text-sm">Small</option>
@@ -362,7 +362,7 @@ export default function CompanyLogosIndex({ logos = [] }) {
                                         type="url"
                                         value={formData.link_url}
                                         onChange={e => setFormData({ ...formData, link_url: e.target.value })}
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                         placeholder="https://..."
                                     />
                                 </div>
@@ -372,7 +372,7 @@ export default function CompanyLogosIndex({ logos = [] }) {
                                         type="text"
                                         value={formData.hover_color}
                                         onChange={e => setFormData({ ...formData, hover_color: e.target.value })}
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                         placeholder="e.g., #006AFF"
                                     />
                                 </div>
@@ -385,7 +385,7 @@ export default function CompanyLogosIndex({ logos = [] }) {
                                         type="number"
                                         value={formData.sort_order}
                                         onChange={e => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#A41E34]"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
                                     />
                                 </div>
                                 <div className="flex items-end">
@@ -394,7 +394,7 @@ export default function CompanyLogosIndex({ logos = [] }) {
                                             type="checkbox"
                                             checked={formData.is_active}
                                             onChange={e => setFormData({ ...formData, is_active: e.target.checked })}
-                                            className="w-4 h-4 text-[#A41E34] border-gray-300 rounded focus:ring-[#A41E34]"
+                                            className="w-4 h-4 text-[#2BBBAD] border-gray-300 rounded focus:ring-[#A41E34]"
                                         />
                                         <span className="text-sm font-medium text-gray-700">Active</span>
                                     </label>
@@ -412,7 +412,7 @@ export default function CompanyLogosIndex({ logos = [] }) {
                                 <button
                                     type="submit"
                                     disabled={submitting}
-                                    className="px-4 py-2 bg-[#A41E34] text-white rounded-lg hover:bg-[#8B1A2C] disabled:opacity-50 flex items-center gap-2"
+                                    className="px-4 py-2 bg-[#2BBBAD] text-white rounded-lg hover:bg-[#249E93] disabled:opacity-50 flex items-center gap-2"
                                 >
                                     <Save className="w-4 h-4" />
                                     {submitting ? 'Saving...' : (editingLogo ? 'Update' : 'Create')}

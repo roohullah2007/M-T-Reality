@@ -171,7 +171,7 @@ function PropertyDetail({ property, openHouses = [] }) {
       </head>
       <body>
         <div class="header">
-          <div class="logo">OKBYOWNER</div>
+          <div class="logo">M&T Realty Group</div>
           <div>For Sale By Owner</div>
         </div>
         <div class="price">${formatPrice(property.price)}</div>
@@ -235,7 +235,7 @@ function PropertyDetail({ property, openHouses = [] }) {
           <div class="contact-phone">${property.contact_phone}</div>
         </div>
         <div class="footer">
-          Listed on OKBYOWNER.com | Scan QR code or visit: ${window.location.href}
+          Listed on M&T Realty Group.com | Scan QR code or visit: ${window.location.href}
         </div>
         <script>window.onload = function() { window.print(); }</script>
       </body>
@@ -279,7 +279,7 @@ function PropertyDetail({ property, openHouses = [] }) {
 
   return (
     <>
-      <Head title={`${property.property_title} - OKBYOWNER`} />
+      <Head title={`${property.property_title} - M&T Realty Group`} />
 
       {/* Back Button */}
       <div className="bg-[#EEEDEA] pt-[77px]">
@@ -313,7 +313,7 @@ function PropertyDetail({ property, openHouses = [] }) {
             </div>
             <div className="flex items-center gap-4">
               <span
-                className="text-[32px] md:text-[40px] font-bold text-[#A41E34]"
+                className="text-[32px] md:text-[40px] font-bold text-[#2BBBAD]"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
                 {formatPrice(property.price)}
@@ -343,7 +343,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                 (property.listing_status || property.status) === 'sold' ? 'bg-gray-700' :
                 (property.listing_status || property.status) === 'pending' ? 'bg-yellow-600' :
                 (property.listing_status || property.status) === 'inactive' ? 'bg-gray-500' :
-                'bg-[#A41E34]'
+                'bg-[#2BBBAD]'
               }`}>
                 {(() => {
                   const ls = property.listing_status || property.status;
@@ -522,7 +522,7 @@ function PropertyDetail({ property, openHouses = [] }) {
               (property.listing_status || property.status) === 'sold' ? 'bg-gray-700' :
               (property.listing_status || property.status) === 'pending' ? 'bg-yellow-600' :
               (property.listing_status || property.status) === 'inactive' ? 'bg-gray-500' :
-              'bg-[#A41E34]'
+              'bg-[#2BBBAD]'
             }`}>
               {(() => {
                 const ls = property.listing_status || property.status;
@@ -709,7 +709,7 @@ function PropertyDetail({ property, openHouses = [] }) {
         <div className="flex gap-3">
           <a
             href={`tel:${property.contact_phone}`}
-            className="flex-1 flex items-center justify-center gap-2 bg-[#A41E34] text-white py-3 px-4 rounded-xl font-semibold hover:bg-[#8B1A2C] transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 bg-[#2BBBAD] text-white py-3 px-4 rounded-xl font-semibold hover:bg-[#249E93] transition-colors"
             style={{ fontFamily: 'Instrument Sans, sans-serif' }}
           >
             <Phone className="w-5 h-5" />
@@ -743,7 +743,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                     <>
                       <div className="flex items-center gap-3">
                         <div className="bg-[#EEEDEA] p-3 rounded-lg">
-                          <BedDouble className="w-5 h-5 text-[#A41E34]" />
+                          <BedDouble className="w-5 h-5 text-[#2BBBAD]" />
                         </div>
                         <div>
                           <p className="text-sm text-[#666]">Bedrooms</p>
@@ -752,7 +752,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="bg-[#EEEDEA] p-3 rounded-lg">
-                          <Bath className="w-5 h-5 text-[#A41E34]" />
+                          <Bath className="w-5 h-5 text-[#2BBBAD]" />
                         </div>
                         <div>
                           <p className="text-sm text-[#666]">Bathrooms</p>
@@ -763,7 +763,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="bg-[#EEEDEA] p-3 rounded-lg">
-                          <Maximize2 className="w-5 h-5 text-[#A41E34]" />
+                          <Maximize2 className="w-5 h-5 text-[#2BBBAD]" />
                         </div>
                         <div>
                           <p className="text-sm text-[#666]">Square Feet</p>
@@ -772,7 +772,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="bg-[#EEEDEA] p-3 rounded-lg">
-                          <Calendar className="w-5 h-5 text-[#A41E34]" />
+                          <Calendar className="w-5 h-5 text-[#2BBBAD]" />
                         </div>
                         <div>
                           <p className="text-sm text-[#666]">Year Built</p>
@@ -787,7 +787,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                       {property.acres && (
                         <div className="flex items-center gap-3">
                           <div className="bg-[#EEEDEA] p-3 rounded-lg">
-                            <Maximize2 className="w-5 h-5 text-[#A41E34]" />
+                            <Maximize2 className="w-5 h-5 text-[#2BBBAD]" />
                           </div>
                           <div>
                             <p className="text-sm text-[#666]">Acres</p>
@@ -798,7 +798,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                       {property.lot_size && (
                         <div className="flex items-center gap-3">
                           <div className="bg-[#EEEDEA] p-3 rounded-lg">
-                            <Maximize2 className="w-5 h-5 text-[#A41E34]" />
+                            <Maximize2 className="w-5 h-5 text-[#2BBBAD]" />
                           </div>
                           <div>
                             <p className="text-sm text-[#666]">Lot Size</p>
@@ -852,12 +852,12 @@ function PropertyDetail({ property, openHouses = [] }) {
               {openHouses.length > 0 && (
                 <div className="bg-white rounded-2xl p-6 mb-6">
                   <h2 className="text-xl font-semibold text-[#111] mb-4 flex items-center gap-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                    <Calendar className="w-5 h-5 text-[#A41E34]" />
+                    <Calendar className="w-5 h-5 text-[#2BBBAD]" />
                     Upcoming Open Houses
                   </h2>
                   <div className="space-y-3">
                     {openHouses.map((oh, idx) => (
-                      <div key={oh.id || idx} className="flex items-start gap-4 p-4 bg-green-50 rounded-xl border-l-4 border-[#A41E34]">
+                      <div key={oh.id || idx} className="flex items-start gap-4 p-4 bg-green-50 rounded-xl border-l-4 border-[#2BBBAD]">
                         <div className="bg-green-200 p-2.5 rounded-lg flex-shrink-0">
                           <Calendar className="w-5 h-5 text-green-700" />
                         </div>
@@ -890,7 +890,7 @@ function PropertyDetail({ property, openHouses = [] }) {
               {property.school_district && (
                 <div className="bg-white rounded-2xl p-6 mb-6">
                   <h2 className="text-xl font-semibold text-[#111] mb-4 flex items-center gap-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                    <svg className="w-5 h-5 text-[#A41E34]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5 text-[#2BBBAD]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
                     </svg>
@@ -954,7 +954,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                         rel="noopener noreferrer"
                         className="flex items-center gap-3 p-4 bg-[#EEEDEA] rounded-xl hover:bg-[#E5E1DC] transition-colors group"
                       >
-                        <div className="bg-[#A41E34] p-3 rounded-lg">
+                        <div className="bg-[#2BBBAD] p-3 rounded-lg">
                           <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                             <polyline points="7.5 4.21 12 6.81 16.5 4.21" />
@@ -968,7 +968,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                           <p className="font-medium text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Virtual Tour</p>
                           <p className="text-sm text-[#666]">Explore property</p>
                         </div>
-                        <ExternalLink className="w-4 h-4 text-[#666] group-hover:text-[#A41E34] transition-colors" />
+                        <ExternalLink className="w-4 h-4 text-[#666] group-hover:text-[#2BBBAD] transition-colors" />
                       </a>
                     )}
                     {property.matterport_url && (
@@ -999,14 +999,14 @@ function PropertyDetail({ property, openHouses = [] }) {
                         rel="noopener noreferrer"
                         className="flex items-center gap-3 p-4 bg-[#EEEDEA] rounded-xl hover:bg-[#E5E1DC] transition-colors group"
                       >
-                        <div className="bg-[#A41E34] p-3 rounded-lg">
+                        <div className="bg-[#2BBBAD] p-3 rounded-lg">
                           <Video className="w-5 h-5 text-white" />
                         </div>
                         <div className="flex-1">
                           <p className="font-medium text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Video Tour</p>
                           <p className="text-sm text-[#666]">Watch walkthrough</p>
                         </div>
-                        <ExternalLink className="w-4 h-4 text-[#666] group-hover:text-[#A41E34] transition-colors" />
+                        <ExternalLink className="w-4 h-4 text-[#666] group-hover:text-[#2BBBAD] transition-colors" />
                       </a>
                     )}
                     {property.floor_plan_url && (
@@ -1016,14 +1016,14 @@ function PropertyDetail({ property, openHouses = [] }) {
                         rel="noopener noreferrer"
                         className="flex items-center gap-3 p-4 bg-[#EEEDEA] rounded-xl hover:bg-[#E5E1DC] transition-colors group"
                       >
-                        <div className="bg-[#A41E34] p-3 rounded-lg">
+                        <div className="bg-[#2BBBAD] p-3 rounded-lg">
                           <Maximize2 className="w-5 h-5 text-white" />
                         </div>
                         <div className="flex-1">
                           <p className="font-medium text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Floor Plan</p>
                           <p className="text-sm text-[#666]">View layout</p>
                         </div>
-                        <ExternalLink className="w-4 h-4 text-[#666] group-hover:text-[#A41E34] transition-colors" />
+                        <ExternalLink className="w-4 h-4 text-[#666] group-hover:text-[#2BBBAD] transition-colors" />
                       </a>
                     )}
                   </div>
@@ -1045,7 +1045,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${property.address}, ${property.city}, ${property.state} ${property.zip_code}`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-[#A41E34] hover:underline mt-2 inline-flex items-center gap-1"
+                  className="text-sm text-[#2BBBAD] hover:underline mt-2 inline-flex items-center gap-1"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -1065,7 +1065,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                 <div className="space-y-4 mb-6">
                   <div className="flex items-center gap-3">
                     <div className="bg-[#EEEDEA] p-3 rounded-full">
-                      <Home className="w-5 h-5 text-[#A41E34]" />
+                      <Home className="w-5 h-5 text-[#2BBBAD]" />
                     </div>
                     <div>
                       <p className="font-semibold text-[#111]">{property.contact_name}</p>
@@ -1077,14 +1077,14 @@ function PropertyDetail({ property, openHouses = [] }) {
                     href={`tel:${property.contact_phone}`}
                     className="flex items-center gap-3 p-3 bg-[#EEEDEA] rounded-xl hover:bg-[#E5E1DC] transition-colors"
                   >
-                    <Phone className="w-5 h-5 text-[#A41E34]" />
+                    <Phone className="w-5 h-5 text-[#2BBBAD]" />
                     <span className="text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>{property.contact_phone}</span>
                   </a>
                 </div>
 
                 <button
                   onClick={() => setShowContactForm(!showContactForm)}
-                  className="w-full bg-[#A41E34] text-white py-3 rounded-xl font-medium hover:bg-[#8B1A2C] transition-colors"
+                  className="w-full bg-[#2BBBAD] text-white py-3 rounded-xl font-medium hover:bg-[#249E93] transition-colors"
                   style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                 >
                   {showContactForm ? 'Hide Form' : 'Send Message'}
@@ -1104,7 +1104,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                         placeholder="Your Name"
                         value={data.name}
                         onChange={(e) => setData('name', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#A41E34]"
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#2BBBAD]"
                         required
                       />
                     </div>
@@ -1114,7 +1114,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                         placeholder="Your Email"
                         value={data.email}
                         onChange={(e) => setData('email', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#A41E34]"
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#2BBBAD]"
                         required
                       />
                     </div>
@@ -1124,7 +1124,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                         placeholder="Your Phone"
                         value={data.phone}
                         onChange={(e) => setData('phone', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#A41E34]"
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#2BBBAD]"
                       />
                     </div>
                     <div>
@@ -1133,7 +1133,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                         placeholder="Your Question (e.g., Is the price negotiable?)"
                         value={data.question}
                         onChange={(e) => setData('question', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#A41E34]"
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#2BBBAD]"
                       />
                     </div>
                     <div>
@@ -1142,7 +1142,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                         value={data.message}
                         onChange={(e) => setData('message', e.target.value)}
                         rows={4}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#A41E34] resize-none"
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#2BBBAD] resize-none"
                       />
                     </div>
                     <button
@@ -1188,7 +1188,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                   href="https://tandmmortgages.morty.com/get-started/mortgage?loan_officer=terry-hassell"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block w-full bg-white text-[#A41E34] text-center py-3 rounded-xl font-semibold hover:bg-gray-100 transition-colors"
+                  className="block w-full bg-white text-[#2BBBAD] text-center py-3 rounded-xl font-semibold hover:bg-gray-100 transition-colors"
                   style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                 >
                   Get Pre-Approved
@@ -1199,14 +1199,14 @@ function PropertyDetail({ property, openHouses = [] }) {
               <div className="bg-white rounded-2xl p-6 mt-6 border border-gray-100">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-[#EEEDEA] p-2 rounded-lg">
-                    <Calculator className="w-5 h-5 text-[#A41E34]" />
+                    <Calculator className="w-5 h-5 text-[#2BBBAD]" />
                   </div>
                   <h3 className="text-lg font-semibold text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                     Est. Monthly Payment
                   </h3>
                 </div>
                 <div className="text-center py-4">
-                  <p className="text-3xl font-bold text-[#A41E34]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  <p className="text-3xl font-bold text-[#2BBBAD]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                     {new Intl.NumberFormat('en-US', {
                       style: 'currency',
                       currency: 'USD',
@@ -1221,7 +1221,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                 </div>
                 <Link
                   href="/mortgages"
-                  className="block w-full text-center text-[#A41E34] py-2 text-sm font-medium hover:underline"
+                  className="block w-full text-center text-[#2BBBAD] py-2 text-sm font-medium hover:underline"
                   style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                 >
                   Calculate with your terms →

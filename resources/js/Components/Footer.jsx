@@ -17,19 +17,26 @@ const Footer = () => {
               Contact Us
             </h4>
             <a
-              href="tel:888-441-6526"
+              href="tel:918-884-7653"
               style={{ fontFamily: '"Instrument Sans", sans-serif' }}
               className="text-[#DCD8D5] text-base hover:text-white transition-colors block mb-2"
             >
-              888-441-OKBO (6526)
+              918-884-7653 (SOLD)
+            </a>
+            <a
+              href="mailto:info@mandtrealty.com"
+              style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+              className="text-[#DCD8D5] text-sm hover:text-white transition-colors block mb-3"
+            >
+              info@mandtrealty.com
             </a>
             <p
               style={{ fontFamily: '"Instrument Sans", sans-serif' }}
               className="text-[#DCD8D5] text-sm leading-relaxed"
             >
               <span className="text-white/60">Mailing Address:</span><br />
-              1611 S Utica Avenue #515<br />
-              Tulsa, OK 74104
+              3701-A South Harvard Ave #320<br />
+              Tulsa, OK 74135
             </p>
           </div>
 
@@ -43,9 +50,11 @@ const Footer = () => {
             </h4>
             <ul className="space-y-2">
               {[
-                { label: 'List Your Property', href: '/list-property' },
-                { label: 'Properties', href: '/properties' },
-                { label: 'Our Packages', href: '/our-packages' },
+                { label: 'Our Listings', href: '/properties' },
+                { label: 'Our Services', href: '/our-packages' },
+                { label: 'How It Works', href: '/how-it-works' },
+                { label: 'Why Our Model Works', href: '/why-our-model-works' },
+                { label: 'Sellers', href: '/sellers' },
                 { label: 'FAQs', href: '/faqs' },
                 { label: 'Contact', href: '/contact' }
               ].map((item) => (
@@ -76,6 +85,7 @@ const Footer = () => {
                 { label: 'For Buyers', href: '/buyers' },
                 { label: 'Mortgage Info', href: '/mortgages' },
                 { label: 'About Us', href: '/about' },
+                { label: 'Testimonials', href: '/testimonials' },
                 { label: 'Privacy Policy', href: '/privacy-policy' },
                 { label: 'Terms of Use', href: '/terms-of-use' }
               ].map((item) => (
@@ -104,29 +114,29 @@ const Footer = () => {
               style={{ fontFamily: '"Instrument Sans", sans-serif' }}
               className="text-[#DCD8D5] text-sm leading-relaxed mb-4"
             >
-              List your property for free and save thousands in broker fees. No commissions, no hidden costs.
+              Ready to sell smarter? Schedule a consultation and discover how M&T Realty Group's modern approach can help you keep more of your equity.
             </p>
             <Link
-              href="/list-property"
+              href="/contact"
               style={{ fontFamily: '"Instrument Sans", sans-serif' }}
-              className="block w-full bg-[#A41E34] text-white rounded-lg px-4 py-2.5 text-sm font-medium text-center transition-all duration-300 hover:bg-[#8B1A2C] mb-3"
+              className="block w-full bg-[#2BBBAD] text-white rounded-lg px-4 py-2.5 text-sm font-medium text-center transition-all duration-300 hover:bg-[#249E93] mb-3"
             >
-              List Your Property Free
+              Schedule a Consultation
             </Link>
             <Link
               href="/our-packages"
               style={{ fontFamily: '"Instrument Sans", sans-serif' }}
               className="block w-full bg-white/10 border border-white/20 text-white rounded-lg px-4 py-2.5 text-sm font-medium text-center transition-all duration-300 hover:bg-white/20 mb-4"
             >
-              View Our Packages
+              View Our Services
             </Link>
             <p
               style={{ fontFamily: '"Instrument Sans", sans-serif' }}
               className="text-[#DCD8D5]/70 text-xs leading-relaxed"
             >
               Questions?{' '}
-              <a href="tel:888-441-6526" className="text-white underline hover:text-[#DCD8D5] transition-colors">
-                Call 888-441-OKBO
+              <a href="tel:918-884-7653" className="text-white underline hover:text-[#DCD8D5] transition-colors">
+                Call 918-884-SOLD
               </a>{' '}
               or{' '}
               <Link href="/contact" className="text-white underline hover:text-[#DCD8D5] transition-colors">
@@ -142,14 +152,14 @@ const Footer = () => {
             style={{ fontFamily: '"Instrument Sans", sans-serif' }}
             className="text-[#DCD8D5]/70 text-xs text-center leading-relaxed"
           >
-            M&T REALTY GROUP, License #180717, will perform all services that require a licensed broker in Oklahoma.{' '}
+            M&T REALTY GROUP, License #180717, is a licensed real estate brokerage in Oklahoma.{' '}
             <a
               href="https://www.zillow.com/profile/mntrealty"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#DCD8D5] underline hover:text-white transition-colors"
             >
-              Check out their Zillow Reviews
+              Check out our Zillow Reviews
             </a>
           </p>
         </div>
@@ -160,13 +170,13 @@ const Footer = () => {
             style={{ fontFamily: '"Instrument Sans", sans-serif' }}
             className="text-[#DCD8D5]/70 text-sm text-center md:text-left"
           >
-            © 1997-{new Date().getFullYear()} OKByOwner. All Rights Reserved.
+            &copy; {new Date().getFullYear()} M&T Realty Group. All Rights Reserved.
           </p>
 
           {/* Social Links */}
           <div className="flex items-center gap-4">
             <a
-              href="https://www.facebook.com/OKByOwner"
+              href="https://www.facebook.com/mandtrealtygroup"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#DCD8D5] hover:text-white transition-colors"
@@ -177,7 +187,7 @@ const Footer = () => {
               </svg>
             </a>
             <a
-              href="https://www.instagram.com/OKByOwner"
+              href="https://www.instagram.com/mandtrealtygroup"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#DCD8D5] hover:text-white transition-colors"
@@ -188,7 +198,7 @@ const Footer = () => {
               </svg>
             </a>
             <a
-              href="https://twitter.com/OKByOwner"
+              href="https://twitter.com/mandtrealtygrp"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#DCD8D5] hover:text-white transition-colors"
@@ -199,7 +209,7 @@ const Footer = () => {
               </svg>
             </a>
             <a
-              href="https://www.youtube.com/@OKByOwner"
+              href="https://www.youtube.com/@mandtrealtygroup"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#DCD8D5] hover:text-white transition-colors"
@@ -210,18 +220,7 @@ const Footer = () => {
               </svg>
             </a>
             <a
-              href="https://www.tiktok.com/@OKByOwner"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#DCD8D5] hover:text-white transition-colors"
-              aria-label="TikTok"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
-              </svg>
-            </a>
-            <a
-              href="https://www.linkedin.com/company/OKByOwner"
+              href="https://www.linkedin.com/company/mandtrealtygroup"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#DCD8D5] hover:text-white transition-colors"

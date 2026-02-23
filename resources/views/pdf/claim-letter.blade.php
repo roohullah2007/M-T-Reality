@@ -164,12 +164,12 @@
 </head>
 <body>
     <div class="header">
-        <div class="logo-text">OKByOwner</div>
+        <div class="logo-text">M&T Realty Group</div>
         <div class="tagline">Oklahoma's #1 For Sale By Owner Platform</div>
     </div>
 
     <div class="headline">
-        Selling on Zillow? Get Your FREE OKByOwner.com<br>Listing + More Exposure in Oklahoma!
+        Selling on Zillow? Get Your FREE M&T Realty Group.com<br>Listing + More Exposure in Oklahoma!
     </div>
 
     <div class="date">{{ $date }}</div>
@@ -190,7 +190,7 @@
     <div class="body-text">
         Congratulations on taking control of your home sale! We saw your For Sale By Owner listing
         on Zillow &mdash; smart move. Zillow is great for visibility, but most serious buyers browse
-        multiple listing sites. That's where <strong>OKByOwner.com</strong> can help.
+        multiple listing sites. That's where <strong>M&T Realty Group.com</strong> can help.
     </div>
 
     <div class="highlight-box">
@@ -216,10 +216,10 @@
     </ul>
 
     <div class="why-section">
-        <h3>Why Add OKByOwner to Your Marketing?</h3>
+        <h3>Why Add M&T Realty Group to Your Marketing?</h3>
         <p>
             Most Zillow FSBO listings aren't shown on MLS-fed sites, and that's where serious buyers
-            and their agents find homes. OKByOwner gives you a free additional touchpoint for buyers
+            and their agents find homes. M&T Realty Group gives you a free additional touchpoint for buyers
             searching in Oklahoma &mdash; boosting visibility without changing your Zillow listing.
             More eyes = better chance of a quicker, profitable sale.
         </p>
@@ -245,12 +245,12 @@
     </div>
 
     <div class="signature">
-        <p>Good luck on your sale &mdash; and welcome to OKByOwner!</p>
-        <p style="margin-top: 8px;"><strong>The OKByOwner Team</strong></p>
+        <p>Good luck on your sale &mdash; and welcome to M&T Realty Group!</p>
+        <p style="margin-top: 8px;"><strong>The M&T Realty Group Team</strong></p>
     </div>
 
     <div class="contact-info">
-        hello@okbyowner.com &bull; OKByOwner.com
+        hello@mandtrealty.com &bull; M&T Realty Group.com
     </div>
 </body>
 </html>

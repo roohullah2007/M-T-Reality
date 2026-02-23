@@ -139,7 +139,7 @@ export default function Dashboard({
                         </h2>
                         <Link
                             href={route('admin.properties.index')}
-                            className="text-sm text-[#A41E34] hover:underline flex items-center gap-1"
+                            className="text-sm text-[#2BBBAD] hover:underline flex items-center gap-1"
                         >
                             View All <ArrowRight className="w-4 h-4" />
                         </Link>
@@ -162,7 +162,7 @@ export default function Dashboard({
                                             </p>
                                         </div>
                                         <div className="flex items-center gap-3">
-                                            <span className="text-sm font-semibold text-[#A41E34]">
+                                            <span className="text-sm font-semibold text-[#2BBBAD]">
                                                 {property.price}
                                             </span>
                                             <span className={`px-2 py-1 text-xs rounded-full ${getStatusBadge(property.approval_status)}`}>
@@ -184,7 +184,7 @@ export default function Dashboard({
                         </h2>
                         <Link
                             href={route('admin.users.index')}
-                            className="text-sm text-[#A41E34] hover:underline flex items-center gap-1"
+                            className="text-sm text-[#2BBBAD] hover:underline flex items-center gap-1"
                         >
                             View All <ArrowRight className="w-4 h-4" />
                         </Link>
@@ -225,7 +225,7 @@ export default function Dashboard({
                         </h2>
                         <Link
                             href={route('admin.inquiries.index')}
-                            className="text-sm text-[#A41E34] hover:underline flex items-center gap-1"
+                            className="text-sm text-[#2BBBAD] hover:underline flex items-center gap-1"
                         >
                             View All <ArrowRight className="w-4 h-4" />
                         </Link>
@@ -265,7 +265,7 @@ export default function Dashboard({
                         </h2>
                         <Link
                             href={route('admin.activity.index')}
-                            className="text-sm text-[#A41E34] hover:underline flex items-center gap-1"
+                            className="text-sm text-[#2BBBAD] hover:underline flex items-center gap-1"
                         >
                             View All <ArrowRight className="w-4 h-4" />
                         </Link>
@@ -279,7 +279,7 @@ export default function Dashboard({
                             recentActivity.map((log) => (
                                 <div key={log.id} className="p-4 hover:bg-gray-50">
                                     <div className="flex items-start gap-3">
-                                        <div className="w-2 h-2 mt-2 bg-[#A41E34] rounded-full flex-shrink-0" />
+                                        <div className="w-2 h-2 mt-2 bg-[#2BBBAD] rounded-full flex-shrink-0" />
                                         <div className="flex-1 min-w-0">
                                             <p className="text-sm text-gray-900">
                                                 <span className="font-medium">{log.user}</span>{' '}

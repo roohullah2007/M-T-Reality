@@ -10,7 +10,7 @@ const ServicesSection = () => {
       title: 'Photos + Drone',
       link: '/our-packages',
       icon: Camera,
-      color: '#A41E34',
+      color: '#2BBBAD',
       modalTitle: 'Professional Photography + Drone',
       modalImage: 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=800',
       modalDescription: 'Full coverage photography with full use rights for your real estate listings. Our photos include interiors, exteriors, details, and neighborhood amenities—optimized for MLS and listing sites like Zillow and Trulia. Aerial video adds a cinematic, professional look that vastly boosts listing views.',
@@ -160,7 +160,7 @@ const ServicesSection = () => {
             {/* Badge */}
             <div className="inline-flex items-center bg-[#E5E1DC] rounded-lg px-4 py-2 mb-6">
               <span className="text-[#666] text-sm font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                Our Multimedia Services
+                Our Marketing Services
               </span>
             </div>
             {/* Main Heading */}
@@ -186,16 +186,16 @@ const ServicesSection = () => {
               className="text-[16px] text-[#666] font-medium mb-8 leading-relaxed"
               style={{ fontFamily: 'Instrument Sans, sans-serif', fontWeight: 500 }}
             >
-              Give your property the best first impression to lead to a faster, higher-priced sale. Listings with professional photos sell up to 32% faster and command around 4% higher prices.
+              We provide professional marketing that makes your listing stand out. Our photography, virtual tours, and media services help attract serious buyers and drive faster, higher-priced sales.
             </p>
 
             {/* Button */}
             <Link
               href="/our-packages"
-              className="inline-flex items-center gap-[0.4rem] bg-[#A41E34] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#8B1A2C]"
+              className="inline-flex items-center gap-[0.4rem] bg-[#2BBBAD] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#249E93]"
               style={{ fontFamily: 'Instrument Sans, sans-serif' }}
             >
-              <span>View Packages</span>
+              <span>View Our Services</span>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <mask id="mask0_56_2205" style={{ maskType: 'alpha' }} maskUnits="userSpaceOnUse" x="0" y="0" width="20" height="20">
                   <rect width="20" height="20" transform="matrix(-1 0 0 1 20 0)" fill="#D9D9D9"/>
@@ -367,7 +367,7 @@ const ServicesSection = () => {
                                   />
                                   {/* TikTok-style UI overlay */}
                                   <div className="absolute bottom-4 left-3 right-12">
-                                    <p className="text-white text-xs font-semibold drop-shadow-lg">@okbyowner</p>
+                                    <p className="text-white text-xs font-semibold drop-shadow-lg">@mandtrealtygroup</p>
                                     <p className="text-white text-[10px] mt-1 drop-shadow-lg">Beautiful 4BR home with stunning views! 🏠✨ #forsale #realestate #dreamhome</p>
                                   </div>
                                   {/* Side icons */}

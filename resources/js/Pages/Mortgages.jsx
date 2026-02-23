@@ -110,7 +110,7 @@ function Mortgages() {
 
   return (
     <>
-      <Head title="Mortgages - OKBYOWNER" />
+      <Head title="Mortgage" />
 
       {/* Hero Section */}
       <div className="relative pt-0 md:pt-[77px]">
@@ -148,7 +148,7 @@ function Mortgages() {
                 className="text-white text-[14px] md:text-[16px] font-medium mb-8 leading-relaxed max-w-2xl drop-shadow-lg"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                OKByOwner has partnered with T&M Mortgages as its preferred lender. Get pre-approved in minutes, compare rates from 25+ lenders, and close with confidence—one seamless experience from home search to keys in hand.
+                M&T Realty proudly partners with T&M Mortgages as its preferred lender. Get pre-approved in minutes, compare rates from 25+ lenders, and close with confidence—one seamless experience from home search to keys in hand.
               </p>
 
               {/* CTA Buttons */}
@@ -157,7 +157,7 @@ function Mortgages() {
                   href="https://tandmmortgages.morty.com/get-started/mortgage?loan_officer=terry-hassell"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="button inline-flex items-center gap-[0.4rem] bg-[#A41E34] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#8B1A2C]"
+                  className="button inline-flex items-center gap-[0.4rem] bg-[#2BBBAD] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#249E93]"
                   style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                 >
                   <BadgeCheck className="w-5 h-5" />
@@ -192,22 +192,22 @@ function Mortgages() {
         <div className="w-full max-w-[1280px] mx-auto px-4 sm:px-6 py-10 md:py-14">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             <div className="bg-white rounded-2xl p-6 md:p-8 hover:shadow-lg transition-all duration-300 text-center">
-              <div className="bg-[#A41E34]/10 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <Percent className="w-8 h-8 text-[#A41E34]" />
+              <div className="bg-[#2BBBAD]/10 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                <Percent className="w-8 h-8 text-[#2BBBAD]" />
               </div>
               <h3 className="text-[#111] font-semibold text-xl mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>25+ Lender Network</h3>
               <p className="text-[#666] text-sm leading-relaxed" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Instantly find the most competitive deal from over 25 lenders in our network.</p>
             </div>
             <div className="bg-white rounded-2xl p-6 md:p-8 hover:shadow-lg transition-all duration-300 text-center">
-              <div className="bg-[#A41E34]/10 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <Clock className="w-8 h-8 text-[#A41E34]" />
+              <div className="bg-[#2BBBAD]/10 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                <Clock className="w-8 h-8 text-[#2BBBAD]" />
               </div>
               <h3 className="text-[#111] font-semibold text-xl mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Get Pre-Approval</h3>
               <p className="text-[#666] text-sm leading-relaxed" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Complete a simple online application to receive fast pre-approval, giving you confidence and leverage in your home search.</p>
             </div>
             <div className="bg-white rounded-2xl p-6 md:p-8 hover:shadow-lg transition-all duration-300 text-center">
-              <div className="bg-[#A41E34]/10 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <Handshake className="w-8 h-8 text-[#A41E34]" />
+              <div className="bg-[#2BBBAD]/10 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                <Handshake className="w-8 h-8 text-[#2BBBAD]" />
               </div>
               <h3 className="text-[#111] font-semibold text-xl mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Close with Ease</h3>
               <p className="text-[#666] text-sm leading-relaxed" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Enjoy a streamlined closing process with digital tools and expert support, making finalizing your mortgage quick and hassle-free.</p>
@@ -223,8 +223,8 @@ function Mortgages() {
             {/* Left Side - Content */}
             <div>
               {/* Badge */}
-              <div className="inline-flex items-center bg-[#A41E34]/10 rounded-lg px-4 py-2 mb-6">
-                <span className="text-[#A41E34] text-sm font-semibold" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+              <div className="inline-flex items-center bg-[#2BBBAD]/10 rounded-lg px-4 py-2 mb-6">
+                <span className="text-[#2BBBAD] text-sm font-semibold" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   T&M Mortgages
                 </span>
               </div>
@@ -242,34 +242,34 @@ function Mortgages() {
                 className="text-[16px] text-[#666] font-medium mb-8 leading-relaxed"
                 style={{ fontFamily: 'Instrument Sans, sans-serif', fontWeight: 500 }}
               >
-                When you find your dream home on OKByOwner, getting financing shouldn't slow you down. T&M Mortgages is our preferred mortgage partner, providing you with a seamless home-buying experience from start to finish.
+                When you find your dream home through M&T Realty Group, getting financing shouldn't slow you down. T&M Mortgages is our preferred mortgage partner, providing you with a seamless home-buying experience from start to finish.
               </p>
 
               {/* Benefits */}
               <div className="space-y-4 mb-8">
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-[#A41E34] flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-6 h-6 text-[#2BBBAD] flex-shrink-0 mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Affordability</h4>
                     <p className="text-sm text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Services and tools that make buying a home affordable for you.</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-[#A41E34] flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-6 h-6 text-[#2BBBAD] flex-shrink-0 mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Low Price</h4>
                     <p className="text-sm text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Competitive pricing from our marketplace of top lenders.</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-[#A41E34] flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-6 h-6 text-[#2BBBAD] flex-shrink-0 mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Marketplace</h4>
                     <p className="text-sm text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Thousands of home financing options that can fit your needs.</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-[#A41E34] flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-6 h-6 text-[#2BBBAD] flex-shrink-0 mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Oklahoma Focused</h4>
                     <p className="text-sm text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Local expertise with knowledge of Oklahoma-specific programs and assistance.</p>
@@ -282,7 +282,7 @@ function Mortgages() {
                 href="https://tandmmortgages.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-[#A41E34] text-white rounded-full px-6 py-4 font-medium hover:bg-[#8B1A2C] transition-all duration-300"
+                className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white rounded-full px-6 py-4 font-medium hover:bg-[#249E93] transition-all duration-300"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
                 Start Your Application
@@ -338,7 +338,7 @@ function Mortgages() {
                 href="https://tandmmortgages.morty.com/get-started/mortgage?loan_officer=terry-hassell"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full bg-white text-[#A41E34] text-center py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300"
+                className="block w-full bg-white text-[#2BBBAD] text-center py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
                 Get Pre-Approved Now
@@ -368,7 +368,7 @@ function Mortgages() {
               href="https://tandmmortgages.com/#todays-rates"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-[#A41E34] text-white rounded-full px-6 py-3 font-medium hover:bg-[#8B1A2C] transition-all duration-300"
+              className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white rounded-full px-6 py-3 font-medium hover:bg-[#249E93] transition-all duration-300"
               style={{ fontFamily: 'Instrument Sans, sans-serif' }}
             >
               <TrendingUp className="w-5 h-5" />
@@ -404,10 +404,10 @@ function Mortgages() {
               return (
                 <div key={index} className="relative">
                   <div className="bg-[#EEEDEA] rounded-2xl p-8 h-full hover:shadow-lg transition-all duration-300 text-center">
-                    <div className="bg-[#A41E34] p-4 rounded-full w-16 h-16 mx-auto mb-5 flex items-center justify-center">
+                    <div className="bg-[#2BBBAD] p-4 rounded-full w-16 h-16 mx-auto mb-5 flex items-center justify-center">
                       <IconComponent className="w-8 h-8 text-white" />
                     </div>
-                    <div className="text-[#A41E34] text-sm font-semibold mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                    <div className="text-[#2BBBAD] text-sm font-semibold mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                       STEP {item.step}
                     </div>
                     <h3 className="text-xl font-semibold text-[#111] mb-3" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
@@ -433,7 +433,7 @@ function Mortgages() {
               href="https://tandmmortgages.morty.com/get-started/mortgage?loan_officer=terry-hassell"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-[#A41E34] text-white rounded-full px-8 py-4 font-medium hover:bg-[#8B1A2C] transition-all duration-300"
+              className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white rounded-full px-8 py-4 font-medium hover:bg-[#249E93] transition-all duration-300"
               style={{ fontFamily: 'Instrument Sans, sans-serif' }}
             >
               Get Pre-Approved with T&M
@@ -483,7 +483,7 @@ function Mortgages() {
                   <ul className="space-y-2 ml-[60px]">
                     {type.features.map((feature, fIndex) => (
                       <li key={fIndex} className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-[#A41E34] flex-shrink-0" />
+                        <CheckCircle className="w-4 h-4 text-[#2BBBAD] flex-shrink-0" />
                         <span className="text-sm text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>{feature}</span>
                       </li>
                     ))}
@@ -502,23 +502,23 @@ function Mortgages() {
                 </h3>
                 <ul className="space-y-3">
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-[#A41E34] flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-[#2BBBAD] flex-shrink-0 mt-0.5" />
                     <span className="text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>OHFA (Oklahoma Housing Finance Agency) first-time buyer programs</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-[#A41E34] flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-[#2BBBAD] flex-shrink-0 mt-0.5" />
                     <span className="text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Down payment assistance up to 3.5% of the loan amount</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-[#A41E34] flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-[#2BBBAD] flex-shrink-0 mt-0.5" />
                     <span className="text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Homebuyer education classes that unlock special rates</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-[#A41E34] flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-[#2BBBAD] flex-shrink-0 mt-0.5" />
                     <span className="text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Teacher, police, and firefighter home purchase programs</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-[#A41E34] flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-[#2BBBAD] flex-shrink-0 mt-0.5" />
                     <span className="text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Rural development loans with no down payment required</span>
                   </li>
                 </ul>
@@ -538,7 +538,7 @@ function Mortgages() {
                     href="https://tandmmortgages.com/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 bg-white text-[#A41E34] rounded-full px-6 py-3 font-medium transition-all duration-300 hover:bg-gray-100"
+                    className="inline-flex items-center gap-2 bg-white text-[#2BBBAD] rounded-full px-6 py-3 font-medium transition-all duration-300 hover:bg-gray-100"
                     style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                   >
                     Start Application

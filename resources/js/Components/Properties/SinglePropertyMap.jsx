@@ -185,7 +185,7 @@ const SinglePropertyMap = ({ property }) => {
           <Navigation className="w-4 h-4 text-gray-700" />
         </button>
         <button
-          className={`p-2 rounded-lg shadow-lg transition-colors ${mapType === 'satellite' ? 'bg-[#A41E34] text-white' : 'bg-white hover:bg-gray-50 text-gray-700'}`}
+          className={`p-2 rounded-lg shadow-lg transition-colors ${mapType === 'satellite' ? 'bg-[#2BBBAD] text-white' : 'bg-white hover:bg-gray-50 text-gray-700'}`}
           title={mapType === 'satellite' ? 'Switch to Road Map' : 'Switch to Satellite View'}
           onClick={handleToggleMapType}
         >
@@ -197,7 +197,7 @@ const SinglePropertyMap = ({ property }) => {
       {!mapInstance && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#A41E34] mx-auto mb-3"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2BBBAD] mx-auto mb-3"></div>
             <p className="text-gray-500 text-sm">Loading map...</p>
           </div>
         </div>

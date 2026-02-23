@@ -26,8 +26,8 @@ function Login({ status, canResetPassword }) {
                 <div className="flex justify-center items-center px-8 py-8">
                     <Link href="/">
                         <img
-                            src="/images/okbyowner-logo.png"
-                            alt="OKByOwner"
+                            src="/images/m&t_logo.png"
+                            alt="M&T Realty Group"
                             className="h-10"
                         />
                     </Link>
@@ -40,7 +40,7 @@ function Login({ status, canResetPassword }) {
                             className="text-[28px] font-bold text-[#111111] mb-2 text-center"
                             style={{ fontFamily: '"Instrument Sans", sans-serif' }}
                         >
-                            Sign in to OKByOwner
+                            Sign in to M&T Realty Group
                         </h1>
                         <p className="text-gray-500 text-center mb-8" style={{ fontFamily: '"Poppins", sans-serif' }}>
                             Welcome back! Sign in to continue
@@ -90,7 +90,7 @@ function Login({ status, canResetPassword }) {
                                     type="email"
                                     name="email"
                                     value={data.email}
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#A41E34] focus:ring-2 focus:ring-[#A41E34]/20 transition-all"
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#A41E34]/20 transition-all"
                                     placeholder="you@example.com"
                                     autoComplete="username"
                                     autoFocus
@@ -114,7 +114,7 @@ function Login({ status, canResetPassword }) {
                                     {canResetPassword && (
                                         <Link
                                             href={route('password.request')}
-                                            className="text-xs text-[#A41E34] hover:underline"
+                                            className="text-xs text-[#2BBBAD] hover:underline"
                                         >
                                             Forgot password?
                                         </Link>
@@ -126,7 +126,7 @@ function Login({ status, canResetPassword }) {
                                         type={showPassword ? 'text' : 'password'}
                                         name="password"
                                         value={data.password}
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#A41E34] focus:ring-2 focus:ring-[#A41E34]/20 transition-all pr-12"
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#A41E34]/20 transition-all pr-12"
                                         placeholder="Enter your password"
                                         autoComplete="current-password"
                                         onChange={(e) => setData('password', e.target.value)}
@@ -157,7 +157,7 @@ function Login({ status, canResetPassword }) {
                                     name="remember"
                                     checked={data.remember}
                                     onChange={(e) => setData('remember', e.target.checked)}
-                                    className="w-4 h-4 text-[#A41E34] border-gray-300 rounded focus:ring-[#A41E34]"
+                                    className="w-4 h-4 text-[#2BBBAD] border-gray-300 rounded focus:ring-[#A41E34]"
                                 />
                                 <label htmlFor="remember" className="ml-2 text-sm text-gray-600">
                                     Remember me
@@ -176,7 +176,7 @@ function Login({ status, canResetPassword }) {
 
                         <p className="mt-8 text-center text-sm text-gray-600">
                             Don't have an account?{' '}
-                            <Link href={route('register')} className="text-[#A41E34] font-medium hover:underline">
+                            <Link href={route('register')} className="text-[#2BBBAD] font-medium hover:underline">
                                 Sign up
                             </Link>
                         </p>

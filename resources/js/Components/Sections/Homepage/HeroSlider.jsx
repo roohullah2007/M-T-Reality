@@ -7,7 +7,7 @@ const HeroSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const services = [
-    { icon: Camera, label: 'Professional Photos + Drone', color: '#A41E34' },
+    { icon: Camera, label: 'Professional Photos + Drone', color: '#2BBBAD' },
     { icon: Compass, label: 'Floor Plans', color: '#3B82F6' },
     { icon: Video, label: 'Walkthrough Video Tour', color: '#10B981' },
     { icon: Box, label: 'Matterport 3D', color: '#8B5CF6' },
@@ -22,7 +22,7 @@ const HeroSlider = () => {
       image: 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=1920',
       title: 'Sell Your Oklahoma Property',
       subtitle: 'Save THOUSANDS in Broker Fees',
-      description: 'List your property for FREE on OK By Owner. No commissions, No Hidden Fees. Join thousands of Oklahoma sellers who\'ve successfully sold without a broker.'
+      description: 'List your property for FREE on M&T Realty Group. No commissions, No Hidden Fees. Join thousands of Oklahoma sellers who\'ve successfully sold without a broker.'
     },
     {
       id: 2,
