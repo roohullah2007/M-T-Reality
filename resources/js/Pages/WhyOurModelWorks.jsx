@@ -26,7 +26,7 @@ export default function WhyOurModelWorks() {
         <div className="relative min-h-[85vh] flex items-center overflow-hidden">
           {/* Background Image */}
           <img
-            src="https://images.pexels.com/photos/1546168/pexels-photo-1546168.jpeg?auto=compress&cs=tinysrgb&w=1920"
+            src="https://images.pexels.com/photos/1732414/pexels-photo-1732414.jpeg?auto=compress&cs=tinysrgb&w=1920"
             alt=""
             className="absolute inset-0 w-full h-full object-cover"
           />

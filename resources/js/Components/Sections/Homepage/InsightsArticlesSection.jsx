@@ -6,15 +6,15 @@ const InsightsArticlesSection = () => {
     {
       id: 1,
       date: 'January 15, 2025',
-      title: "Maximizing Your Home's Value: Top Tips for Oklahoma Sellers",
-      image: 'https://images.pexels.com/photos/7031706/pexels-photo-7031706.jpeg?auto=compress&cs=tinysrgb&w=1200',
+      title: "Oklahoma Housing Market Trends: What Sellers Need to Know",
+      image: 'https://images.pexels.com/photos/4846461/pexels-photo-4846461.jpeg?auto=compress&cs=tinysrgb&w=1200',
       link: '#'
     },
     {
       id: 2,
       date: 'January 10, 2025',
-      title: 'Why For Sale By Owner is Growing in Oklahoma Real Estate Market',
-      image: 'https://images.pexels.com/photos/6238297/pexels-photo-6238297.jpeg?auto=compress&cs=tinysrgb&w=1200',
+      title: 'How Professional Marketing Helps Oklahoma Homes Sell Faster',
+      image: 'https://images.pexels.com/photos/2121121/pexels-photo-2121121.jpeg?auto=compress&cs=tinysrgb&w=1200',
       link: '#'
     }
   ];
@@ -43,17 +43,17 @@ const InsightsArticlesSection = () => {
             style={{ fontFamily: '"Instrument Sans", sans-serif' }}
             className="text-[14px] font-medium text-[#666] max-w-[400px] text-left lg:text-right"
           >
-            Get expert tips, market insights, and practical advice to help you successfully sell your home without paying realtor commissions.
+            Get expert tips, market insights, and practical advice to help you buy or sell your home with confidence.
           </p>
 
           {/* Buttons */}
           <div className="flex flex-wrap gap-3">
             <a
               className="inline-flex items-center gap-[0.4rem] bg-[#413936] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#312926]"
-              href="/list-property"
+              href="/sellers"
               style={{ fontFamily: '"Instrument Sans", sans-serif' }}
             >
-              <span>List Your Property</span>
+              <span>Sell With Us</span>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <mask id="mask0_56_2205" maskUnits="userSpaceOnUse" x="0" y="0" width="20" height="20" style={{ maskType: 'alpha' }}>
                   <rect width="20" height="20" transform="matrix(-1 0 0 1 20 0)" fill="#D9D9D9"></rect>

@@ -128,7 +128,7 @@ function Testimonials() {
         <div className="relative min-h-[85vh] flex items-center overflow-hidden">
           <div className="absolute inset-0 z-0">
             <img
-              src="https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1920"
+              src="https://images.pexels.com/photos/2988860/pexels-photo-2988860.jpeg?auto=compress&cs=tinysrgb&w=1920"
               alt=""
               className="w-full h-full object-cover"
             />

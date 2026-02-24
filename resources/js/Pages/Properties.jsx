@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import { MapPin, Home, DollarSign, BedDouble, Bath, ChevronLeft, ChevronRight, Map, LayoutGrid, Calendar } from 'lucide-react';
+import { MapPin, Home, DollarSign, BedDouble, Bath, ChevronLeft, ChevronRight, Map, LayoutGrid, Calendar, Search, SlidersHorizontal, X } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
 import PropertyCard from '@/Components/PropertyCard';
 import PropertyMap from '@/Components/Properties/PropertyMap';
@@ -9,6 +9,7 @@ import AuthModal from '@/Components/AuthModal';
 function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, allPropertiesForMap = [] }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showMap, setShowMap] = useState(false);
+  const [showMoreFilters, setShowMoreFilters] = useState(false);
   const [searchParams, setSearchParams] = useState({
     keyword: String(filters.keyword || ''),
     location: String(filters.location || ''),
@@ -42,271 +43,260 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
     router.get('/properties', newParams, { preserveState: true });
   };
 
+  const clearFilters = () => {
+    setSearchParams({
+      keyword: '',
+      location: '',
+      status: 'for-sale',
+      propertyType: '',
+      priceMin: '',
+      priceMax: '',
+      bedrooms: '',
+      bathrooms: '',
+      schoolDistrict: '',
+      hasOpenHouse: '',
+      sort: 'newest',
+    });
+    router.get('/properties');
+  };
+
+  // Check if any filters are active
+  const hasActiveFilters = searchParams.location || searchParams.propertyType || searchParams.priceMin || searchParams.priceMax || searchParams.bedrooms || searchParams.bathrooms || searchParams.schoolDistrict || searchParams.hasOpenHouse;
+
   return (
     <>
       <Head title="Our Listings" />
 
       {/* Hero Section */}
-      <div className="relative bg-[#EEEDEA] pt-0 md:pt-[77px]">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-16">
-          <div className="max-w-3xl mx-auto text-center">
-            {/* Badge */}
-            <div className="inline-flex items-center bg-white rounded-lg px-4 py-2 mb-6">
-              <span className="text-[#666] text-sm font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                Browse Properties
-              </span>
+      <section className="relative">
+        <div className="relative min-h-[60vh] flex items-end overflow-hidden">
+          {/* Background Image */}
+          <img
+            src="https://images.pexels.com/photos/2119714/pexels-photo-2119714.jpeg?auto=compress&cs=tinysrgb&w=1920"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30"></div>
+
+          {/* Content */}
+          <div className="max-w-[1280px] mx-auto px-4 sm:px-6 relative z-10 w-full py-16 pt-[120px]">
+            <div className="max-w-3xl">
+              {/* Badge */}
+              <div className="inline-flex items-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-4 py-2 mb-6">
+                <span className="text-white/90 text-sm font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  Our Listings
+                </span>
+              </div>
+
+              <h1
+                className="text-white text-[36px] sm:text-[46px] md:text-[56px] font-medium leading-[1.1] mb-4 drop-shadow-2xl"
+                style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+              >
+                Find Your Next Home
+              </h1>
+              <p
+                className="text-white/80 text-[15px] sm:text-[17px] font-medium leading-relaxed max-w-2xl drop-shadow-lg"
+                style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+              >
+                Browse our curated collection of properties across Oklahoma — backed by experienced agents who put your goals first.
+              </p>
             </div>
 
-            {/* Page Title */}
-            <h1
-              className="text-[#111] text-[48px] md:text-[60px] font-medium leading-[1.1] mb-4"
-              style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-            >
-              Find Your Dream Property
-            </h1>
-
-            {/* Subtitle */}
-            <p
-              className="text-[#666] text-[14px] md:text-[16px] font-medium leading-relaxed max-w-2xl mx-auto"
-              style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-            >
-              Browse thousands of For Sale by Owner properties across Oklahoma.
-            </p>
-          </div>
-        </div>
-
-        {/* Bottom border */}
-        <div className="border-b border-[#D0CCC7]"></div>
-      </div>
-
-      {/* Filters Panel */}
-      <div className="bg-[#E5E1DC] border-b border-[#D0CCC7] py-6">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* Location */}
-              <div>
-                <label className="block text-sm font-medium text-[#111] mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Location
-                </label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
-                  <input
-                    type="text"
-                    placeholder="City or ZIP"
-                    className="w-full pl-10 pr-4 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#2BBBAD] transition-colors"
-                    style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                    value={searchParams.location}
-                    onChange={(e) => handleSearchChange('location', e.target.value)}
-                  />
-                </div>
-              </div>
-
-              {/* Property Type */}
-              <div>
-                <label className="block text-sm font-medium text-[#111] mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Property Type
-                </label>
-                <div className="relative">
-                  <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
-                  <select
-                    className="w-full pl-10 pr-4 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#2BBBAD] transition-colors appearance-none bg-white"
-                    style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                    value={searchParams.propertyType}
-                    onChange={(e) => handleSearchChange('propertyType', e.target.value)}
-                  >
-                    <option value="">All Types</option>
-                    <option value="single-family-home">Single Family Home</option>
-                    <option value="condos-townhomes-co-ops">Condos/Townhomes/Co-Ops</option>
-                    <option value="multi-family">Multi-Family</option>
-                    <option value="land">Lot/Land</option>
-                    <option value="farms-ranches">Farms/Ranches</option>
-                    <option value="mfd-mobile-homes">Manufactured/Mobile Homes</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Price Range */}
-              <div>
-                <label className="block text-sm font-medium text-[#111] mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Price Range
-                </label>
-                <div className="flex gap-2">
+            {/* Search Bar */}
+            <div className="mt-8">
+              <form onSubmit={handleSearch} className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 sm:p-4">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  {/* Location Input */}
                   <div className="relative flex-1">
-                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
+                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
                     <input
                       type="text"
-                      placeholder="Min"
-                      className="w-full pl-10 pr-2 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#2BBBAD] transition-colors"
+                      placeholder="Search by city, ZIP, or neighborhood..."
+                      className="w-full pl-12 pr-4 py-3.5 bg-white/10 border border-white/15 rounded-xl text-white text-[15px] placeholder-white/40 outline-none focus:border-[#2BBBAD] focus:bg-white/15 transition-all"
                       style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                      value={searchParams.priceMin}
-                      onChange={(e) => handleSearchChange('priceMin', e.target.value)}
+                      value={searchParams.location}
+                      onChange={(e) => handleSearchChange('location', e.target.value)}
                     />
                   </div>
-                  <div className="relative flex-1">
-                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
-                    <input
-                      type="text"
-                      placeholder="Max"
-                      className="w-full pl-10 pr-2 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#2BBBAD] transition-colors"
-                      style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                      value={searchParams.priceMax}
-                      onChange={(e) => handleSearchChange('priceMax', e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
 
-              {/* Beds & Baths */}
-              <div>
-                <label className="block text-sm font-medium text-[#111] mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Beds & Baths
-                </label>
-                <div className="flex gap-2">
-                  <div className="relative flex-1">
-                    <BedDouble className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
+                  {/* Property Type */}
+                  <div className="relative sm:w-[200px]">
+                    <Home className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
                     <select
-                      className="w-full pl-10 pr-2 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#2BBBAD] transition-colors appearance-none bg-white"
+                      className="w-full pl-12 pr-4 py-3.5 bg-white/10 border border-white/15 rounded-xl text-white text-[15px] outline-none focus:border-[#2BBBAD] transition-all appearance-none cursor-pointer"
                       style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                      value={searchParams.bedrooms}
-                      onChange={(e) => handleSearchChange('bedrooms', e.target.value)}
+                      value={searchParams.propertyType}
+                      onChange={(e) => handleSearchChange('propertyType', e.target.value)}
                     >
-                      <option value="">Beds</option>
-                      <option value="1">1+</option>
-                      <option value="2">2+</option>
-                      <option value="3">3+</option>
-                      <option value="4">4+</option>
-                      <option value="5">5+</option>
+                      <option value="" className="text-[#111]">All Types</option>
+                      <option value="single-family-home" className="text-[#111]">Single Family</option>
+                      <option value="condos-townhomes-co-ops" className="text-[#111]">Condos/Townhomes</option>
+                      <option value="multi-family" className="text-[#111]">Multi-Family</option>
+                      <option value="land" className="text-[#111]">Lot/Land</option>
+                      <option value="farms-ranches" className="text-[#111]">Farms/Ranches</option>
+                      <option value="mfd-mobile-homes" className="text-[#111]">Mobile Homes</option>
                     </select>
                   </div>
-                  <div className="relative flex-1">
-                    <Bath className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
+
+                  {/* Status */}
+                  <div className="relative sm:w-[160px]">
                     <select
-                      className="w-full pl-10 pr-2 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#2BBBAD] transition-colors appearance-none bg-white"
+                      className="w-full px-4 py-3.5 bg-white/10 border border-white/15 rounded-xl text-white text-[15px] outline-none focus:border-[#2BBBAD] transition-all appearance-none cursor-pointer"
                       style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                      value={searchParams.bathrooms}
-                      onChange={(e) => handleSearchChange('bathrooms', e.target.value)}
+                      value={searchParams.status}
+                      onChange={(e) => handleSearchChange('status', e.target.value)}
                     >
-                      <option value="">Baths</option>
-                      <option value="1">1+</option>
-                      <option value="2">2+</option>
-                      <option value="3">3+</option>
-                      <option value="4">4+</option>
+                      <option value="all" className="text-[#111]">All Listings</option>
+                      <option value="for-sale" className="text-[#111]">For Sale</option>
+                      <option value="pending" className="text-[#111]">Pending</option>
+                      <option value="sold" className="text-[#111]">Sold</option>
+                      {isAdmin && <option value="inactive" className="text-[#111]">Inactive</option>}
                     </select>
                   </div>
-                </div>
-              </div>
-            </div>
 
-            {/* Second Row - School District */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-              {/* School District */}
-              <div>
-                <label className="block text-sm font-medium text-[#111] mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  School District
-                </label>
-                <div className="relative">
-                  <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                  </svg>
-                  <input
-                    type="text"
-                    placeholder="Search school district"
-                    className="w-full pl-10 pr-4 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#2BBBAD] transition-colors"
-                    style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                    value={searchParams.schoolDistrict}
-                    onChange={(e) => handleSearchChange('schoolDistrict', e.target.value)}
-                  />
-                </div>
-              </div>
-
-              {/* Open Houses */}
-              <div>
-                <label className="block text-sm font-medium text-[#111] mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Open Houses
-                </label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
-                  <select
-                    className="w-full pl-10 pr-4 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#2BBBAD] transition-colors appearance-none bg-white"
-                    style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                    value={searchParams.hasOpenHouse}
-                    onChange={(e) => handleSearchChange('hasOpenHouse', e.target.value)}
-                  >
-                    <option value="">Any</option>
-                    <option value="yes">Has Open House</option>
-                    <option value="this_weekend">This Weekend</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* Status Dropdown & Action Buttons */}
-            <div className="flex justify-between items-center mt-4 gap-3">
-              {/* Status Dropdown */}
-              <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Status:
-                </label>
-                <div className="relative">
-                  <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
-                  <select
-                    value={searchParams.status}
-                    onChange={(e) => {
-                      const newParams = { ...searchParams, status: e.target.value };
-                      setSearchParams(newParams);
-                      router.get('/properties', newParams, { preserveState: true });
-                    }}
-                    className="min-w-[160px] pl-10 pr-4 py-2.5 border border-[#D0CCC7] rounded-xl text-sm outline-none focus:border-[#999] transition-colors appearance-none bg-white cursor-pointer"
+                  {/* Search Button */}
+                  <button
+                    type="submit"
+                    className="flex items-center justify-center gap-2 bg-[#2BBBAD] text-white rounded-xl px-6 py-3.5 font-semibold text-[15px] hover:bg-[#249E93] transition-all duration-300 whitespace-nowrap"
                     style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                   >
-                    <option value="all">All Listings</option>
-                    <option value="for-sale">For Sale</option>
-                    <option value="pending">Pending</option>
-                    <option value="sold">Sold</option>
-                    {isAdmin && <option value="inactive">Inactive</option>}
-                  </select>
+                    <Search className="w-5 h-5" />
+                    <span className="hidden sm:inline">Search</span>
+                  </button>
                 </div>
-              </div>
 
-              {/* Action Buttons */}
-              <div className="flex gap-3">
-                <button
-                  onClick={() => {
-                    setSearchParams({
-                      keyword: '',
-                      location: '',
-                      status: 'for-sale',
-                      propertyType: '',
-                      priceMin: '',
-                      priceMax: '',
-                      bedrooms: '',
-                      bathrooms: '',
-                      schoolDistrict: '',
-                      hasOpenHouse: '',
-                      sort: 'newest',
-                    });
-                    router.get('/properties');
-                  }}
-                  className="px-6 py-2.5 border border-[#D0CCC7] rounded-xl text-sm font-medium text-[#111] hover:bg-white transition-colors"
-                  style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                >
-                  Clear All
-                </button>
-                <button
-                  onClick={handleSearch}
-                  className="px-6 py-2.5 bg-[#2BBBAD] text-white rounded-xl text-sm font-medium hover:bg-[#249E93] transition-colors"
-                  style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                >
-                  Apply Filters
-                </button>
-              </div>
+                {/* More Filters Toggle */}
+                <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => setShowMoreFilters(!showMoreFilters)}
+                    className="flex items-center gap-2 text-white/70 text-sm font-medium hover:text-white transition-colors"
+                    style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                  >
+                    <SlidersHorizontal className="w-4 h-4" />
+                    {showMoreFilters ? 'Less Filters' : 'More Filters'}
+                    {hasActiveFilters && (
+                      <span className="w-2 h-2 bg-[#2BBBAD] rounded-full"></span>
+                    )}
+                  </button>
+
+                  {hasActiveFilters && (
+                    <button
+                      type="button"
+                      onClick={clearFilters}
+                      className="flex items-center gap-1.5 text-white/50 text-sm font-medium hover:text-white transition-colors"
+                      style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                    >
+                      <X className="w-3.5 h-3.5" />
+                      Clear All
+                    </button>
+                  )}
+                </div>
+
+                {/* Expanded Filters */}
+                {showMoreFilters && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-3 pt-3 border-t border-white/10">
+                    {/* Price Min */}
+                    <div className="relative">
+                      <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
+                      <input
+                        type="text"
+                        placeholder="Min Price"
+                        className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/15 rounded-xl text-white text-sm placeholder-white/40 outline-none focus:border-[#2BBBAD] transition-all"
+                        style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                        value={searchParams.priceMin}
+                        onChange={(e) => handleSearchChange('priceMin', e.target.value)}
+                      />
+                    </div>
+
+                    {/* Price Max */}
+                    <div className="relative">
+                      <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
+                      <input
+                        type="text"
+                        placeholder="Max Price"
+                        className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/15 rounded-xl text-white text-sm placeholder-white/40 outline-none focus:border-[#2BBBAD] transition-all"
+                        style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                        value={searchParams.priceMax}
+                        onChange={(e) => handleSearchChange('priceMax', e.target.value)}
+                      />
+                    </div>
+
+                    {/* Bedrooms */}
+                    <div className="relative">
+                      <BedDouble className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
+                      <select
+                        className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/15 rounded-xl text-white text-sm outline-none focus:border-[#2BBBAD] transition-all appearance-none cursor-pointer"
+                        style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                        value={searchParams.bedrooms}
+                        onChange={(e) => handleSearchChange('bedrooms', e.target.value)}
+                      >
+                        <option value="" className="text-[#111]">Bedrooms</option>
+                        <option value="1" className="text-[#111]">1+ Beds</option>
+                        <option value="2" className="text-[#111]">2+ Beds</option>
+                        <option value="3" className="text-[#111]">3+ Beds</option>
+                        <option value="4" className="text-[#111]">4+ Beds</option>
+                        <option value="5" className="text-[#111]">5+ Beds</option>
+                      </select>
+                    </div>
+
+                    {/* Bathrooms */}
+                    <div className="relative">
+                      <Bath className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
+                      <select
+                        className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/15 rounded-xl text-white text-sm outline-none focus:border-[#2BBBAD] transition-all appearance-none cursor-pointer"
+                        style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                        value={searchParams.bathrooms}
+                        onChange={(e) => handleSearchChange('bathrooms', e.target.value)}
+                      >
+                        <option value="" className="text-[#111]">Bathrooms</option>
+                        <option value="1" className="text-[#111]">1+ Baths</option>
+                        <option value="2" className="text-[#111]">2+ Baths</option>
+                        <option value="3" className="text-[#111]">3+ Baths</option>
+                        <option value="4" className="text-[#111]">4+ Baths</option>
+                      </select>
+                    </div>
+
+                    {/* School District */}
+                    <div className="relative">
+                      <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                      </svg>
+                      <input
+                        type="text"
+                        placeholder="School District"
+                        className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/15 rounded-xl text-white text-sm placeholder-white/40 outline-none focus:border-[#2BBBAD] transition-all"
+                        style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                        value={searchParams.schoolDistrict}
+                        onChange={(e) => handleSearchChange('schoolDistrict', e.target.value)}
+                      />
+                    </div>
+
+                    {/* Open Houses */}
+                    <div className="relative">
+                      <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
+                      <select
+                        className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/15 rounded-xl text-white text-sm outline-none focus:border-[#2BBBAD] transition-all appearance-none cursor-pointer"
+                        style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                        value={searchParams.hasOpenHouse}
+                        onChange={(e) => handleSearchChange('hasOpenHouse', e.target.value)}
+                      >
+                        <option value="" className="text-[#111]">Open Houses</option>
+                        <option value="yes" className="text-[#111]">Has Open House</option>
+                        <option value="this_weekend" className="text-[#111]">This Weekend</option>
+                      </select>
+                    </div>
+                  </div>
+                )}
+              </form>
             </div>
           </div>
         </div>
+      </section>
 
       {/* Properties Section */}
-      <section className="bg-[#EEEDEA] py-16 md:py-20">
+      <section className="bg-[#EEEDEA] py-12 md:py-16">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
           {/* Results Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
@@ -391,22 +381,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
               </p>
               {(searchParams.keyword || searchParams.location) && (
                 <button
-                  onClick={() => {
-                    setSearchParams({
-                      keyword: '',
-                      location: '',
-                      status: 'for-sale',
-                      propertyType: '',
-                      priceMin: '',
-                      priceMax: '',
-                      bedrooms: '',
-                      bathrooms: '',
-                      schoolDistrict: '',
-                      hasOpenHouse: '',
-                      sort: 'newest',
-                    });
-                    router.get('/properties');
-                  }}
+                  onClick={clearFilters}
                   className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white px-6 py-3 rounded-full font-medium hover:bg-[#249E93] transition-colors"
                   style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                 >
@@ -443,13 +418,11 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
               {/* Page Numbers */}
               {Array.from({ length: pagination.last_page }, (_, i) => i + 1)
                 .filter(page => {
-                  // Show first, last, current, and adjacent pages
                   return page === 1 ||
                     page === pagination.last_page ||
                     Math.abs(page - pagination.current_page) <= 1;
                 })
                 .map((page, index, array) => {
-                  // Add ellipsis if there's a gap
                   const showEllipsisBefore = index > 0 && page - array[index - 1] > 1;
 
                   return (

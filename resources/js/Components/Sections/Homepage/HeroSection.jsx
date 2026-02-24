@@ -12,7 +12,7 @@ const HeroSection = () => {
       headlineTop: 'Sell Smarter.',
       headlineBottom: 'Keep More of Your Equity.',
       description: 'Full-service real estate representation — without outdated overhead. M&T Realty Group is a modern brokerage built for today\'s market. We deliver expert strategy, professional marketing, and skilled negotiation.',
-      image: 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1920',
+      image: 'https://images.pexels.com/photos/2102587/pexels-photo-2102587.jpeg?auto=compress&cs=tinysrgb&w=1920',
       ctaPrimary: { text: 'Schedule a Consultation', href: '/contact' },
       ctaSecondary: { text: 'Browse Our Listings', href: '/properties', icon: Search }
     },
@@ -21,7 +21,7 @@ const HeroSection = () => {
       headlineTop: 'Professional Service.',
       headlineBottom: 'Proven Results.',
       description: 'Strategic pricing, professional photography, full MLS exposure, skilled negotiation, and contract-to-close management. Same service. Streamlined structure.',
-      image: 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1920',
+      image: 'https://images.pexels.com/photos/2462015/pexels-photo-2462015.jpeg?auto=compress&cs=tinysrgb&w=1920',
       ctaPrimary: { text: 'Our Services', href: '/our-packages' },
       ctaSecondary: { text: 'Learn How It Works', href: '/how-it-works', icon: Search }
     },
@@ -30,7 +30,7 @@ const HeroSection = () => {
       headlineTop: 'The Modern',
       headlineBottom: 'Brokerage Model',
       description: 'We believe commission should reflect service and performance — not outdated business models. Our lean structure means our clients typically pay significantly less than traditional listing fees.',
-      image: 'https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1920',
+      image: 'https://images.pexels.com/photos/8134820/pexels-photo-8134820.jpeg?auto=compress&cs=tinysrgb&w=1920',
       ctaPrimary: { text: 'Get Started', href: '/sellers' },
       ctaSecondary: { text: 'About Us', href: '/about', icon: Search }
     }

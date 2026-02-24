@@ -11,7 +11,7 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
 
   // Pages with hero sections where header should be transparent
-  const heroPages = ['/', '/how-it-works', '/why-our-model-works', '/about', '/testimonials', '/contact'];
+  const heroPages = ['/', '/how-it-works', '/why-our-model-works', '/about', '/testimonials', '/contact', '/properties', '/buyers', '/sellers', '/our-packages', '/mortgages'];
   const isHeroPage = heroPages.includes(currentUrl.split('?')[0]);
 
   useEffect(() => {

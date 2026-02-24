@@ -113,46 +113,43 @@ function Mortgages() {
       <Head title="Mortgage" />
 
       {/* Hero Section */}
-      <div className="relative pt-0 md:pt-[77px]">
-        <div className="relative min-h-[60vh] flex items-center py-16 md:py-20 overflow-hidden">
+      <section className="relative">
+        <div className="relative min-h-[85vh] flex items-center overflow-hidden">
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
             <img
-              src="https://images.pexels.com/photos/8293778/pexels-photo-8293778.jpeg?auto=compress&cs=tinysrgb&w=1920"
-              alt="Mortgage Financing - Oklahoma"
+              src="https://images.pexels.com/photos/2251247/pexels-photo-2251247.jpeg?auto=compress&cs=tinysrgb&w=1920"
+              alt=""
               className="w-full h-full object-cover"
             />
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/35"></div>
           </div>
 
-          <div className="max-w-[1280px] mx-auto px-4 sm:px-6 relative z-10 w-full">
+          <div className="max-w-[1280px] mx-auto px-4 sm:px-6 relative z-10 w-full py-20 pt-[120px]">
             <div className="max-w-3xl">
               {/* Badge */}
-              <div className="inline-flex items-center bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-                <span className="text-white text-sm font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+              <div className="inline-flex items-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-4 py-2 mb-6">
+                <span className="text-white/90 text-sm font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   Powered by T&M Mortgages
                 </span>
               </div>
 
-              {/* Main Heading */}
               <h1
-                className="text-white text-[40px] sm:text-[50px] md:text-[60px] font-medium leading-[1.1] mb-5 drop-shadow-2xl"
+                className="text-white text-[40px] sm:text-[50px] md:text-[60px] font-medium leading-[1.1] mb-6 drop-shadow-2xl"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                Get a mortgage from<br />T&M Mortgages
+                Get a Mortgage from<br />T&M Mortgages
               </h1>
 
-              {/* Subheading */}
               <p
-                className="text-white text-[14px] md:text-[16px] font-medium mb-8 leading-relaxed max-w-2xl drop-shadow-lg"
+                className="text-white/90 text-[16px] sm:text-[18px] font-medium mb-8 leading-relaxed max-w-2xl drop-shadow-lg"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                M&T Realty proudly partners with T&M Mortgages as its preferred lender. Get pre-approved in minutes, compare rates from 25+ lenders, and close with confidence—one seamless experience from home search to keys in hand.
+                M&T Realty proudly partners with T&M Mortgages to provide our buyers with trusted lending solutions, competitive rates, and a smooth, stress-free financing experience.
               </p>
 
               {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-[0.4rem] mb-12">
+              <div className="flex flex-col sm:flex-row gap-[0.4rem]">
                 <a
                   href="https://tandmmortgages.morty.com/get-started/mortgage?loan_officer=terry-hassell"
                   target="_blank"
@@ -185,7 +182,7 @@ function Mortgages() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Features Section - After Hero */}
       <div className="bg-[#EEEDEA] border-b border-gray-300">
@@ -532,7 +529,7 @@ function Mortgages() {
                     Get Pre-Approved with T&M
                   </h4>
                   <p className="text-sm text-white/80 mb-4" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                    Our preferred mortgage team understands Oklahoma programs and FSBO transactions. Let us help you get the best rate.
+                    Our preferred mortgage team understands Oklahoma programs and local market dynamics. Let us help you get the best rate.
                   </p>
                   <a
                     href="https://tandmmortgages.com/"

@@ -32,7 +32,7 @@ function About() {
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
             <img
-              src="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=1920"
+              src="https://images.pexels.com/photos/3184416/pexels-photo-3184416.jpeg?auto=compress&cs=tinysrgb&w=1920"
               alt=""
               className="w-full h-full object-cover"
             />

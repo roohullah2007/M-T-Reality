@@ -43,7 +43,7 @@ export default function HowItWorks() {
         <div className="relative min-h-[85vh] flex items-center overflow-hidden">
           {/* Background Image */}
           <img
-            src="https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1920"
+            src="https://images.pexels.com/photos/2724749/pexels-photo-2724749.jpeg?auto=compress&cs=tinysrgb&w=1920"
             alt=""
             className="absolute inset-0 w-full h-full object-cover"
           />

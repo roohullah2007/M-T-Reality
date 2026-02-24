@@ -23,7 +23,7 @@ const SellingSection = () => {
           <div className="relative order-2 lg:order-1">
             <div className="relative">
               <img
-                src="https://images.pexels.com/photos/280222/pexels-photo-280222.jpeg?auto=compress&cs=tinysrgb&w=1200"
+                src="https://images.pexels.com/photos/2062426/pexels-photo-2062426.jpeg?auto=compress&cs=tinysrgb&w=1200"
                 alt="Beautiful home listing by M&T Realty Group"
                 className="w-full h-[500px] object-cover rounded-2xl shadow-xl"
               />

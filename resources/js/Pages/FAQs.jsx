@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
-import { HelpCircle, ChevronDown, Home, DollarSign, Users, FileText } from 'lucide-react';
+import { HelpCircle, ChevronDown, Home, DollarSign, Users, FileText, Key } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
 
 const FAQItem = ({ question, answer, isOpen, onClick }) => {
@@ -56,12 +56,12 @@ function FAQs() {
           answer: "M&T Realty Group is a modern real estate brokerage in Oklahoma that provides full-service listing representation with an efficient, streamlined structure. We deliver expert strategy, professional marketing, and skilled negotiation while helping our clients keep more of their equity."
         },
         {
-          question: "How do I get started listing my property?",
-          answer: "Simply click on 'List Your Property' button, create a free account, and follow our step-by-step listing process. You'll add property details, upload photos, set your price, and your listing will be live within minutes."
+          question: "How do I get started selling my home?",
+          answer: "Getting started is easy — simply visit our Sellers page or contact us to schedule a free consultation. An M&T agent will discuss your goals, evaluate your property, and create a customized selling strategy tailored to your timeline and needs."
         },
         {
           question: "Do I need real estate experience to work with M&T Realty Group?",
-          answer: "No, you don't need any real estate experience. M&T Realty Group handles everything for you — from pricing strategy to closing. We provide full-service representation so you can sell with confidence."
+          answer: "Not at all. M&T Realty Group handles everything for you — from pricing strategy and professional marketing to showings, negotiation, and closing. We provide full-service representation so you can sell with confidence."
         },
         {
           question: "What areas does M&T Realty Group serve?",
@@ -74,20 +74,20 @@ function FAQs() {
       icon: DollarSign,
       faqs: [
         {
-          question: "How much does it cost to list my property?",
-          answer: "Our basic listing is completely FREE forever. We also offer premium packages starting at $250 for additional exposure and marketing tools."
+          question: "How much does it cost to list with M&T Realty Group?",
+          answer: "We offer competitive, transparent commission rates that are clearly outlined before you sign a listing agreement. Our lean business model allows us to deliver full-service representation at rates that save you money compared to traditional brokerages."
         },
         {
           question: "Are there any hidden fees?",
-          answer: "Absolutely not. We believe in complete transparency. Our free listing is truly free with no hidden charges. Premium features are clearly priced upfront, and you only pay for what you choose to use."
+          answer: "Absolutely not. We believe in complete transparency. Our fees are clearly outlined upfront in your listing agreement, with no surprise charges at closing. What we quote is what you pay."
         },
         {
-          question: "How much money can I save by selling FSBO?",
-          answer: "Traditional real estate commissions typically range from 5-6% of your home's sale price. On a $300,000 home, that's $15,000-$18,000 in commissions. By working with M&T Realty Group, you keep that money in your pocket."
+          question: "How does M&T Realty Group save me money?",
+          answer: "Our lean, efficient business model eliminates the unnecessary overhead of traditional brokerages. We pass those savings directly to our clients through competitive commission rates — without sacrificing the quality of service, marketing, or representation."
         },
         {
-          question: "Do I need to offer a buyer's agent commission?",
-          answer: "While not required, offering a buyer's agent commission (typically 2.5-3%) can significantly increase your property's exposure since many buyers work with agents. You decide what commission, if any, to offer."
+          question: "What's included in my listing fee?",
+          answer: "Your listing includes professional photography, MLS listing with syndication to 100+ websites, digital marketing, showings management, expert negotiation, and full contract-to-close support. Everything you need for a successful sale is included."
         }
       ]
     },
@@ -96,24 +96,24 @@ function FAQs() {
       icon: FileText,
       faqs: [
         {
-          question: "What is an MLS flat-fee listing?",
-          answer: "An MLS flat-fee listing is a service that allows you to list your property on the Multiple Listing Service (MLS) for a one-time flat fee instead of paying a percentage-based commission to a traditional real estate agent. This gives you access to thousands of potential buyers through the MLS while saving significantly on commission costs."
+          question: "How will M&T Realty Group market my property?",
+          answer: "We provide comprehensive marketing for every listing, including professional HDR photography, drone aerials, MLS listing with syndication to Zillow, Trulia, Realtor.com, and 100+ websites, targeted digital advertising, social media campaigns, and open house promotion."
         },
         {
           question: "Will my listing appear on Zillow, Trulia, and Realtor.com?",
-          answer: "Yes! With our MLS integration package, your listing will automatically syndicate to major real estate websites including Zillow, Trulia, Realtor.com, and many others, giving your property maximum exposure."
+          answer: "Yes! Every M&T listing is placed on the MLS and automatically syndicates to all major real estate websites including Zillow, Trulia, Realtor.com, and many more — ensuring your property gets maximum buyer exposure."
         },
         {
-          question: "How long does my listing stay active?",
-          answer: "Your listing stays active until you sell your property or choose to remove it. There are no time limits on our free listings. Premium MLS listings typically run for 6 months and can be renewed."
+          question: "Does M&T provide professional photography?",
+          answer: "Absolutely. Every listing includes professional HDR photography, and depending on your property, we may also include drone aerials, virtual twilight images, and 3D virtual tours to showcase your home at its best."
         },
         {
-          question: "Can I edit my listing after it's published?",
-          answer: "Yes! You have complete control over your listing and can update details, change photos, adjust pricing, or modify any information at any time through your account dashboard."
+          question: "How long will my home be listed?",
+          answer: "Listing agreements are typically 6 months, but we work with you on a timeline that fits your situation. Our goal is to sell your home as quickly as possible at the best price — most of our listings sell well within the agreement period."
         },
         {
-          question: "What photos should I include in my listing?",
-          answer: "Include at least 10-15 high-quality photos showing exterior views, all main rooms, kitchen, bathrooms, special features, and outdoor spaces. Good lighting and clean, decluttered spaces make the best impression. We also offer professional photography services."
+          question: "Can I request changes to my listing after it goes live?",
+          answer: "Of course. Your M&T agent handles all listing updates for you — price adjustments, photo changes, description updates, or any other modifications. Simply reach out to your agent and we'll take care of it promptly."
         }
       ]
     },
@@ -122,24 +122,46 @@ function FAQs() {
       icon: Users,
       faqs: [
         {
-          question: "How do buyers contact me about my property?",
-          answer: "Buyers and their agents can contact you directly through the contact information you provide in your listing. You'll receive inquiries via phone, email, or through our messaging system, and you can respond on your own schedule."
+          question: "How do buyers schedule showings on my property?",
+          answer: "All showing requests come through M&T Realty Group. We coordinate scheduling with you, screen potential buyers, and can conduct showings on your behalf — so you don't have to manage inquiries or be present for every visit."
         },
         {
-          question: "Can I schedule and conduct showings myself?",
-          answer: "Yes! You have complete control over showings. You can schedule them at times that work for you and show the property yourself. Many sellers find this gives them the opportunity to highlight their home's best features directly to potential buyers."
+          question: "Does M&T handle showings and open houses?",
+          answer: "Yes. Your M&T agent manages all showings and open house events. We handle buyer screening, scheduling, property presentation, and follow-up — giving you a hands-off experience while ensuring your home is professionally represented."
         },
         {
           question: "What happens when I receive an offer?",
-          answer: "When you receive an offer, you can review it and choose to accept, reject, or counter. You can find many of the forms on the Oklahoma Real Estate Commission's website. You may also contact M&T Realty Group, which offers à la carte real estate services."
+          answer: "Your M&T agent will present every offer to you, explain the terms, and provide expert guidance on how to respond. We handle all negotiations on your behalf to secure the best possible price and terms, and manage counteroffers until we reach an agreement."
         },
         {
-          question: "How long does it typically take to sell a FSBO property?",
-          answer: "Sale times vary based on pricing, location, condition, and market conditions. Properties listed on the MLS and priced competitively typically sell within 30-90 days. Proper pricing, good photos, and being responsive to inquiries are key to a quick sale."
+          question: "How long does it typically take to sell?",
+          answer: "Sale timelines vary based on pricing, location, condition, and market conditions. Properties priced competitively with professional marketing typically sell within 30-90 days. Your M&T agent will provide a realistic timeline based on your specific market."
         },
         {
-          question: "What paperwork do I need to sell my home?",
-          answer: "You'll need a purchase agreement, seller's disclosure form, title documents, and closing documents. You can find many of the forms on the Oklahoma Real Estate Commission's website. You may also contact M&T Realty Group, which offers à la carte real estate services."
+          question: "Does M&T handle the paperwork and closing process?",
+          answer: "Yes — we manage the entire transaction from accepted offer to closing day. This includes coordinating inspections, appraisals, title work, and all required documentation. Your agent ensures every detail is handled so you can close with confidence."
+        }
+      ]
+    },
+    {
+      title: 'Buying Process',
+      icon: Key,
+      faqs: [
+        {
+          question: "Can M&T Realty Group help me buy a home?",
+          answer: "Yes! M&T Realty Group represents both buyers and sellers. Our buyer agents will help you find the right property, schedule showings, negotiate on your behalf, and guide you through every step of the purchasing process."
+        },
+        {
+          question: "How do I start searching for homes?",
+          answer: "Visit our Properties page to browse current listings, or contact us to connect with a buyer's agent who can set up custom searches based on your criteria, budget, and preferred neighborhoods."
+        },
+        {
+          question: "Does M&T help with mortgage pre-approval?",
+          answer: "We proudly partner with T&M Mortgages to provide our buyers with trusted lending solutions. Our agents can connect you with a lending specialist to get pre-approved, compare rates, and ensure a smooth financing process."
+        },
+        {
+          question: "What does it cost to work with a buyer's agent?",
+          answer: "In most transactions, the seller pays the buyer's agent commission, so our buyer representation comes at no direct cost to you. We'll explain exactly how compensation works before you begin your home search."
         }
       ]
     }
@@ -155,7 +177,7 @@ function FAQs() {
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
             <img
-              src="https://images.pexels.com/photos/1370704/pexels-photo-1370704.jpeg?auto=compress&cs=tinysrgb&w=1920"
+              src="https://images.pexels.com/photos/2079234/pexels-photo-2079234.jpeg?auto=compress&cs=tinysrgb&w=1920"
               alt="FAQ"
               className="w-full h-full object-cover"
             />
@@ -186,7 +208,7 @@ function FAQs() {
                 className="text-white text-[14px] md:text-[16px] font-medium mb-8 leading-relaxed max-w-2xl drop-shadow-lg"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                Find answers to common questions about selling your home by owner. Can't find what you're looking for? Contact our support team.
+                Find answers to common questions about buying and selling with M&T Realty Group. Can't find what you're looking for? Contact our team.
               </p>
 
               {/* CTA Button */}
@@ -268,7 +290,7 @@ function FAQs() {
             className="text-white/90 text-[16px] font-medium mb-8 max-w-2xl mx-auto"
             style={{ fontFamily: 'Instrument Sans, sans-serif' }}
           >
-            Our support team is here to help you every step of the way. Get in touch and we'll respond within 24 hours.
+            Our team is here to help you every step of the way. Get in touch and we'll respond within 24 hours.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -279,11 +301,11 @@ function FAQs() {
               Contact Us
             </Link>
             <Link
-              href="/list-property"
+              href="/sellers"
               className="inline-flex items-center justify-center gap-2 bg-transparent border-2 border-white text-white rounded-full px-8 py-4 font-medium transition-all duration-300 hover:bg-white/10"
               style={{ fontFamily: 'Instrument Sans, sans-serif' }}
             >
-              List Your Property
+              Sell With Us
             </Link>
           </div>
         </div>
@@ -292,7 +314,6 @@ function FAQs() {
   );
 }
 
-// Specify MainLayout for this page to include Header and Footer
 FAQs.layout = (page) => <MainLayout>{page}</MainLayout>;
 
 export default FAQs;

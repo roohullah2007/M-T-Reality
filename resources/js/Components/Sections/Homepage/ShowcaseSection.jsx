@@ -11,7 +11,7 @@ const ShowcaseSection = () => {
           {/* Left Image - For Sellers */}
           <div className="relative overflow-hidden rounded-3xl md:w-[443px] w-full flex-shrink-0">
             <img
-              src="https://images.pexels.com/photos/1643389/pexels-photo-1643389.jpeg?auto=compress&cs=tinysrgb&w=1200"
+              src="https://images.pexels.com/photos/2227832/pexels-photo-2227832.jpeg?auto=compress&cs=tinysrgb&w=1200"
               alt="Beautiful Oklahoma home exterior"
               className="w-full h-[400px] md:h-[600px] object-cover"
             />
@@ -25,7 +25,7 @@ const ShowcaseSection = () => {
                 For Sellers
               </h3>
               <p className="text-white/90 text-sm md:text-base mb-4 leading-relaxed" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                List your property for FREE. No commissions, no hidden fees. Keep 100% of your home's value.
+                Get professional representation, strategic pricing, and full MLS exposure to sell your home faster and for more.
               </p>
               <Link
                 href="/sellers"
@@ -43,7 +43,7 @@ const ShowcaseSection = () => {
           {/* Right Image - For Buyers */}
           <div className="relative overflow-hidden rounded-3xl flex-1">
             <img
-              src="https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&w=1920"
+              src="https://images.pexels.com/photos/3935350/pexels-photo-3935350.jpeg?auto=compress&cs=tinysrgb&w=1920"
               alt="Modern Oklahoma property interior"
               className="w-full h-[400px] md:h-[600px] object-cover"
             />
@@ -57,7 +57,7 @@ const ShowcaseSection = () => {
                 For Buyers
               </h3>
               <p className="text-white/90 text-sm md:text-base mb-4 leading-relaxed" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                Find your dream home directly from owners. Save thousands with no buyer agent commissions.
+                Browse our exclusive listings and let our agents guide you to the perfect home with expert support every step of the way.
               </p>
               <Link
                 href="/buyers"
