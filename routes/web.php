@@ -140,8 +140,6 @@ Route::middleware(['auth'])->prefix('dashboard')->name('dashboard')->group(funct
     Route::get('/favorites', function () { return redirect('/'); })->name('.favorites');
     Route::get('/service-requests', function () { return redirect('/'); })->name('.service-requests');
     Route::get('/media-orders', function () { return redirect('/'); })->name('.media-orders');
-    // Catch-all for any other dashboard URL
-    Route::any('/{any}', function () { return redirect('/'); })->where('any', '.*');
 });
 
 // User Profile routes
