@@ -130,57 +130,18 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 // Property inquiry submission route (public)
 Route::post('/inquiry', [InquiryController::class, 'store'])->name('inquiry.store');
 
-// User Dashboard
-Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard')->group(function () {
-    // Dashboard Overview
-    Route::get('/', [UserDashboardController::class, 'index']);
-
-    // Listings Management
-    Route::get('/listings', [UserDashboardController::class, 'listings'])->name('.listings');
-    Route::get('/listings/create', function () {
-        return Inertia::render('ListProperty');
-    })->name('.listings.create');
-    Route::get('/listings/{property}/edit', [UserDashboardController::class, 'editListing'])->name('.listings.edit');
-    Route::put('/listings/{property}', [UserDashboardController::class, 'updateListing'])->name('.listings.update');
-    Route::delete('/listings/{property}', [UserDashboardController::class, 'destroyListing'])->name('.listings.destroy');
-    Route::post('/listings/{property}/photos', [UserDashboardController::class, 'addPhotos'])->name('.listings.photos.add');
-    Route::post('/listings/{property}/photos/remove', [UserDashboardController::class, 'removePhoto'])->name('.listings.photos.remove');
-    Route::post('/listings/{property}/photos/reorder', [UserDashboardController::class, 'reorderPhotos'])->name('.listings.photos.reorder');
-
-    // Open Houses
-    Route::post('/listings/{property}/open-houses', [UserDashboardController::class, 'storeOpenHouse'])->name('.listings.open-houses.store');
-    Route::put('/listings/{property}/open-houses/{openHouse}', [UserDashboardController::class, 'updateOpenHouse'])->name('.listings.open-houses.update');
-    Route::delete('/listings/{property}/open-houses/{openHouse}', [UserDashboardController::class, 'destroyOpenHouse'])->name('.listings.open-houses.destroy');
-
-    // Messages (Inquiries)
-    Route::get('/messages', [UserDashboardController::class, 'messages'])->name('.messages');
-    Route::post('/messages/{inquiry}/read', [UserDashboardController::class, 'markMessageRead'])->name('.messages.read');
-    Route::post('/messages/{inquiry}/responded', [UserDashboardController::class, 'markMessageResponded'])->name('.messages.responded');
-    Route::delete('/messages/{inquiry}', [UserDashboardController::class, 'destroyMessage'])->name('.messages.destroy');
-
-    // Favorites
-    Route::get('/favorites', [UserDashboardController::class, 'favorites'])->name('.favorites');
-    Route::post('/favorites/{property}', [UserDashboardController::class, 'addFavorite'])->name('.favorites.add');
-    Route::delete('/favorites/{property}', [UserDashboardController::class, 'removeFavorite'])->name('.favorites.remove');
-
-    // Service Requests (Upgrades)
-    Route::get('/service-requests', [UserDashboardController::class, 'serviceRequests'])->name('.service-requests');
-    Route::get('/listings/{property}/upgrade', [UserDashboardController::class, 'showUpgradeOptions'])->name('.listings.upgrade');
-    Route::post('/listings/{property}/upgrade', [UserDashboardController::class, 'submitUpgradeRequest'])->name('.listings.upgrade.submit');
-    Route::post('/service-requests/{serviceRequest}/cancel', [UserDashboardController::class, 'cancelUpgradeRequest'])->name('.service-requests.cancel');
-
-    // QR Code Generation (Authenticated - for property owners)
-    Route::get('/listings/{property}/qrcode', [QrCodeController::class, 'generate'])->name('.listings.qrcode');
-    Route::get('/listings/{property}/qrcode/preview', [QrCodeController::class, 'preview'])->name('.listings.qrcode.preview');
-    Route::get('/listings/{property}/qrcode/info', [QrCodeController::class, 'getStickerInfo'])->name('.listings.qrcode.info');
-
-    // Order Free Materials (Stickers, Yard Signs)
-    Route::post('/listings/{property}/order', [UserDashboardController::class, 'submitOrder'])->name('.listings.order');
-
-    // Media Orders
-    Route::get('/media-orders', [MediaOrderController::class, 'userOrders'])->name('.media-orders');
-    Route::get('/media-orders/{mediaOrder}', [MediaOrderController::class, 'show'])->name('.media-orders.show');
-    Route::post('/media-orders/{mediaOrder}/cancel', [MediaOrderController::class, 'cancel'])->name('.media-orders.cancel');
+// User Dashboard - DISABLED FOR NOW (all routes redirect to home)
+// Named routes are kept so backend redirects and route() calls don't break
+Route::middleware(['auth'])->prefix('dashboard')->name('dashboard')->group(function () {
+    Route::get('/', function () { return redirect('/'); });
+    Route::get('/listings', function () { return redirect('/'); })->name('.listings');
+    Route::get('/listings/create', function () { return redirect('/'); })->name('.listings.create');
+    Route::get('/messages', function () { return redirect('/'); })->name('.messages');
+    Route::get('/favorites', function () { return redirect('/'); })->name('.favorites');
+    Route::get('/service-requests', function () { return redirect('/'); })->name('.service-requests');
+    Route::get('/media-orders', function () { return redirect('/'); })->name('.media-orders');
+    // Catch-all for any other dashboard URL
+    Route::any('/dashboard/{any}', function () { return redirect('/'); })->where('any', '.*');
 });
 
 // User Profile routes
