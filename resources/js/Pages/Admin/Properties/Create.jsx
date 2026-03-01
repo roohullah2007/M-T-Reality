@@ -306,7 +306,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                         <select
                             value={data.user_id}
                             onChange={e => handleUserChange(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                         >
                             <option value="">Select a user...</option>
                             {users.map(user => (
@@ -332,7 +332,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 type="text"
                                 value={data.property_title}
                                 onChange={e => setData('property_title', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                             {errors.property_title && <p className="text-red-500 text-sm mt-1">{errors.property_title}</p>}
                         </div>
@@ -341,7 +341,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                             <select
                                 value={data.property_type}
                                 onChange={e => setData('property_type', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             >
                                 {propertyTypes.map(type => (
                                     <option key={type.value} value={type.value}>{type.label}</option>
@@ -366,7 +366,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                         status: statusMap[newListingStatus] || 'for-sale'
                                     }));
                                 }}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             >
                                 {statusOptions.map((status) => (
                                     <option key={status.value} value={status.value}>{status.label}</option>
@@ -382,7 +382,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                     type="number"
                                     value={data.price}
                                     onChange={e => setData('price', e.target.value)}
-                                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                 />
                             </div>
                             {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
@@ -393,7 +393,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                     type="checkbox"
                                     checked={data.is_featured}
                                     onChange={e => setData('is_featured', e.target.checked)}
-                                    className="w-4 h-4 text-[#2BBBAD] border-gray-300 rounded focus:ring-[#A41E34]"
+                                    className="w-4 h-4 text-[#2BBBAD] border-gray-300 rounded focus:ring-[#2BBBAD]"
                                 />
                                 <span className="text-sm font-medium text-gray-700">Featured</span>
                             </label>
@@ -402,7 +402,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                     type="checkbox"
                                     checked={data.is_active}
                                     onChange={e => setData('is_active', e.target.checked)}
-                                    className="w-4 h-4 text-[#2BBBAD] border-gray-300 rounded focus:ring-[#A41E34]"
+                                    className="w-4 h-4 text-[#2BBBAD] border-gray-300 rounded focus:ring-[#2BBBAD]"
                                 />
                                 <span className="text-sm font-medium text-gray-700">Active</span>
                             </label>
@@ -423,7 +423,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 type="text"
                                 value={data.address}
                                 onChange={e => setData('address', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                             {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
                         </div>
@@ -433,7 +433,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 type="text"
                                 value={data.city}
                                 onChange={e => setData('city', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                             {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
                         </div>
@@ -443,7 +443,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 type="text"
                                 value={data.state}
                                 onChange={e => setData('state', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                         </div>
                         <div>
@@ -452,7 +452,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 type="text"
                                 value={data.zip_code}
                                 onChange={e => setData('zip_code', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                             {errors.zip_code && <p className="text-red-500 text-sm mt-1">{errors.zip_code}</p>}
                         </div>
@@ -462,7 +462,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 type="text"
                                 value={data.subdivision}
                                 onChange={e => setData('subdivision', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                         </div>
 
@@ -498,7 +498,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 value={data.school_district}
                                 onChange={e => setData('school_district', e.target.value)}
                                 placeholder="e.g., Tulsa Public Schools"
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                             {errors.school_district && <p className="text-red-500 text-sm mt-1">{errors.school_district}</p>}
                         </div>
@@ -509,7 +509,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 value={data.grade_school}
                                 onChange={e => setData('grade_school', e.target.value)}
                                 placeholder="Elementary school name"
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                         </div>
                         <div>
@@ -519,7 +519,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 value={data.middle_school}
                                 onChange={e => setData('middle_school', e.target.value)}
                                 placeholder="Middle school name"
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                         </div>
                         <div>
@@ -529,7 +529,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 value={data.high_school}
                                 onChange={e => setData('high_school', e.target.value)}
                                 placeholder="High school name"
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                         </div>
                     </div>
@@ -550,7 +550,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                         type="number"
                                         value={data.bedrooms}
                                         onChange={e => setData('bedrooms', e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                     />
                                 </div>
                                 <div>
@@ -559,7 +559,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                         type="number"
                                         value={data.full_bathrooms}
                                         onChange={e => setData('full_bathrooms', e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                     />
                                 </div>
                                 <div>
@@ -568,7 +568,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                         type="number"
                                         value={data.half_bathrooms}
                                         onChange={e => setData('half_bathrooms', e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                     />
                                 </div>
                                 <div>
@@ -577,7 +577,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                         type="number"
                                         value={data.sqft}
                                         onChange={e => setData('sqft', e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                     />
                                 </div>
                                 <div>
@@ -586,7 +586,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                         type="number"
                                         value={data.year_built}
                                         onChange={e => setData('year_built', e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                     />
                                 </div>
                             </>
@@ -600,7 +600,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 value={data.lot_size}
                                 onChange={e => setData('lot_size', e.target.value)}
                                 placeholder="e.g., 43560"
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                         </div>
 
@@ -614,7 +614,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                         value={data.acres}
                                         onChange={e => setData('acres', e.target.value)}
                                         placeholder="e.g., 5.5"
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                     />
                                     <p className="text-xs text-gray-400 mt-1">Acres x 43,560 = sqft</p>
                                 </div>
@@ -625,7 +625,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                         value={data.zoning}
                                         onChange={e => setData('zoning', e.target.value)}
                                         placeholder="e.g., Agricultural, Residential"
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                     />
                                 </div>
                             </>
@@ -638,7 +638,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                             value={data.description}
                             onChange={e => setData('description', e.target.value)}
                             rows={5}
-                            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             placeholder={data.property_type === 'land' ? 'Describe your lot/land...' : 'Describe your property...'}
                         />
                         {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
@@ -659,7 +659,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 value={data.virtual_tour_url}
                                 onChange={e => setData('virtual_tour_url', e.target.value)}
                                 placeholder="https://..."
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                         </div>
                         <div>
@@ -669,7 +669,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 value={data.matterport_url}
                                 onChange={e => setData('matterport_url', e.target.value)}
                                 placeholder="https://my.matterport.com/show/?m=..."
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                         </div>
                         <div>
@@ -679,7 +679,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 value={data.video_tour_url}
                                 onChange={e => setData('video_tour_url', e.target.value)}
                                 placeholder="https://..."
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                         </div>
                         <div>
@@ -689,7 +689,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 value={data.mls_virtual_tour_url}
                                 onChange={e => setData('mls_virtual_tour_url', e.target.value)}
                                 placeholder="https://... (MLS-compliant, no branding)"
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                             <p className="text-xs text-gray-400 mt-1">Clean URL only. No branding or YouTube links for MLS export.</p>
                         </div>
@@ -749,7 +749,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 type="text"
                                 value={data.contact_name}
                                 onChange={e => setData('contact_name', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                         </div>
                         <div>
@@ -758,7 +758,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 type="email"
                                 value={data.contact_email}
                                 onChange={e => setData('contact_email', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                         </div>
                         <div>
@@ -767,7 +767,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 type="tel"
                                 value={data.contact_phone}
                                 onChange={e => setData('contact_phone', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                         </div>
                     </div>

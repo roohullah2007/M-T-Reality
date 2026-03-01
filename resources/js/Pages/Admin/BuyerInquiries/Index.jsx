@@ -165,7 +165,7 @@ export default function BuyerInquiriesIndex({ inquiries, filters = {}, counts = 
                             placeholder="Search by name, email, phone, or area..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                         />
                     </div>
                     <button
@@ -421,7 +421,7 @@ export default function BuyerInquiriesIndex({ inquiries, filters = {}, counts = 
                                         updateStatus(selectedInquiry, e.target.value);
                                         setSelectedInquiry({ ...selectedInquiry, status: e.target.value });
                                     }}
-                                    className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                    className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                 >
                                     <option value="new">New Lead</option>
                                     <option value="contacted">Contacted</option>
@@ -438,7 +438,7 @@ export default function BuyerInquiriesIndex({ inquiries, filters = {}, counts = 
                                     onChange={(e) => setNotes(e.target.value)}
                                     rows={4}
                                     placeholder="Add notes about this lead..."
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD] resize-none"
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD] resize-none"
                                 />
                             </div>
 

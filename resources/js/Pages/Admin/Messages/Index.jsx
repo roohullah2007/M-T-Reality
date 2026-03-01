@@ -161,7 +161,7 @@ export default function MessagesIndex({ messages, filters = {}, counts = {} }) {
                                 placeholder="Search messages..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                         </div>
                         <button
@@ -214,7 +214,7 @@ export default function MessagesIndex({ messages, filters = {}, counts = {} }) {
                                         type="checkbox"
                                         checked={selectedMessages.length === messageList.length && messageList.length > 0}
                                         onChange={toggleSelectAll}
-                                        className="rounded border-gray-300 text-[#2BBBAD] focus:ring-[#A41E34]"
+                                        className="rounded border-gray-300 text-[#2BBBAD] focus:ring-[#2BBBAD]"
                                     />
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">From</th>
@@ -241,7 +241,7 @@ export default function MessagesIndex({ messages, filters = {}, counts = {} }) {
                                                 type="checkbox"
                                                 checked={selectedMessages.includes(message.id)}
                                                 onChange={() => toggleSelect(message.id)}
-                                                className="rounded border-gray-300 text-[#2BBBAD] focus:ring-[#A41E34]"
+                                                className="rounded border-gray-300 text-[#2BBBAD] focus:ring-[#2BBBAD]"
                                             />
                                         </td>
                                         <td className="px-6 py-4">
@@ -309,7 +309,7 @@ export default function MessagesIndex({ messages, filters = {}, counts = {} }) {
                                                         e.stopPropagation();
                                                         window.location.href = `mailto:${message.email}?subject=Re: ${encodeURIComponent(message.subject || 'Your Message')}`;
                                                     }}
-                                                    className="p-2 text-[#2BBBAD] hover:text-[#8B1A2C] hover:bg-red-50 rounded-lg"
+                                                    className="p-2 text-[#2BBBAD] hover:text-[#249E93] hover:bg-red-50 rounded-lg"
                                                     title="Reply via Email"
                                                 >
                                                     <Send className="w-4 h-4" />

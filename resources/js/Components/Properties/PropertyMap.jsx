@@ -132,7 +132,7 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
       const statusColor = property.listing_status === 'sold' ? '#374151'
         : property.listing_status === 'pending' ? '#CA8A04'
         : property.listing_status === 'inactive' ? '#6B7280'
-        : '#A41E34';
+        : '#2BBBAD';
 
       // Create custom marker element
       const markerDiv = document.createElement('div');
@@ -186,7 +186,7 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
           <a href="/properties/${property.slug || property.id}" style="text-decoration:none;color:inherit;">
             <img src="${photo}" alt="${property.property_title || ''}" style="width:100%;height:120px;object-fit:cover;object-position:center 20%;border-radius:8px 8px 0 0;" onerror="this.src='/images/property-placeholder.svg'" />
             <div style="padding:10px;">
-              <div style="font-weight:700;font-size:16px;color:#A41E34;margin-bottom:4px;">$${Number(property.price).toLocaleString()}</div>
+              <div style="font-weight:700;font-size:16px;color:#2BBBAD;margin-bottom:4px;">$${Number(property.price).toLocaleString()}</div>
               <div style="font-size:13px;color:#111;margin-bottom:4px;line-height:1.3;">${property.address || ''}</div>
               <div style="font-size:12px;color:#666;">${property.city || ''}, ${property.state || 'OK'} ${property.zip_code || ''}</div>
               <div style="font-size:12px;color:#555;margin-top:6px;">${property.bedrooms || 0} BD | ${baths} BA | ${property.sqft ? Number(property.sqft).toLocaleString() + ' sq ft' : 'N/A'}</div>

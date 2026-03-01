@@ -199,7 +199,7 @@ export default function UpgradeProperty({ property, existingRequests = [] }) {
                                 isPending
                                     ? 'opacity-75 cursor-not-allowed'
                                     : isSelected
-                                        ? 'ring-2 ring-[#A41E34] border-transparent'
+                                        ? 'ring-2 ring-[#2BBBAD] border-transparent'
                                         : 'hover:shadow-md border border-transparent'
                             }`}
                         >
@@ -257,7 +257,7 @@ export default function UpgradeProperty({ property, existingRequests = [] }) {
                                     value={data.preferred_date}
                                     onChange={(e) => setData('preferred_date', e.target.value)}
                                     min={new Date().toISOString().split('T')[0]}
-                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                 />
                                 {errors.preferred_date && (
                                     <p className="text-red-500 text-sm mt-1">{errors.preferred_date}</p>
@@ -272,7 +272,7 @@ export default function UpgradeProperty({ property, existingRequests = [] }) {
                                 <select
                                     value={data.preferred_time}
                                     onChange={(e) => setData('preferred_time', e.target.value)}
-                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                 >
                                     <option value="">Select a time</option>
                                     <option value="morning">Morning (9 AM - 12 PM)</option>
@@ -291,7 +291,7 @@ export default function UpgradeProperty({ property, existingRequests = [] }) {
                             value={data.notes}
                             onChange={(e) => setData('notes', e.target.value)}
                             rows={4}
-                            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             placeholder="Any special instructions or questions..."
                         />
                         {errors.notes && (

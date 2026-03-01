@@ -29,7 +29,7 @@ export default function AlreadyClaimed({ property }) {
                             <div className="space-y-3">
                                 <Link
                                     href={route('login')}
-                                    className="block w-full py-3 bg-[#2BBBAD] text-white rounded-lg font-semibold hover:bg-[#8a1a2c] transition-colors"
+                                    className="block w-full py-3 bg-[#2BBBAD] text-white rounded-lg font-semibold hover:bg-[#249E93] transition-colors"
                                 >
                                     Log In to Your Account
                                 </Link>

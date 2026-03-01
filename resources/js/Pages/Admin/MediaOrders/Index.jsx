@@ -170,7 +170,7 @@ function Index({ orders, counts, filters }) {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search by address, email, or name..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
               />
             </div>
             <button
@@ -291,7 +291,7 @@ function Index({ orders, counts, filters }) {
                     <td className="px-6 py-4 text-right">
                       <Link
                         href={`/admin/media-orders/${order.id}`}
-                        className="text-[#2BBBAD] hover:text-[#8B1A2C] font-medium text-sm"
+                        className="text-[#2BBBAD] hover:text-[#249E93] font-medium text-sm"
                       >
                         View Details
                       </Link>

@@ -145,7 +145,7 @@ function VerifyCode({ email }) {
                                         onChange={(e) => handleDigitChange(index, e.target.value)}
                                         onKeyDown={(e) => handleKeyDown(index, e)}
                                         onPaste={handlePaste}
-                                        className="w-12 h-14 sm:w-14 sm:h-16 text-center text-2xl font-bold border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#A41E34]/20 transition-all"
+                                        className="w-12 h-14 sm:w-14 sm:h-16 text-center text-2xl font-bold border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#2BBBAD]/20 transition-all"
                                         autoComplete="off"
                                     />
                                 ))}

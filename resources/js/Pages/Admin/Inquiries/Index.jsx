@@ -151,7 +151,7 @@ export default function InquiriesIndex({ inquiries, filters = {}, counts = {} })
                                 placeholder="Search inquiries..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                         </div>
                         <button
@@ -204,7 +204,7 @@ export default function InquiriesIndex({ inquiries, filters = {}, counts = {} })
                                         type="checkbox"
                                         checked={selectedInquiries.length === inquiryList.length && inquiryList.length > 0}
                                         onChange={toggleSelectAll}
-                                        className="rounded border-gray-300 text-[#2BBBAD] focus:ring-[#A41E34]"
+                                        className="rounded border-gray-300 text-[#2BBBAD] focus:ring-[#2BBBAD]"
                                     />
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">From</th>
@@ -231,7 +231,7 @@ export default function InquiriesIndex({ inquiries, filters = {}, counts = {} })
                                                 type="checkbox"
                                                 checked={selectedInquiries.includes(inquiry.id)}
                                                 onChange={() => toggleSelect(inquiry.id)}
-                                                className="rounded border-gray-300 text-[#2BBBAD] focus:ring-[#A41E34]"
+                                                className="rounded border-gray-300 text-[#2BBBAD] focus:ring-[#2BBBAD]"
                                             />
                                         </td>
                                         <td className="px-6 py-4">

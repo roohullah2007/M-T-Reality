@@ -89,7 +89,7 @@ export default function Favorites({ favorites, filters = {} }) {
                             placeholder="Search saved properties..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                         />
                     </form>
                     <div className="flex gap-2">
@@ -160,7 +160,7 @@ export default function Favorites({ favorites, filters = {} }) {
                                     }}
                                     className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50"
                                 >
-                                    <Heart className="w-5 h-5 text-[#2BBBAD] fill-[#A41E34]" />
+                                    <Heart className="w-5 h-5 text-[#2BBBAD] fill-[#2BBBAD]" />
                                 </button>
                             </div>
 

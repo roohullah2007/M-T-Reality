@@ -161,7 +161,7 @@ function Register() {
                                     type="text"
                                     name="name"
                                     value={data.name}
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#A41E34]/20 transition-all"
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#2BBBAD]/20 transition-all"
                                     placeholder="John Doe"
                                     autoComplete="name"
                                     autoFocus
@@ -183,7 +183,7 @@ function Register() {
                                     type="email"
                                     name="email"
                                     value={data.email}
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#A41E34]/20 transition-all"
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#2BBBAD]/20 transition-all"
                                     placeholder="you@example.com"
                                     autoComplete="username"
                                     onChange={(e) => setData('email', e.target.value)}
@@ -205,7 +205,7 @@ function Register() {
                                         type={showPassword ? 'text' : 'password'}
                                         name="password"
                                         value={data.password}
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#A41E34]/20 transition-all pr-12"
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#2BBBAD]/20 transition-all pr-12"
                                         placeholder="Create a strong password"
                                         autoComplete="new-password"
                                         onChange={(e) => setData('password', e.target.value)}
@@ -259,7 +259,7 @@ function Register() {
                                         type={showConfirmPassword ? 'text' : 'password'}
                                         name="password_confirmation"
                                         value={data.password_confirmation}
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#A41E34]/20 transition-all pr-12"
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#2BBBAD]/20 transition-all pr-12"
                                         placeholder="Confirm your password"
                                         autoComplete="new-password"
                                         onChange={(e) => setData('password_confirmation', e.target.value)}

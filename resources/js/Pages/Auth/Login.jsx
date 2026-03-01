@@ -90,7 +90,7 @@ function Login({ status, canResetPassword }) {
                                     type="email"
                                     name="email"
                                     value={data.email}
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#A41E34]/20 transition-all"
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#2BBBAD]/20 transition-all"
                                     placeholder="you@example.com"
                                     autoComplete="username"
                                     autoFocus
@@ -126,7 +126,7 @@ function Login({ status, canResetPassword }) {
                                         type={showPassword ? 'text' : 'password'}
                                         name="password"
                                         value={data.password}
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#A41E34]/20 transition-all pr-12"
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2BBBAD] focus:ring-2 focus:ring-[#2BBBAD]/20 transition-all pr-12"
                                         placeholder="Enter your password"
                                         autoComplete="current-password"
                                         onChange={(e) => setData('password', e.target.value)}
@@ -157,7 +157,7 @@ function Login({ status, canResetPassword }) {
                                     name="remember"
                                     checked={data.remember}
                                     onChange={(e) => setData('remember', e.target.checked)}
-                                    className="w-4 h-4 text-[#2BBBAD] border-gray-300 rounded focus:ring-[#A41E34]"
+                                    className="w-4 h-4 text-[#2BBBAD] border-gray-300 rounded focus:ring-[#2BBBAD]"
                                 />
                                 <label htmlFor="remember" className="ml-2 text-sm text-gray-600">
                                     Remember me

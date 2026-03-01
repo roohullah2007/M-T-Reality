@@ -14,7 +14,7 @@ const PropertyList = ({ properties }) => {
           <span className="text-[#2BBBAD]">{properties.length}</span> Properties Found
         </h2>
         <select
-          className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#A41E34] focus:border-transparent bg-white cursor-pointer hover:border-[#2BBBAD] transition-colors"
+          className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#2BBBAD] focus:border-transparent bg-white cursor-pointer hover:border-[#2BBBAD] transition-colors"
           style={{ fontFamily: 'Instrument Sans, sans-serif' }}
         >
           <option>Sort by: Newest</option>

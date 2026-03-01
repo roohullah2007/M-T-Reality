@@ -229,7 +229,7 @@ export default function Edit({ mustVerifyEmail, status }) {
                                                         type="text"
                                                         value={profileData.name}
                                                         onChange={(e) => setProfileData('name', e.target.value)}
-                                                        className="w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD] transition-colors"
+                                                        className="w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD] transition-colors"
                                                         required
                                                     />
                                                 </div>
@@ -248,7 +248,7 @@ export default function Edit({ mustVerifyEmail, status }) {
                                                         type="tel"
                                                         value={profileData.phone}
                                                         onChange={(e) => setProfileData('phone', e.target.value)}
-                                                        className="w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD] transition-colors"
+                                                        className="w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD] transition-colors"
                                                         placeholder="(555) 123-4567"
                                                     />
                                                 </div>
@@ -268,7 +268,7 @@ export default function Edit({ mustVerifyEmail, status }) {
                                                     type="email"
                                                     value={profileData.email}
                                                     onChange={(e) => setProfileData('email', e.target.value)}
-                                                    className="w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD] transition-colors"
+                                                    className="w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD] transition-colors"
                                                     required
                                                 />
                                             </div>
@@ -351,7 +351,7 @@ export default function Edit({ mustVerifyEmail, status }) {
                                                     ref={currentPasswordInput}
                                                     value={passwordData.current_password}
                                                     onChange={(e) => setPasswordData('current_password', e.target.value)}
-                                                    className="w-full pl-12 pr-14 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD] transition-colors"
+                                                    className="w-full pl-12 pr-14 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD] transition-colors"
                                                     autoComplete="current-password"
                                                 />
                                                 <button
@@ -379,7 +379,7 @@ export default function Edit({ mustVerifyEmail, status }) {
                                                         ref={passwordInput}
                                                         value={passwordData.password}
                                                         onChange={(e) => setPasswordData('password', e.target.value)}
-                                                        className="w-full pl-12 pr-14 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD] transition-colors"
+                                                        className="w-full pl-12 pr-14 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD] transition-colors"
                                                         autoComplete="new-password"
                                                     />
                                                     <button
@@ -405,7 +405,7 @@ export default function Edit({ mustVerifyEmail, status }) {
                                                         type={showConfirmPassword ? 'text' : 'password'}
                                                         value={passwordData.password_confirmation}
                                                         onChange={(e) => setPasswordData('password_confirmation', e.target.value)}
-                                                        className="w-full pl-12 pr-14 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD] transition-colors"
+                                                        className="w-full pl-12 pr-14 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD] transition-colors"
                                                         autoComplete="new-password"
                                                     />
                                                     <button

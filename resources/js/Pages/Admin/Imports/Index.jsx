@@ -96,7 +96,7 @@ export default function ImportsIndex({ batches, stats, filters }) {
                 </div>
                 <Link
                     href={route('admin.imports.create')}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#2BBBAD] text-white rounded-lg hover:bg-[#8a1a2c] transition-colors text-sm font-medium"
+                    className="flex items-center gap-2 px-4 py-2 bg-[#2BBBAD] text-white rounded-lg hover:bg-[#249E93] transition-colors text-sm font-medium"
                 >
                     <Plus className="w-4 h-4" />
                     Import CSV

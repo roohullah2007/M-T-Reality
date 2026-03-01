@@ -288,7 +288,7 @@ function Mortgages() {
             </div>
 
             {/* Right Side - Card */}
-            <div className="bg-gradient-to-br from-[#2BBBAD] to-[#1E8A7E] rounded-3xl p-8 md:p-10 text-white">
+            <div className="bg-gradient-to-br from-[#2BBBAD] to-[#249E93] rounded-3xl p-8 md:p-10 text-white">
               <div className="text-center mb-8">
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 rounded-full mb-6">
                   <Home className="w-10 h-10 text-white" />
@@ -520,7 +520,7 @@ function Mortgages() {
                   </li>
                 </ul>
               </div>
-              <div className="bg-gradient-to-br from-[#2BBBAD] to-[#1E8A7E] rounded-xl p-6 text-white">
+              <div className="bg-gradient-to-br from-[#2BBBAD] to-[#249E93] rounded-xl p-6 text-white">
                 <div className="text-center">
                   <div className="inline-flex items-center justify-center w-12 h-12 bg-white/20 rounded-full mb-4">
                     <BadgeCheck className="w-6 h-6" />

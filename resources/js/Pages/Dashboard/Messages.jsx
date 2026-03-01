@@ -150,7 +150,7 @@ export default function Messages({ messages, filters = {}, counts = {} }) {
                                 placeholder="Search messages..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                         </form>
 
@@ -198,7 +198,7 @@ export default function Messages({ messages, filters = {}, counts = {} }) {
                                         }
                                     }}
                                     className={`w-full p-4 text-left border-b border-gray-100 hover:bg-gray-50 transition-colors ${
-                                        selectedMessage?.id === msg.id ? 'bg-[#2BBBAD]/5 border-l-2 border-l-[#A41E34]' : ''
+                                        selectedMessage?.id === msg.id ? 'bg-[#2BBBAD]/5 border-l-2 border-l-[#2BBBAD]' : ''
                                     } ${msg.status === 'new' ? 'bg-blue-50/50' : ''}`}
                                 >
                                     <div className="flex items-start gap-3">

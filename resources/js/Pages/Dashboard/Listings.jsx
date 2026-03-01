@@ -187,7 +187,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                             placeholder="Search listings..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                         />
                     </div>
                     <button
@@ -589,7 +589,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                 type="text"
                                                 value={orderForm.data.shipping_name}
                                                 onChange={(e) => orderForm.setData('shipping_name', e.target.value)}
-                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                                 required
                                             />
                                             {orderForm.errors.shipping_name && (
@@ -605,7 +605,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                 type="text"
                                                 value={orderForm.data.shipping_address}
                                                 onChange={(e) => orderForm.setData('shipping_address', e.target.value)}
-                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                                 required
                                             />
                                             {orderForm.errors.shipping_address && (
@@ -622,7 +622,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                     type="text"
                                                     value={orderForm.data.shipping_city}
                                                     onChange={(e) => orderForm.setData('shipping_city', e.target.value)}
-                                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                                     required
                                                 />
                                             </div>
@@ -634,7 +634,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                     type="text"
                                                     value={orderForm.data.shipping_zip}
                                                     onChange={(e) => orderForm.setData('shipping_zip', e.target.value)}
-                                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                                     required
                                                 />
                                             </div>
@@ -648,7 +648,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                 type="tel"
                                                 value={orderForm.data.shipping_phone}
                                                 onChange={(e) => orderForm.setData('shipping_phone', e.target.value)}
-                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                                 required
                                             />
                                         </div>
@@ -660,7 +660,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                             <select
                                                 value={orderForm.data.quantity}
                                                 onChange={(e) => orderForm.setData('quantity', parseInt(e.target.value))}
-                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                             >
                                                 <option value={2}>2 stickers</option>
                                                 <option value={4}>4 stickers</option>
@@ -676,7 +676,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                                 value={orderForm.data.notes}
                                                 onChange={(e) => orderForm.setData('notes', e.target.value)}
                                                 rows={2}
-                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                                 placeholder="Any special delivery instructions..."
                                             />
                                         </div>

@@ -147,9 +147,9 @@ function PropertyDetail({ property, openHouses = [] }) {
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
           body { font-family: Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
-          .header { text-align: center; margin-bottom: 30px; border-bottom: 3px solid #A41E34; padding-bottom: 20px; }
-          .logo { font-size: 24px; font-weight: bold; color: #A41E34; margin-bottom: 10px; }
-          .price { font-size: 36px; font-weight: bold; color: #A41E34; margin: 20px 0; }
+          .header { text-align: center; margin-bottom: 30px; border-bottom: 3px solid #2BBBAD; padding-bottom: 20px; }
+          .logo { font-size: 24px; font-weight: bold; color: #2BBBAD; margin-bottom: 10px; }
+          .price { font-size: 36px; font-weight: bold; color: #2BBBAD; margin: 20px 0; }
           .address { font-size: 18px; color: #333; }
           .photo { width: 100%; height: 300px; object-fit: cover; object-position: center 20%; border-radius: 10px; margin: 20px 0; }
           .details { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0; }
@@ -161,8 +161,8 @@ function PropertyDetail({ property, openHouses = [] }) {
           .features h3 { margin-bottom: 10px; color: #111; }
           .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
           .feature-item { font-size: 14px; color: #666; }
-          .feature-item:before { content: "✓ "; color: #A41E34; }
-          .contact { margin-top: 30px; padding: 20px; background: #A41E34; color: white; border-radius: 10px; text-align: center; }
+          .feature-item:before { content: "✓ "; color: #2BBBAD; }
+          .contact { margin-top: 30px; padding: 20px; background: #2BBBAD; color: white; border-radius: 10px; text-align: center; }
           .contact-name { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
           .contact-phone { font-size: 24px; font-weight: bold; }
           .footer { margin-top: 30px; text-align: center; font-size: 12px; color: #999; }
@@ -1158,7 +1158,7 @@ function PropertyDetail({ property, openHouses = [] }) {
               </div>
 
               {/* Mortgage Pre-Approval CTA */}
-              <div className="bg-gradient-to-br from-[#2BBBAD] to-[#1E8A7E] rounded-2xl p-6 mt-6 text-white">
+              <div className="bg-gradient-to-br from-[#2BBBAD] to-[#249E93] rounded-2xl p-6 mt-6 text-white">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-white/20 p-2 rounded-lg">
                     <BadgeCheck className="w-5 h-5" />

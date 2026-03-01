@@ -194,7 +194,7 @@ export default function OpenHouseManager({ property, openHouses = [], routePrefi
                                 value={form.date}
                                 onChange={(e) => setForm({ ...form, date: e.target.value })}
                                 min={new Date().toISOString().split('T')[0]}
-                                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD] ${errors.date ? 'border-red-500' : 'border-gray-300'}`}
+                                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD] ${errors.date ? 'border-red-500' : 'border-gray-300'}`}
                             />
                             {errors.date && <p className="text-red-500 text-xs mt-1">{errors.date}</p>}
                         </div>
@@ -204,7 +204,7 @@ export default function OpenHouseManager({ property, openHouses = [], routePrefi
                                 type="time"
                                 value={form.start_time}
                                 onChange={(e) => setForm({ ...form, start_time: e.target.value })}
-                                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD] ${errors.start_time ? 'border-red-500' : 'border-gray-300'}`}
+                                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD] ${errors.start_time ? 'border-red-500' : 'border-gray-300'}`}
                             />
                             {errors.start_time && <p className="text-red-500 text-xs mt-1">{errors.start_time}</p>}
                         </div>
@@ -214,7 +214,7 @@ export default function OpenHouseManager({ property, openHouses = [], routePrefi
                                 type="time"
                                 value={form.end_time}
                                 onChange={(e) => setForm({ ...form, end_time: e.target.value })}
-                                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD] ${errors.end_time ? 'border-red-500' : 'border-gray-300'}`}
+                                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD] ${errors.end_time ? 'border-red-500' : 'border-gray-300'}`}
                             />
                             {errors.end_time && <p className="text-red-500 text-xs mt-1">{errors.end_time}</p>}
                         </div>
@@ -227,7 +227,7 @@ export default function OpenHouseManager({ property, openHouses = [], routePrefi
                             onChange={(e) => setForm({ ...form, description: e.target.value })}
                             placeholder="e.g., Light refreshments provided, come meet the owner!"
                             maxLength={500}
-                            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD] ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
+                            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD] ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
                         />
                         {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
                     </div>

@@ -745,7 +745,7 @@ export default function PropertiesShow({ property, listingStatuses = {} }) {
                                 <select
                                     value={listingStatus}
                                     onChange={(e) => setListingStatus(e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                 >
                                     <option value="for_sale">For Sale (Active)</option>
                                     <option value="pending">Pending (Under Contract)</option>
@@ -762,7 +762,7 @@ export default function PropertiesShow({ property, listingStatuses = {} }) {
                                     value={virtualTourUrl}
                                     onChange={(e) => setVirtualTourUrl(e.target.value)}
                                     placeholder="https://..."
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                 />
                             </div>
 
@@ -774,7 +774,7 @@ export default function PropertiesShow({ property, listingStatuses = {} }) {
                                     value={matterportUrl}
                                     onChange={(e) => setMatterportUrl(e.target.value)}
                                     placeholder="https://my.matterport.com/show/?m=..."
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                 />
                             </div>
 
@@ -786,7 +786,7 @@ export default function PropertiesShow({ property, listingStatuses = {} }) {
                                     value={videoTourUrl}
                                     onChange={(e) => setVideoTourUrl(e.target.value)}
                                     placeholder="https://..."
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                 />
                             </div>
 
@@ -798,7 +798,7 @@ export default function PropertiesShow({ property, listingStatuses = {} }) {
                                     value={mlsVirtualTourUrl}
                                     onChange={(e) => setMlsVirtualTourUrl(e.target.value)}
                                     placeholder="https://... (MLS-compliant, no branding)"
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                 />
                                 <p className="text-xs text-gray-400 mt-1">Clean URL only. No branding or YouTube links for MLS export.</p>
                             </div>

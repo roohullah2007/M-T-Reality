@@ -399,7 +399,7 @@ export default function ImportsShow({ batch, properties }) {
                                         className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                                             copied
                                                 ? 'bg-green-100 text-green-700'
-                                                : 'bg-[#2BBBAD] text-white hover:bg-[#8a1a2c]'
+                                                : 'bg-[#2BBBAD] text-white hover:bg-[#249E93]'
                                         }`}
                                     >
                                         {copied ? (

@@ -276,13 +276,13 @@ function Index({ serviceRequests, counts, filters }) {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 placeholder="Search by name, email, or property address..."
-                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                             />
                         </div>
                         <select
                             value={selectedType}
                             onChange={handleTypeFilter}
-                            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD] bg-white"
+                            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD] bg-white"
                         >
                             {typeOptions.map((opt) => (
                                 <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -406,7 +406,7 @@ function Index({ serviceRequests, counts, filters }) {
                                                         <select
                                                             value={req.status}
                                                             onChange={(e) => handleStatusUpdate(req.id, e.target.value)}
-                                                            className="text-xs border border-gray-300 rounded px-2 py-1 focus:ring-1 focus:ring-[#A41E34] focus:border-[#2BBBAD]"
+                                                            className="text-xs border border-gray-300 rounded px-2 py-1 focus:ring-1 focus:ring-[#2BBBAD] focus:border-[#2BBBAD]"
                                                         >
                                                             <option value="pending">Pending</option>
                                                             <option value="approved">Approved</option>
@@ -485,7 +485,7 @@ function Index({ serviceRequests, counts, filters }) {
                                 value={noteText}
                                 onChange={(e) => setNoteText(e.target.value)}
                                 rows={4}
-                                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                                 placeholder="Add admin notes..."
                             />
                             <div className="flex justify-end gap-3 mt-4">

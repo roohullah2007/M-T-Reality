@@ -518,7 +518,7 @@ function Show({ order }) {
                 <select
                   value={statusForm.status}
                   onChange={(e) => setStatusForm({ ...statusForm, status: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                 >
                   <option value="pending">Pending</option>
                   <option value="confirmed">Confirmed</option>
@@ -534,7 +534,7 @@ function Show({ order }) {
                   value={statusForm.admin_notes}
                   onChange={(e) => setStatusForm({ ...statusForm, admin_notes: e.target.value })}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                   placeholder="Add notes about this order..."
                 />
               </div>
@@ -570,7 +570,7 @@ function Show({ order }) {
                   value={paymentForm.payment_method}
                   onChange={(e) => setPaymentForm({ ...paymentForm, payment_method: e.target.value })}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                 >
                   <option value="">Select payment method</option>
                   <option value="venmo">Venmo</option>
@@ -586,7 +586,7 @@ function Show({ order }) {
                   type="text"
                   value={paymentForm.payment_reference}
                   onChange={(e) => setPaymentForm({ ...paymentForm, payment_reference: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                   placeholder="Transaction ID or check number"
                 />
               </div>
@@ -623,7 +623,7 @@ function Show({ order }) {
                   value={scheduleForm.scheduled_at}
                   onChange={(e) => setScheduleForm({ ...scheduleForm, scheduled_at: e.target.value })}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                 />
               </div>
               <div className="flex gap-3">

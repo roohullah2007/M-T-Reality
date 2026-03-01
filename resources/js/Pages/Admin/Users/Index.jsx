@@ -95,7 +95,7 @@ export default function UsersIndex({ users, filters }) {
                             placeholder="Search users..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                         />
                     </div>
                     <select
@@ -104,7 +104,7 @@ export default function UsersIndex({ users, filters }) {
                             setSelectedRole(e.target.value);
                             handleFilter('role', e.target.value);
                         }}
-                        className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                        className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                     >
                         <option value="">All Roles</option>
                         <option value="admin">Admin</option>
@@ -118,7 +118,7 @@ export default function UsersIndex({ users, filters }) {
                             setSelectedStatus(e.target.value);
                             handleFilter('status', e.target.value);
                         }}
-                        className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A41E34]/20 focus:border-[#2BBBAD]"
+                        className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BBBAD]/20 focus:border-[#2BBBAD]"
                     >
                         <option value="">All Status</option>
                         <option value="active">Active</option>
