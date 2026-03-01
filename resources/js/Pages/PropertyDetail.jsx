@@ -1158,7 +1158,7 @@ function PropertyDetail({ property, openHouses = [] }) {
               </div>
 
               {/* Mortgage Pre-Approval CTA */}
-              <div className="bg-gradient-to-br from-[#A41E34] to-[#7A1628] rounded-2xl p-6 mt-6 text-white">
+              <div className="bg-gradient-to-br from-[#2BBBAD] to-[#1E8A7E] rounded-2xl p-6 mt-6 text-white">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-white/20 p-2 rounded-lg">
                     <BadgeCheck className="w-5 h-5" />

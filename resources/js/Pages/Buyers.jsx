@@ -432,7 +432,7 @@ function Buyers() {
           </div>
 
           {/* Pre-Approval CTA Box */}
-          <div className="bg-gradient-to-br from-[#A41E34] to-[#7A1628] rounded-3xl p-8 md:p-12 text-white">
+          <div className="bg-gradient-to-br from-[#2BBBAD] to-[#1E8A7E] rounded-3xl p-8 md:p-12 text-white">
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
                 <h3 className="text-2xl md:text-3xl font-medium mb-4" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
