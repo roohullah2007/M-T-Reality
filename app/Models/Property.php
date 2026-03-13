@@ -227,6 +227,14 @@ class Property extends Model
     }
 
     /**
+     * Get MLS change requests for this property
+     */
+    public function mlsChangeRequests(): HasMany
+    {
+        return $this->hasMany(MlsChangeRequest::class);
+    }
+
+    /**
      * Get open houses for this property
      */
     public function openHouses(): HasMany

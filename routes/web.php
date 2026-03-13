@@ -13,6 +13,9 @@ use App\Http\Controllers\Admin\AdminActivityController;
 use App\Http\Controllers\Admin\AdminMediaOrderController;
 use App\Http\Controllers\Admin\AdminCompanyLogoController;
 use App\Http\Controllers\Admin\AdminImportController;
+use App\Http\Controllers\Admin\AdminFormTemplateController;
+use App\Http\Controllers\Admin\AdminSellerDocumentController;
+use App\Http\Controllers\Admin\AdminMlsChangeRequestController;
 use App\Http\Controllers\Admin\AdminServiceRequestController;
 use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\BuyerInquiryController;
@@ -130,16 +133,43 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 // Property inquiry submission route (public)
 Route::post('/inquiry', [InquiryController::class, 'store'])->name('inquiry.store');
 
-// User Dashboard - DISABLED FOR NOW (all routes redirect to home)
-// Named routes are kept so backend redirects and route() calls don't break
-Route::middleware(['auth'])->prefix('dashboard')->name('dashboard')->group(function () {
-    Route::get('/', function () { return redirect('/'); });
-    Route::get('/listings', function () { return redirect('/'); })->name('.listings');
-    Route::get('/listings/create', function () { return redirect('/'); })->name('.listings.create');
-    Route::get('/messages', function () { return redirect('/'); })->name('.messages');
-    Route::get('/favorites', function () { return redirect('/'); })->name('.favorites');
-    Route::get('/service-requests', function () { return redirect('/'); })->name('.service-requests');
-    Route::get('/media-orders', function () { return redirect('/'); })->name('.media-orders');
+// User Dashboard
+Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard')->group(function () {
+    Route::get('/', [UserDashboardController::class, 'index']);
+    Route::get('/listings', [UserDashboardController::class, 'listings'])->name('.listings');
+    Route::get('/listings/{property}/edit', [UserDashboardController::class, 'editListing'])->name('.listings.edit');
+    Route::put('/listings/{property}', [UserDashboardController::class, 'updateListing'])->name('.listings.update');
+    Route::delete('/listings/{property}', [UserDashboardController::class, 'destroyListing'])->name('.listings.destroy');
+    Route::post('/listings/{property}/photos', [UserDashboardController::class, 'addPhotos'])->name('.listings.add-photos');
+    Route::post('/listings/{property}/remove-photo', [UserDashboardController::class, 'removePhoto'])->name('.listings.remove-photo');
+    Route::post('/listings/{property}/reorder-photos', [UserDashboardController::class, 'reorderPhotos'])->name('.listings.reorder-photos');
+    Route::get('/messages', [UserDashboardController::class, 'messages'])->name('.messages');
+    Route::post('/messages/{inquiry}/read', [UserDashboardController::class, 'markMessageRead'])->name('.messages.read');
+    Route::post('/messages/{inquiry}/responded', [UserDashboardController::class, 'markMessageResponded'])->name('.messages.responded');
+    Route::delete('/messages/{inquiry}', [UserDashboardController::class, 'destroyMessage'])->name('.messages.destroy');
+    Route::get('/favorites', [UserDashboardController::class, 'favorites'])->name('.favorites');
+    Route::post('/favorites/{property}', [UserDashboardController::class, 'addFavorite'])->name('.favorites.add');
+    Route::delete('/favorites/{property}', [UserDashboardController::class, 'removeFavorite'])->name('.favorites.remove');
+    Route::get('/service-requests', [UserDashboardController::class, 'serviceRequests'])->name('.service-requests');
+    Route::get('/listings/{property}/upgrade', [UserDashboardController::class, 'showUpgradeOptions'])->name('.listings.upgrade');
+    Route::post('/listings/{property}/upgrade', [UserDashboardController::class, 'submitUpgradeRequest'])->name('.listings.upgrade.store');
+    Route::post('/listings/{property}/order', [UserDashboardController::class, 'submitOrder'])->name('.listings.order');
+    Route::delete('/service-requests/{serviceRequest}', [UserDashboardController::class, 'cancelUpgradeRequest'])->name('.service-requests.cancel');
+    Route::get('/listings/create', function () { return redirect('/list-property'); })->name('.listings.create');
+    // Documents (completed forms uploaded by admin)
+    Route::get('/documents', [UserDashboardController::class, 'documents'])->name('.documents');
+    Route::get('/documents/{sellerDocument}/download', [UserDashboardController::class, 'downloadDocument'])->name('.documents.download');
+    // Forms Library
+    Route::get('/forms', [UserDashboardController::class, 'formsLibrary'])->name('.forms');
+    Route::post('/forms/{formTemplate}/acknowledge', [UserDashboardController::class, 'acknowledgeForm'])->name('.forms.acknowledge');
+    Route::get('/forms/{formTemplate}/download', [UserDashboardController::class, 'downloadForm'])->name('.forms.download');
+    // MLS Change Requests
+    Route::get('/mls-changes', [UserDashboardController::class, 'mlsChangeRequests'])->name('.mls-changes');
+    Route::post('/mls-changes', [UserDashboardController::class, 'storeMlsChangeRequest'])->name('.mls-changes.store');
+    // Open Houses
+    Route::post('/listings/{property}/open-houses', [UserDashboardController::class, 'storeOpenHouse'])->name('.listings.open-houses.store');
+    Route::put('/listings/{property}/open-houses/{openHouse}', [UserDashboardController::class, 'updateOpenHouse'])->name('.listings.open-houses.update');
+    Route::delete('/listings/{property}/open-houses/{openHouse}', [UserDashboardController::class, 'destroyOpenHouse'])->name('.listings.open-houses.destroy');
 });
 
 // User Profile routes
@@ -252,6 +282,25 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/imports/property/{property}/letter', [AdminImportController::class, 'generateLetter'])->name('imports.letter');
     Route::get('/imports/property/{property}/qr-code', [AdminImportController::class, 'generateQrCode'])->name('imports.qr-code');
     Route::post('/imports/{batch}/refetch-images', [AdminImportController::class, 'refetchImages'])->name('imports.refetch-images');
+
+    // Seller Documents Management
+    Route::get('/seller-documents', [AdminSellerDocumentController::class, 'index'])->name('seller-documents.index');
+    Route::post('/seller-documents', [AdminSellerDocumentController::class, 'store'])->name('seller-documents.store');
+    Route::delete('/seller-documents/{sellerDocument}', [AdminSellerDocumentController::class, 'destroy'])->name('seller-documents.destroy');
+    Route::get('/seller-documents/{sellerDocument}/download', [AdminSellerDocumentController::class, 'download'])->name('seller-documents.download');
+
+    // Form Templates Management
+    Route::get('/form-templates', [AdminFormTemplateController::class, 'index'])->name('form-templates.index');
+    Route::post('/form-templates', [AdminFormTemplateController::class, 'store'])->name('form-templates.store');
+    Route::put('/form-templates/{formTemplate}', [AdminFormTemplateController::class, 'update'])->name('form-templates.update');
+    Route::delete('/form-templates/{formTemplate}', [AdminFormTemplateController::class, 'destroy'])->name('form-templates.destroy');
+    Route::get('/form-templates/{formTemplate}/download', [AdminFormTemplateController::class, 'download'])->name('form-templates.download');
+    Route::get('/form-templates/{formTemplate}/acknowledgments', [AdminFormTemplateController::class, 'acknowledgments'])->name('form-templates.acknowledgments');
+
+    // MLS Change Requests Management
+    Route::get('/mls-change-requests', [AdminMlsChangeRequestController::class, 'index'])->name('mls-change-requests.index');
+    Route::put('/mls-change-requests/{mlsChangeRequest}/status', [AdminMlsChangeRequestController::class, 'updateStatus'])->name('mls-change-requests.update-status');
+    Route::put('/mls-change-requests/{mlsChangeRequest}/note', [AdminMlsChangeRequestController::class, 'addNote'])->name('mls-change-requests.add-note');
 
     // Service Requests Management
     Route::get('/service-requests', [AdminServiceRequestController::class, 'index'])->name('service-requests.index');

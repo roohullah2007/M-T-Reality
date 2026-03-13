@@ -16,7 +16,10 @@ import {
     UserSearch,
     ImageIcon,
     Upload,
-    Package
+    Package,
+    FileEdit,
+    FileText,
+    FolderOpen
 } from 'lucide-react';
 
 export default function AdminLayout({ children, title }) {
@@ -33,6 +36,9 @@ export default function AdminLayout({ children, title }) {
         { name: 'Buyer Leads', href: route('admin.buyer-inquiries.index'), icon: UserSearch, current: route().current('admin.buyer-inquiries.*') },
         { name: 'Messages', href: route('admin.messages.index'), icon: Mail, current: route().current('admin.messages.*') },
         { name: 'Imports', href: route('admin.imports.index'), icon: Upload, current: route().current('admin.imports.*') },
+        { name: 'MLS Changes', href: route('admin.mls-change-requests.index'), icon: FileEdit, current: route().current('admin.mls-change-requests.*') },
+        { name: 'Forms Library', href: route('admin.form-templates.index'), icon: FileText, current: route().current('admin.form-templates.*') },
+        { name: 'Seller Docs', href: route('admin.seller-documents.index'), icon: FolderOpen, current: route().current('admin.seller-documents.*') },
         { name: 'Service Requests', href: route('admin.service-requests.index'), icon: Package, current: route().current('admin.service-requests.*') },
         { name: 'Company Logos', href: route('admin.company-logos.index'), icon: ImageIcon, current: route().current('admin.company-logos.*') },
         { name: 'Settings', href: route('admin.settings.index'), icon: Settings, current: route().current('admin.settings.*') },

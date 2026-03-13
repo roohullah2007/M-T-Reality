@@ -9,8 +9,11 @@ use App\Models\Property;
 use App\Models\OpenHouse;
 use App\Models\Inquiry;
 use App\Models\Favorite;
+use App\Models\FormAcknowledgment;
+use App\Models\FormTemplate;
+use App\Models\MlsChangeRequest;
+use App\Models\SellerDocument;
 use App\Models\ServiceRequest;
-use App\Models\Setting;
 use App\Services\EmailService;
 use App\Services\GeocodingService;
 use App\Services\ImageService;
@@ -815,5 +818,200 @@ class UserDashboardController extends Controller
         $openHouse->delete();
 
         return back()->with('success', 'Open house removed successfully!');
+    }
+
+    /**
+     * Display MLS change requests for the seller
+     */
+    public function mlsChangeRequests(Request $request)
+    {
+        $user = Auth::user();
+        $propertyIds = $user->properties()->pluck('id');
+
+        $query = MlsChangeRequest::whereIn('property_id', $propertyIds)->with('property');
+
+        if ($request->status && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        $changeRequests = $query->latest()->paginate(15)->withQueryString();
+
+        $counts = [
+            'all' => MlsChangeRequest::whereIn('property_id', $propertyIds)->count(),
+            'pending' => MlsChangeRequest::whereIn('property_id', $propertyIds)->where('status', 'pending')->count(),
+            'in_progress' => MlsChangeRequest::whereIn('property_id', $propertyIds)->where('status', 'in_progress')->count(),
+            'completed' => MlsChangeRequest::whereIn('property_id', $propertyIds)->where('status', 'completed')->count(),
+        ];
+
+        $properties = $user->properties()->select('id', 'property_title', 'address', 'city', 'state', 'mls_number')->get();
+
+        return Inertia::render('Dashboard/MlsChangeRequests', [
+            'changeRequests' => $changeRequests,
+            'properties' => $properties,
+            'filters' => $request->only(['status']),
+            'counts' => $counts,
+        ]);
+    }
+
+    /**
+     * Store a new MLS change request
+     */
+    public function storeMlsChangeRequest(Request $request)
+    {
+        $validated = $request->validate([
+            'property_id' => 'required|exists:properties,id',
+            'request_type' => 'required|in:listing_change,new_listing,open_house,price_change,status_change',
+            'description' => 'required|string|max:2000',
+            'changes' => 'nullable|array',
+            'changes.new_price' => 'nullable|numeric|min:0',
+            'changes.new_status' => 'nullable|string',
+            'changes.open_house_date' => 'nullable|date',
+            'changes.open_house_start' => 'nullable|string',
+            'changes.open_house_end' => 'nullable|string',
+        ]);
+
+        // Verify ownership
+        $property = Property::findOrFail($validated['property_id']);
+        if ($property->user_id !== Auth::id()) {
+            abort(403, 'You do not own this property.');
+        }
+
+        MlsChangeRequest::create([
+            'user_id' => Auth::id(),
+            'property_id' => $validated['property_id'],
+            'request_type' => $validated['request_type'],
+            'description' => $validated['description'],
+            'changes' => $validated['changes'] ?? null,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('dashboard.mls-changes')->with('success', 'Your MLS change request has been submitted! We will process it shortly.');
+    }
+
+    /**
+     * Display the forms library for sellers
+     */
+    public function formsLibrary(Request $request)
+    {
+        $user = Auth::user();
+
+        $query = FormTemplate::active();
+
+        if ($request->category && $request->category !== 'all') {
+            $query->where('category', $request->category);
+        }
+
+        $templates = $query->orderBy('sort_order')->orderBy('name')->get();
+
+        // Get user's acknowledgments
+        $acknowledgedIds = FormAcknowledgment::where('user_id', $user->id)
+            ->pluck('form_template_id')
+            ->toArray();
+
+        $counts = [
+            'all' => FormTemplate::active()->count(),
+            'required' => FormTemplate::active()->required()->count(),
+            'acknowledged' => count($acknowledgedIds),
+            'pending' => FormTemplate::active()->required()
+                ->whereNotIn('id', $acknowledgedIds)->count(),
+        ];
+
+        return Inertia::render('Dashboard/FormsLibrary', [
+            'templates' => $templates,
+            'acknowledgedIds' => $acknowledgedIds,
+            'categories' => FormTemplate::CATEGORIES,
+            'filters' => $request->only(['category']),
+            'counts' => $counts,
+        ]);
+    }
+
+    /**
+     * Acknowledge a form template
+     */
+    public function acknowledgeForm(FormTemplate $formTemplate)
+    {
+        $user = Auth::user();
+
+        FormAcknowledgment::firstOrCreate(
+            [
+                'user_id' => $user->id,
+                'form_template_id' => $formTemplate->id,
+            ],
+            [
+                'acknowledged_at' => now(),
+                'ip_address' => request()->ip(),
+            ]
+        );
+
+        return back()->with('success', "You've acknowledged \"{$formTemplate->name}\".");
+    }
+
+    /**
+     * Download a form template
+     */
+    public function downloadForm(FormTemplate $formTemplate)
+    {
+        if (!$formTemplate->is_active) {
+            abort(404);
+        }
+
+        $path = storage_path('app/public/' . $formTemplate->file_path);
+
+        if (!file_exists($path)) {
+            return back()->with('error', 'File not found.');
+        }
+
+        return response()->download($path, $formTemplate->file_name);
+    }
+
+    /**
+     * Display seller's documents (uploaded by admin)
+     */
+    public function documents(Request $request)
+    {
+        $user = Auth::user();
+
+        $query = SellerDocument::where('user_id', $user->id)->with(['property', 'uploader']);
+
+        if ($request->category && $request->category !== 'all') {
+            $query->where('category', $request->category);
+        }
+
+        $documents = $query->latest()->get();
+
+        $counts = [
+            'all' => SellerDocument::where('user_id', $user->id)->count(),
+            'new' => SellerDocument::where('user_id', $user->id)->whereNull('viewed_at')->count(),
+        ];
+
+        return Inertia::render('Dashboard/Documents', [
+            'documents' => $documents,
+            'categories' => SellerDocument::CATEGORIES,
+            'filters' => $request->only(['category']),
+            'counts' => $counts,
+        ]);
+    }
+
+    /**
+     * Download a seller document (marks as viewed)
+     */
+    public function downloadDocument(SellerDocument $sellerDocument)
+    {
+        if ($sellerDocument->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        // Mark as viewed on first download
+        if (!$sellerDocument->viewed_at) {
+            $sellerDocument->update(['viewed_at' => now()]);
+        }
+
+        $path = storage_path('app/public/' . $sellerDocument->file_path);
+
+        if (!file_exists($path)) {
+            return back()->with('error', 'File not found.');
+        }
+
+        return response()->download($path, $sellerDocument->file_name);
     }
 }

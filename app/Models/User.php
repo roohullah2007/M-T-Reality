@@ -160,6 +160,11 @@ class User extends Authenticatable
         return $this->hasMany(ServiceRequest::class);
     }
 
+    public function mlsChangeRequests(): HasMany
+    {
+        return $this->hasMany(MlsChangeRequest::class);
+    }
+
     /**
      * Get user's full address
      */

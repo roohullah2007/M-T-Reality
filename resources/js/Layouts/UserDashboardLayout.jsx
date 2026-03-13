@@ -9,7 +9,11 @@ import {
     User,
     LogOut,
     Menu,
-    X
+    X,
+    FileEdit,
+    FolderOpen,
+    FileText,
+    Wrench,
 } from 'lucide-react';
 
 export default function UserDashboardLayout({ children, title }) {
@@ -20,8 +24,12 @@ export default function UserDashboardLayout({ children, title }) {
     const navigation = [
         { name: 'Overview', href: route('dashboard'), icon: LayoutDashboard, current: route().current('dashboard') && !route().current('dashboard.*') },
         { name: 'My Listings', href: route('dashboard.listings'), icon: Home, current: route().current('dashboard.listings*') },
+        { name: 'MLS Changes', href: route('dashboard.mls-changes'), icon: FileEdit, current: route().current('dashboard.mls-changes*') },
+        { name: 'Documents', href: route('dashboard.documents'), icon: FolderOpen, current: route().current('dashboard.documents*') },
+        { name: 'Forms Library', href: route('dashboard.forms'), icon: FileText, current: route().current('dashboard.forms*') },
         { name: 'Messages', href: route('dashboard.messages'), icon: MessageSquare, current: route().current('dashboard.messages*') },
         { name: 'Saved Properties', href: route('dashboard.favorites'), icon: Heart, current: route().current('dashboard.favorites*') },
+        { name: 'Service Requests', href: route('dashboard.service-requests'), icon: Wrench, current: route().current('dashboard.service-requests*') },
         { name: 'Profile', href: route('profile.edit'), icon: User, current: route().current('profile.edit') },
     ];
 
@@ -77,19 +85,33 @@ export default function UserDashboardLayout({ children, title }) {
                     {/* Navigation */}
                     <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
                         {navigation.map((item) => (
-                            <Link
-                                key={item.name}
-                                href={item.href}
-                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${
-                                    item.current
-                                        ? 'bg-[#1a1a1a] text-white'
-                                        : 'text-gray-600 hover:bg-gray-100'
-                                }`}
-                                style={{ fontFamily: '"Instrument Sans", sans-serif' }}
-                            >
-                                <item.icon className="w-5 h-5" />
-                                <span className="font-medium">{item.name}</span>
-                            </Link>
+                            item.coming ? (
+                                <div
+                                    key={item.name}
+                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 cursor-default"
+                                    style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+                                >
+                                    <item.icon className="w-5 h-5" />
+                                    <span className="font-medium">{item.name}</span>
+                                    <span className="ml-auto px-2 py-0.5 text-[10px] font-semibold rounded-full bg-gray-100 text-gray-400 uppercase tracking-wide">
+                                        Soon
+                                    </span>
+                                </div>
+                            ) : (
+                                <Link
+                                    key={item.name}
+                                    href={item.href}
+                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${
+                                        item.current
+                                            ? 'bg-[#1a1a1a] text-white'
+                                            : 'text-gray-600 hover:bg-gray-100'
+                                    }`}
+                                    style={{ fontFamily: '"Instrument Sans", sans-serif' }}
+                                >
+                                    <item.icon className="w-5 h-5" />
+                                    <span className="font-medium">{item.name}</span>
+                                </Link>
+                            )
                         ))}
                     </nav>
 
