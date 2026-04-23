@@ -32,7 +32,7 @@ function Packages() {
     {
       icon: Home,
       title: 'Showings & Open Houses',
-      description: 'Professionally managed showings and open house events. We handle scheduling, buyer screening, and follow-up so you don\'t have to.'
+      description: 'Professionally managed showings through the ShowingTime service and public open house notifications on MLS, Zillow, Trulia, Realtor.com, and 100+ real estate websites.'
     },
     {
       icon: Handshake,
@@ -76,7 +76,7 @@ function Packages() {
 
   const differentiators = [
     'Full-service representation at competitive rates',
-    'Professional photography and virtual tours included',
+    'Professional photography with floor plan included',
     'MLS listing with 100+ site syndication',
     'Expert negotiation and contract management',
     'No hidden fees — transparent pricing upfront',
@@ -157,11 +157,6 @@ function Packages() {
       <section className="bg-[#EEEDEA] py-20 md:py-28">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
           <div className="mb-12">
-            <div className="inline-flex items-center bg-[#E5E1DC] rounded-lg px-4 py-2 mb-6">
-              <span className="text-[#666] text-sm font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                What's Included
-              </span>
-            </div>
             <h2
               className="text-[32px] md:text-[48px] font-medium text-[#111] leading-tight"
               style={{ fontFamily: 'Instrument Sans, sans-serif' }}
@@ -172,7 +167,7 @@ function Packages() {
               className="text-[16px] text-[#666] font-medium mt-4 max-w-2xl"
               style={{ fontFamily: 'Instrument Sans, sans-serif' }}
             >
-              Every listing with M&T Realty Group includes a full suite of professional services designed to sell your home faster and for the best possible price.
+              M&T Realty Group provides a full suite of professional services designed to sell your home faster and for the best possible price.
             </p>
           </div>
 

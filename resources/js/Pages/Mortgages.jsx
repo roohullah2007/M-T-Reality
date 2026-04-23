@@ -3,13 +3,15 @@ import { Head, Link } from '@inertiajs/react';
 import { Calculator, DollarSign, Shield, Clock, CheckCircle, ChevronRight, FileText, Home, Percent, BadgeCheck, Building2, CreditCard, PiggyBank, FileCheck, TrendingUp, HelpCircle, Info, User, Search, FileSignature, Handshake } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
 
+const PRE_APPROVAL_URL = 'https://simplenexus.annie-mac.com/homehub/signup/THASSELL@ANNIE-MAC.COM';
+
 function Mortgages() {
   const howItWorks = [
     {
       step: '01',
       icon: Search,
       title: 'Find Your Rate',
-      description: 'Instantly find the most competitive deal from over 25 lenders. Compare rates, terms, and costs side by side.'
+      description: 'Start your mortgage application online and get personalized loan options from AnnieMac Home Mortgage.'
     },
     {
       step: '02',
@@ -118,7 +120,7 @@ function Mortgages() {
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
             <img
-              src="https://images.pexels.com/photos/2251247/pexels-photo-2251247.jpeg?auto=compress&cs=tinysrgb&w=1920"
+              src="https://images.pexels.com/photos/8293778/pexels-photo-8293778.jpeg?auto=compress&cs=tinysrgb&w=1920"
               alt=""
               className="w-full h-full object-cover"
             />
@@ -130,7 +132,7 @@ function Mortgages() {
               {/* Badge */}
               <div className="inline-flex items-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-4 py-2 mb-6">
                 <span className="text-white/90 text-sm font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Powered by T&M Mortgages
+                  Powered by AnnieMac Home Mortgage
                 </span>
               </div>
 
@@ -138,20 +140,20 @@ function Mortgages() {
                 className="text-white text-[40px] sm:text-[50px] md:text-[60px] font-medium leading-[1.1] mb-6 drop-shadow-2xl"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                Get a Mortgage from<br />T&M Mortgages
+                Get a mortgage from<br />AnnieMac Home Mortgage
               </h1>
 
               <p
                 className="text-white/90 text-[16px] sm:text-[18px] font-medium mb-8 leading-relaxed max-w-2xl drop-shadow-lg"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                M&T Realty proudly partners with T&M Mortgages to provide our buyers with trusted lending solutions, competitive rates, and a smooth, stress-free financing experience.
+                M&T Realty Group has partnered with AnnieMac Home Mortgage as its preferred lender. Get pre-approved in minutes and close with confidence — one seamless experience from home search to keys in hand.
               </p>
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-[0.4rem]">
                 <a
-                  href="https://tandmmortgages.morty.com/get-started/mortgage?loan_officer=terry-hassell"
+                  href={PRE_APPROVAL_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="button inline-flex items-center gap-[0.4rem] bg-[#2BBBAD] text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-[#249E93]"
@@ -160,23 +162,13 @@ function Mortgages() {
                   <BadgeCheck className="w-5 h-5" />
                   <span>Get Pre-Approved</span>
                 </a>
-                <a
-                  href="https://tandmmortgages.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="button inline-flex items-center gap-[0.4rem] bg-white/10 backdrop-blur-md border border-white/30 text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-white/20"
-                  style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                >
-                  <Calculator className="w-5 h-5" />
-                  <span>Compare Rates</span>
-                </a>
                 <Link
                   href="#why-us"
                   className="button inline-flex items-center gap-[0.4rem] bg-white/10 backdrop-blur-md border border-white/30 text-white rounded-full px-5 py-[0.875rem] font-medium leading-[120%] transition-all duration-[400ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] hover:bg-white/20"
                   style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                 >
                   <Info className="w-5 h-5" />
-                  <span>Why T&M?</span>
+                  <span>Why AnnieMac?</span>
                 </Link>
               </div>
             </div>
@@ -192,8 +184,8 @@ function Mortgages() {
               <div className="bg-[#2BBBAD]/10 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                 <Percent className="w-8 h-8 text-[#2BBBAD]" />
               </div>
-              <h3 className="text-[#111] font-semibold text-xl mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>25+ Lender Network</h3>
-              <p className="text-[#666] text-sm leading-relaxed" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Instantly find the most competitive deal from over 25 lenders in our network.</p>
+              <h3 className="text-[#111] font-semibold text-xl mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Competitive Rates</h3>
+              <p className="text-[#666] text-sm leading-relaxed" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Get a competitive mortgage rate from AnnieMac Home Mortgage, our trusted lending partner.</p>
             </div>
             <div className="bg-white rounded-2xl p-6 md:p-8 hover:shadow-lg transition-all duration-300 text-center">
               <div className="bg-[#2BBBAD]/10 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
@@ -213,7 +205,7 @@ function Mortgages() {
         </div>
       </div>
 
-      {/* Why T&M Mortgages Section */}
+      {/* Why AnnieMac Section */}
       <section id="why-us" className="bg-white py-16 md:py-20">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -222,7 +214,7 @@ function Mortgages() {
               {/* Badge */}
               <div className="inline-flex items-center bg-[#2BBBAD]/10 rounded-lg px-4 py-2 mb-6">
                 <span className="text-[#2BBBAD] text-sm font-semibold" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  T&M Mortgages
+                  AnnieMac Home Mortgage
                 </span>
               </div>
 
@@ -231,7 +223,7 @@ function Mortgages() {
                 className="text-[28px] md:text-[36px] text-[#111] font-medium leading-tight mb-6"
                 style={{ fontFamily: 'Instrument Sans, sans-serif', fontWeight: 500 }}
               >
-                Why use T&M Mortgages?
+                Why use AnnieMac Home Mortgage?
               </h2>
 
               {/* Description */}
@@ -239,7 +231,7 @@ function Mortgages() {
                 className="text-[16px] text-[#666] font-medium mb-8 leading-relaxed"
                 style={{ fontFamily: 'Instrument Sans, sans-serif', fontWeight: 500 }}
               >
-                When you find your dream home through M&T Realty Group, getting financing shouldn't slow you down. T&M Mortgages is our preferred mortgage partner, providing you with a seamless home-buying experience from start to finish.
+                When you find your dream home through M&T Realty Group, getting financing shouldn't slow you down. AnnieMac Home Mortgage is our preferred mortgage partner, providing you with a seamless home-buying experience from start to finish.
               </p>
 
               {/* Benefits */}
@@ -255,7 +247,7 @@ function Mortgages() {
                   <CheckCircle className="w-6 h-6 text-[#2BBBAD] flex-shrink-0 mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Low Price</h4>
-                    <p className="text-sm text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Competitive pricing from our marketplace of top lenders.</p>
+                    <p className="text-sm text-[#666]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Competitive pricing on a wide range of loan products.</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -276,7 +268,7 @@ function Mortgages() {
 
               {/* CTA */}
               <a
-                href="https://tandmmortgages.com/"
+                href={PRE_APPROVAL_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white rounded-full px-6 py-4 font-medium hover:bg-[#249E93] transition-all duration-300"
@@ -332,7 +324,7 @@ function Mortgages() {
               </div>
 
               <a
-                href="https://tandmmortgages.morty.com/get-started/mortgage?loan_officer=terry-hassell"
+                href={PRE_APPROVAL_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full bg-white text-[#2BBBAD] text-center py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300"
@@ -341,37 +333,6 @@ function Mortgages() {
                 Get Pre-Approved Now
               </a>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Mortgage Rates Today Section */}
-      <section id="rates" className="bg-white py-16 md:py-20">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
-          {/* Section Header */}
-          <div className="text-center">
-            <div className="inline-flex items-center bg-[#E5E1DC] rounded-lg px-4 py-2 mb-6">
-              <span className="text-[#666] text-sm font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                Compare Rates
-              </span>
-            </div>
-            <h2 className="text-[32px] md:text-[48px] font-medium text-[#111] mb-4" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-              Mortgage Rates Today
-            </h2>
-            <p className="text-[16px] text-[#666] font-medium max-w-3xl mx-auto mb-8" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-              We search thousands of loan options so you don't have to! Find the most competitive rates including: 15, 20 and 30-year fixed rates, 10/6, 7/6 and 5/6 ARMs, FHA, Jumbo, low down payment options and more.
-            </p>
-            <a
-              href="https://tandmmortgages.com/#todays-rates"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white rounded-full px-6 py-3 font-medium hover:bg-[#249E93] transition-all duration-300"
-              style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-            >
-              <TrendingUp className="w-5 h-5" />
-              View Today's Live Rates
-              <ChevronRight className="w-5 h-5" />
-            </a>
           </div>
         </div>
       </section>
@@ -427,13 +388,13 @@ function Mortgages() {
           {/* CTA */}
           <div className="text-center mt-12">
             <a
-              href="https://tandmmortgages.morty.com/get-started/mortgage?loan_officer=terry-hassell"
+              href={PRE_APPROVAL_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white rounded-full px-8 py-4 font-medium hover:bg-[#249E93] transition-all duration-300"
               style={{ fontFamily: 'Instrument Sans, sans-serif' }}
             >
-              Get Pre-Approved with T&M
+              Get Pre-Approved with AnnieMac
               <ChevronRight className="w-5 h-5" />
             </a>
           </div>
@@ -526,13 +487,13 @@ function Mortgages() {
                     <BadgeCheck className="w-6 h-6" />
                   </div>
                   <h4 className="text-lg font-medium mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                    Get Pre-Approved with T&M
+                    Get Pre-Approved with AnnieMac
                   </h4>
                   <p className="text-sm text-white/80 mb-4" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                    Our preferred mortgage team understands Oklahoma programs and local market dynamics. Let us help you get the best rate.
+                    Our preferred mortgage team understands Oklahoma programs and works seamlessly with M&T Realty Group. Let us help you get the best rate.
                   </p>
                   <a
-                    href="https://tandmmortgages.com/"
+                    href={PRE_APPROVAL_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 bg-white text-[#2BBBAD] rounded-full px-6 py-3 font-medium transition-all duration-300 hover:bg-gray-100"

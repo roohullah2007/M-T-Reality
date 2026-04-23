@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
-import { DollarSign, Users, ChevronRight, ChevronDown, Zap, BarChart3, Camera, FileText, Megaphone, Handshake, CheckCircle, Video, Box, Sun, Globe, Eye, TrendingUp, ArrowRight, Shield, Target, ClipboardList } from 'lucide-react';
+import { DollarSign, Users, ChevronRight, ChevronDown, BarChart3, Camera, FileText, Handshake, Video, Box, Sun, Globe, Eye, TrendingUp, ArrowRight, Target, ClipboardList } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
 import CompanyLogosGrid from '@/Components/Sections/CompanyLogosGrid';
 
@@ -133,14 +133,6 @@ function Sellers() {
       answer: "We provide full-service representation — strategic pricing, professional marketing, expert negotiation, and closing management — without the inflated cost structure of traditional firms. No large offices, no franchise fees, no unnecessary overhead. You get the same quality service while keeping more of your equity."
     },
     {
-      question: "What does your commission structure look like?",
-      answer: "Our commission reflects the actual service and value we deliver — not outdated industry norms. We're transparent about our fees from day one, and our lean operations mean you retain more equity at closing. Contact us for a personalized consultation."
-    },
-    {
-      question: "What marketing do you provide for my listing?",
-      answer: "We offer comprehensive marketing including professional HDR photography, MLS syndication to 100+ websites, video walkthroughs, 3D virtual tours, drone aerials, digital advertising, and targeted buyer outreach. Every listing gets the exposure it deserves."
-    },
-    {
       question: "How do you determine the right listing price?",
       answer: "We conduct a thorough comparative market analysis using current market data, recent sales, neighborhood trends, and property-specific factors. Our pricing strategy is designed to attract strong offers — not just any offers."
     },
@@ -205,7 +197,7 @@ function Sellers() {
                 className="text-white text-[40px] sm:text-[50px] md:text-[60px] font-medium leading-[1.1] mb-6 drop-shadow-2xl"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                Sell Smarter.<br />Keep More of Your Equity.
+                Sell Smarter<br />Keep More of Your Equity
               </h1>
               <p
                 className="text-white/90 text-[16px] sm:text-[18px] font-medium mb-8 leading-relaxed max-w-2xl drop-shadow-lg"
@@ -362,8 +354,8 @@ function Sellers() {
                 </div>
                 <div className="overflow-hidden rounded-2xl h-[195px]">
                   <img
-                    src="https://images.pexels.com/photos/5524308/pexels-photo-5524308.jpeg?auto=compress&cs=tinysrgb&w=600"
-                    alt="Dream home"
+                    src="https://images.pexels.com/photos/8186489/pexels-photo-8186489.jpeg?auto=compress&cs=tinysrgb&w=600"
+                    alt="Updated bathroom"
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                   />
                 </div>
@@ -432,7 +424,7 @@ function Sellers() {
               Your Home, Presented at Its Best
             </h2>
             <p className="text-[16px] text-[#666] font-medium max-w-2xl mx-auto" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-              Professional marketing sells homes faster and for more money. Every listing gets the attention and exposure it deserves.
+              Professional marketing sells homes faster and for more money.
             </p>
           </div>
 
@@ -562,7 +554,7 @@ function Sellers() {
               How We Compare
             </h2>
             <p className="text-[16px] text-[#666] font-medium max-w-2xl mx-auto" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-              Full-service representation at a smarter cost — see how M&T stacks up
+              Representation at a smarter cost — see how M&T stacks up
             </p>
           </div>
 
@@ -606,6 +598,85 @@ function Sellers() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Comparison Section */}
+      <section className="bg-white py-20 md:py-28">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center bg-[#E5E1DC] rounded-lg px-4 py-2 mb-6">
+              <span className="text-[#666] text-sm font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                Our Pricing
+              </span>
+            </div>
+            <h2 className="text-[32px] md:text-[48px] font-medium text-[#111] mb-6" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+              See How Much You Save
+            </h2>
+            <p className="text-[16px] text-[#666] font-medium max-w-4xl mx-auto leading-relaxed" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+              M&amp;T Realty Group offers a superior alternative to traditional brokerages. Our model is structured to maximize your savings by deviating from the standard practice of charging a fixed commission, regardless of who secures the buyer. As illustrated in the chart below, even with an assumed 3% buyer's agent compensation, you benefit significantly. Your potential savings increase further when M&amp;T Realty Group or the seller brings the buyer directly.
+            </p>
+          </div>
+
+          {/* Pricing Table */}
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-[#E5E1DC]">
+              {/* Header */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 bg-[#1a1a1a]">
+                <div className="text-white font-semibold" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  Options
+                </div>
+                <div className="text-[#2BBBAD] font-semibold text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  M&amp;T Realty Group Brokerage*
+                </div>
+                <div className="text-white/70 font-medium text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  Traditional Brokerage
+                </div>
+                <div className="text-white/70 font-medium text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  $ Savings with M&amp;T Realty Group<br />
+                  <span className="text-white/50 text-xs font-normal">(i.e., $300K home)</span>
+                </div>
+              </div>
+
+              {/* Row 1 — Buyer's agent involved */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 bg-white border-b border-[#E5E1DC]">
+                <div className="text-[#111] font-semibold text-sm md:text-base" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  If a buyer's agent is involved:
+                </div>
+                <div className="text-[#111] text-sm leading-relaxed md:text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  Seller pays <span className="font-semibold text-[#2BBBAD]">1.5%</span> of the final sales price (or a minimum of $3,000) for handling the seller's side, plus the buyer's agent's compensation.
+                </div>
+                <div className="text-[#666] text-sm md:text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  6% ($15,000 on $300K home)
+                </div>
+                <div className="text-[#2BBBAD] font-semibold text-lg md:text-2xl md:text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  $4,500
+                </div>
+              </div>
+
+              {/* Row 2 — Buyer's agent not involved */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 bg-[#F8F7F5]">
+                <div className="text-[#111] font-semibold text-sm md:text-base" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  If a buyer's agent is not involved:
+                </div>
+                <div className="text-[#111] text-sm leading-relaxed md:text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  Seller pays <span className="font-semibold text-[#2BBBAD]">3%</span> of the final sales price (or a minimum of $5,000) for handling both the buyer and seller sides. No buyer's broker compensation is paid by the seller.
+                </div>
+                <div className="text-[#666] text-sm md:text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  6% ($15,000 on $300K home)
+                </div>
+                <div className="text-[#2BBBAD] font-semibold text-lg md:text-2xl md:text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  $9,000
+                </div>
+              </div>
+            </div>
+
+            {/* Footnote */}
+            <p className="text-[13px] text-[#666] mt-6 leading-relaxed" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+              * $500 is due upon listing cancellation to cover the upfront cost of the listing. The seller owns all multimedia.
+            </p>
           </div>
         </div>
       </section>
@@ -753,50 +824,6 @@ function Sellers() {
         </div>
       </section>
 
-      {/* Bottom CTA Section */}
-      <section className="bg-white py-16 md:py-20">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
-          <div className="bg-[#1a1a1a] rounded-2xl p-10 md:p-16 text-center">
-            <Shield className="w-12 h-12 text-[#2BBBAD] mx-auto mb-6" />
-            <h2
-              className="text-white text-[28px] md:text-[40px] font-medium mb-4 leading-[1.15]"
-              style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-            >
-              Ready to sell smarter?
-            </h2>
-            <p
-              className="text-[#2BBBAD] text-[20px] md:text-[28px] font-medium mb-8"
-              style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-            >
-              Let's create a strategy that works for you.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 bg-[#2BBBAD] text-white rounded-full px-8 py-3.5 font-semibold text-[15px] transition-all duration-300 hover:bg-[#249E93] hover:shadow-lg hover:shadow-[#2BBBAD]/25"
-                style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-              >
-                Schedule a Consultation
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <mask id="mask_sellers_cta" style={{ maskType: 'alpha' }} maskUnits="userSpaceOnUse" x="0" y="0" width="20" height="20">
-                    <rect width="20" height="20" transform="matrix(-1 0 0 1 20 0)" fill="#D9D9D9"/>
-                  </mask>
-                  <g mask="url(#mask_sellers_cta)">
-                    <path d="M13.459 10.8334L11.084 13.2084C10.9173 13.3751 10.8375 13.5695 10.8444 13.7918C10.8513 14.014 10.9312 14.2084 11.084 14.3751C11.2507 14.5418 11.4486 14.6286 11.6777 14.6355C11.9069 14.6425 12.1048 14.5626 12.2715 14.3959L16.084 10.5834C16.2507 10.4168 16.334 10.2223 16.334 10.0001C16.334 9.77787 16.2507 9.58343 16.084 9.41676L12.2715 5.60426C12.1048 5.43759 11.9069 5.35773 11.6777 5.36467C11.4486 5.37162 11.2507 5.45842 11.084 5.62509C10.9312 5.79176 10.8513 5.9862 10.8444 6.20842C10.8375 6.43065 10.9173 6.62509 11.084 6.79176L13.459 9.16676H4.16732C3.93121 9.16676 3.73329 9.24662 3.57357 9.40634C3.41385 9.56606 3.33398 9.76398 3.33398 10.0001C3.33398 10.2362 3.41385 10.4341 3.57357 10.5938C3.73329 10.7536 3.93121 10.8334 4.16732 10.8334H13.459Z" fill="white"/>
-                  </g>
-                </svg>
-              </Link>
-              <Link
-                href="/why-our-model-works"
-                className="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/30 text-white rounded-full px-8 py-3.5 font-semibold text-[15px] transition-all duration-300 hover:bg-white/20"
-                style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-              >
-                Why Our Model Works
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
     </>
   );
 }

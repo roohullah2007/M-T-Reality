@@ -70,12 +70,12 @@ const FAQSection = () => {
     {
       category: "Selling Process",
       question: "What areas do you serve?",
-      answer: "M&T Realty Group is licensed in Oklahoma and primarily serves the Tulsa metropolitan area and surrounding communities. Contact us to discuss your specific location."
+      answer: "M&T Realty Group is licensed in Oklahoma and serves the Tulsa, Oklahoma City, and Northeastern Oklahoma area, but we can serve all of Oklahoma."
     },
     {
       category: "Mortgage",
       question: "Do you offer mortgage services?",
-      answer: "M&T Realty proudly partners with T&M Mortgages to provide our buyers with trusted lending solutions, competitive rates, and a smooth, stress-free financing experience."
+      answer: "M&T Realty proudly partners with AnnieMac Home Mortgage to provide our buyers with trusted lending solutions, competitive rates, and a smooth, stress-free financing experience."
     }
   ];
 

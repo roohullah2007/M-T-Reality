@@ -94,12 +94,6 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
               >
                 Find Your Next Home
               </h1>
-              <p
-                className="text-white/80 text-[15px] sm:text-[17px] font-medium leading-relaxed max-w-2xl drop-shadow-lg"
-                style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-              >
-                Browse our curated collection of properties across Oklahoma — backed by experienced agents who put your goals first.
-              </p>
             </div>
 
             {/* Search Bar */}

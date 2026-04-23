@@ -9,12 +9,12 @@ const HeroSection = () => {
   const slides = [
     {
       id: 1,
-      headlineTop: 'Sell Smarter.',
-      headlineBottom: 'Keep More of Your Equity.',
-      description: 'Full-service real estate representation — without outdated overhead. M&T Realty Group is a modern brokerage built for today\'s market. We deliver expert strategy, professional marketing, and skilled negotiation.',
-      image: 'https://images.pexels.com/photos/2102587/pexels-photo-2102587.jpeg?auto=compress&cs=tinysrgb&w=1920',
+      headlineTop: 'Sell Smarter',
+      headlineBottom: 'Keep More of Your Equity',
+      description: 'Full-service real estate representation — without outdated overhead.\nM&T Realty Group is a modern brokerage built for today\'s market.\nWe deliver expert strategy, professional marketing, and skilled negotiation.',
+      image: '/images/slide-1.jpg',
       ctaPrimary: { text: 'Schedule a Consultation', href: '/contact' },
-      ctaSecondary: { text: 'Browse Our Listings', href: '/properties', icon: Search }
+      ctaSecondary: { text: 'Learn How It Works', href: '/how-it-works' }
     },
     {
       id: 2,
@@ -115,7 +115,7 @@ const HeroSection = () => {
 
                     {/* Description */}
                     <p
-                      className="text-white text-[14px] sm:text-[16px] font-medium mb-8 leading-relaxed max-w-2xl mx-auto drop-shadow-lg"
+                      className="text-white text-[14px] sm:text-[16px] font-medium mb-8 leading-relaxed max-w-2xl mx-auto drop-shadow-lg whitespace-pre-line"
                       style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                     >
                       {slide.description}
