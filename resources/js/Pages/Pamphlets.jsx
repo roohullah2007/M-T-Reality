@@ -57,10 +57,11 @@ export default function Pamphlets({ forms = [] }) {
                                     className="block relative bg-gray-100 aspect-[3/4] overflow-hidden group"
                                 >
                                     <iframe
-                                        src={`${doc.url}#toolbar=0&navpanes=0&scrollbar=0&view=FitH&page=1`}
-                                        className="absolute inset-0 w-full h-full pointer-events-none"
+                                        src={`${doc.url}#toolbar=0&navpanes=0&scrollbar=0&view=Fit&page=1`}
+                                        className="absolute inset-0 w-full h-full pointer-events-none border-0"
                                         title={doc.name}
                                         loading="lazy"
+                                        scrolling="no"
                                     />
                                     <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition-colors">
                                         <div className="opacity-0 group-hover:opacity-100 transition-opacity inline-flex items-center gap-2 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium text-[#111] shadow-lg">
