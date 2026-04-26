@@ -102,12 +102,6 @@ function Sellers() {
       traditional: 'Full-service agents'
     },
     {
-      feature: 'Commission Structure',
-      mandt: 'Competitive — reflects service, not overhead',
-      discount: 'Low fee, minimal service',
-      traditional: '5-6% ($15,000+ on $300K home)'
-    },
-    {
       feature: 'Marketing & MLS',
       mandt: 'Professional photos, MLS, digital marketing',
       discount: 'MLS only, no marketing',
@@ -117,13 +111,13 @@ function Sellers() {
       feature: 'Negotiation Support',
       mandt: 'Strategic, data-driven negotiation',
       discount: 'DIY or none',
-      traditional: 'Agent-handled'
+      traditional: 'Varies by Agent'
     },
     {
-      feature: 'Client Equity Retained',
-      mandt: 'More — lean model means lower costs',
-      discount: 'More — but at the cost of service',
-      traditional: 'Less — high overhead passed to you'
+      feature: 'Commission Structure*',
+      mandt: 'Competitive — reflects service, not overhead',
+      discount: 'Low fee, but minimal service',
+      traditional: 'High Commission to cover the outdated business model'
     }
   ];
 
@@ -570,10 +564,10 @@ function Sellers() {
                   M&T Realty Group
                 </div>
                 <div className="text-white/70 font-medium text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Discount Broker
+                  Limited-Service Broker
                 </div>
                 <div className="text-white/70 font-medium text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Traditional Agent
+                  Traditional Broker
                 </div>
               </div>
 
