@@ -52,8 +52,6 @@ const Footer = () => {
               {[
                 { label: 'Our Listings', href: '/properties' },
                 { label: 'Our Services', href: '/our-packages' },
-                { label: 'How It Works', href: '/how-it-works' },
-                { label: 'Why Our Model Works', href: '/why-our-model-works' },
                 { label: 'Sellers', href: '/sellers' },
                 { label: 'FAQs', href: '/faqs' },
                 { label: 'Contact', href: '/contact' }

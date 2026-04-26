@@ -85,7 +85,17 @@
       "Bash(find:*)",
       "Bash(cd:*)",
       "Bash(tail:*)",
-      "Bash(cd F:\\\\m and t project terry\\\\M&T-Reality:*)"
+      "Bash(cd F:\\\\m and t project terry\\\\M&T-Reality:*)",
+      "Bash(composer install *)",
+      "Read(//private/tmp/**)",
+      "Bash(sips -s format png /Users/macbookair/M-T-Reality/public/images/__TRACKED_VAR__.avif --out /tmp/__TRACKED_VAR__.png --resampleWidth 400)",
+      "Bash(sips -s format png \"/Users/macbookair/M-T-Reality/public/images/slide-1.jpg\" --out \"/tmp/slide-1.png\" --resampleWidth 400)",
+      "Bash(sips -s format png \"/Users/macbookair/M-T-Reality/public/images/property-1.jpg\" --out \"/tmp/property-1.png\" --resampleWidth 400)",
+      "Bash(sips -s format png \"/Users/macbookair/M-T-Reality/public/images/property-2.jpg\" --out \"/tmp/property-2.png\" --resampleWidth 400)",
+      "Bash(sips -s format png \"/Users/macbookair/M-T-Reality/public/images/for-sale.webp\" --out \"/tmp/for-sale.png\" --resampleWidth 400)",
+      "Bash(sips -s format png \"/Users/macbookair/M-T-Reality/public/images/84ThfxeixSTqgPeVHnjMy4tXX4SsZeNXbv2hAnqi.jpeg\" --out \"/tmp/mystery.png\" --resampleWidth 400)",
+      "Bash(sips -g pixelWidth -g pixelHeight /tmp/bath-8186489.jpg)",
+      "Bash(git *)"
     ],
     "deny": [],
     "ask": []

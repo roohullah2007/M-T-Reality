@@ -210,13 +210,13 @@ function Testimonials() {
           <div className="flex flex-col md:flex-row items-center justify-center gap-10">
             <div className="flex items-center gap-5">
               <img
-                src="/images/men-img.jpg"
-                alt="Terry"
-                className="w-24 h-24 rounded-2xl object-cover shadow-lg"
+                src="/images/women-img.jpg"
+                alt="Michele"
+                className="w-24 h-24 rounded-2xl object-cover object-top shadow-lg"
               />
               <div>
                 <h3 className="text-[20px] font-semibold text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Terry
+                  Michele
                 </h3>
                 <p className="text-[14px] text-[#666] font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   Broker / Owner
@@ -226,16 +226,16 @@ function Testimonials() {
             <div className="hidden md:block w-px h-16 bg-gray-200"></div>
             <div className="flex items-center gap-5">
               <img
-                src="/images/women-img.jpg"
-                alt="Michele"
+                src="/images/men-img.jpg"
+                alt="Terry"
                 className="w-24 h-24 rounded-2xl object-cover shadow-lg"
               />
               <div>
                 <h3 className="text-[20px] font-semibold text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Michele
+                  Terry
                 </h3>
                 <p className="text-[14px] text-[#666] font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Associate Broker
+                  Associate Broker / Owner
                 </p>
               </div>
             </div>
@@ -386,10 +386,10 @@ function Testimonials() {
               </div>
               <div className="bg-[#EEEDEA] rounded-2xl p-8 text-center">
                 <p className="text-[48px] font-bold text-[#2BBBAD] mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  13+
+                  67+
                 </p>
                 <p className="text-[14px] text-[#666] font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Happy Clients
+                  5-Star Reviews
                 </p>
               </div>
               <div className="bg-[#EEEDEA] rounded-2xl p-8 text-center col-span-2">

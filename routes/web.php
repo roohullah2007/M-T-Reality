@@ -81,14 +81,6 @@ Route::get('/faqs', function () {
     return Inertia::render('FAQs');
 })->name('faqs');
 
-Route::get('/how-it-works', function () {
-    return Inertia::render('HowItWorks');
-})->name('how-it-works');
-
-Route::get('/why-our-model-works', function () {
-    return Inertia::render('WhyOurModelWorks');
-})->name('why-our-model-works');
-
 Route::get('/testimonials', function () {
     return Inertia::render('Testimonials');
 })->name('testimonials');
@@ -133,6 +125,26 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 // Property inquiry submission route (public)
 Route::post('/inquiry', [InquiryController::class, 'store'])->name('inquiry.store');
 
+// Public Pamphlets page (linked from DocuSign-signed receipt forms; not in nav)
+Route::get('/pamphlets', function () {
+    $forms = \App\Models\FormTemplate::active()
+        ->orderBy('sort_order')->orderBy('name')
+        ->get(['id', 'name', 'description', 'file_path', 'file_name', 'file_size'])
+        ->map(fn ($f) => [
+            'id' => $f->id,
+            'name' => $f->name,
+            'description' => $f->description,
+            'file_name' => $f->file_name,
+            'file_size' => $f->file_size,
+            'url' => '/storage/' . $f->file_path,
+        ]);
+    return Inertia::render('Pamphlets', ['forms' => $forms]);
+})->name('pamphlets');
+
+// Public MLS Change request form (linked from DocuSign-signed forms; not in nav)
+Route::get('/mlschanges', fn () => Inertia::render('MlsChanges'))->name('mlschanges');
+Route::post('/mlschanges', [\App\Http\Controllers\MlsChangeFormController::class, 'store'])->name('mlschanges.store');
+
 // User Dashboard
 Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard')->group(function () {
     Route::get('/', [UserDashboardController::class, 'index']);
@@ -159,6 +171,8 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard')-
     // Documents (completed forms uploaded by admin)
     Route::get('/documents', [UserDashboardController::class, 'documents'])->name('.documents');
     Route::get('/documents/{sellerDocument}/download', [UserDashboardController::class, 'downloadDocument'])->name('.documents.download');
+    // Listing Documents (OREC-required pamphlets, sellers only)
+    Route::get('/listing-documents', [UserDashboardController::class, 'listingDocuments'])->name('.listing-documents');
     // Forms Library
     Route::get('/forms', [UserDashboardController::class, 'formsLibrary'])->name('.forms');
     Route::post('/forms/{formTemplate}/acknowledge', [UserDashboardController::class, 'acknowledgeForm'])->name('.forms.acknowledge');

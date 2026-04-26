@@ -35,6 +35,10 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
+            ],
             'googleMapsApiKey' => config('services.google.maps_api_key'),
             'companyLogos' => fn () => CompanyLogo::getActive(),
         ];

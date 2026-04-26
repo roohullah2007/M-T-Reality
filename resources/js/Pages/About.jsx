@@ -109,44 +109,29 @@ function About() {
 
             {/* Right - Team Photos */}
             <div className="relative">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-2xl overflow-hidden shadow-2xl">
-                  <img
-                    src="/images/men-img.jpg"
-                    alt="Terry - Broker / Owner"
-                    className="w-full h-[300px] object-cover"
-                  />
-                  <div className="bg-white p-4 text-center">
-                    <h3 className="text-[16px] font-semibold text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Terry</h3>
-                    <p className="text-[13px] text-[#666] font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Broker / Owner</p>
-                  </div>
-                </div>
-                <div className="rounded-2xl overflow-hidden shadow-2xl">
+              <div className="grid grid-cols-2 gap-4 justify-items-center">
+                <div className="rounded-2xl overflow-hidden shadow-2xl w-full order-1">
                   <img
                     src="/images/women-img.jpg"
-                    alt="Michele - Associate Broker"
+                    alt="Michele - Broker / Owner"
                     className="w-full h-[300px] object-cover"
                   />
                   <div className="bg-white p-4 text-center">
                     <h3 className="text-[16px] font-semibold text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Michele</h3>
-                    <p className="text-[13px] text-[#666] font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Associate Broker</p>
+                    <p className="text-[13px] text-[#666] font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Broker / Owner</p>
                   </div>
                 </div>
-              </div>
-              {/* Accent card */}
-              <div className="absolute -bottom-6 -left-6 bg-[#1a1a1a] rounded-2xl p-6 shadow-xl hidden md:block">
-                <p
-                  className="text-[#2BBBAD] text-[36px] font-bold leading-none mb-1"
-                  style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                >
-                  M&T
-                </p>
-                <p
-                  className="text-white/70 text-sm font-medium"
-                  style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                >
-                  Realty Group
-                </p>
+                <div className="rounded-2xl overflow-hidden shadow-2xl w-full order-2">
+                  <img
+                    src="/images/men-img.jpg"
+                    alt="Terry - Associate Broker / Owner"
+                    className="w-full h-[300px] object-cover"
+                  />
+                  <div className="bg-white p-4 text-center">
+                    <h3 className="text-[16px] font-semibold text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Terry</h3>
+                    <p className="text-[13px] text-[#666] font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Associate Broker / Owner</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -236,7 +221,7 @@ function About() {
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link
-                  href="/why-our-model-works"
+                  href="/sellers"
                   className="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/30 text-white rounded-full px-8 py-3.5 font-semibold text-[15px] transition-all duration-300 hover:bg-white/20"
                   style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                 >

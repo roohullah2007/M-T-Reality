@@ -185,11 +185,32 @@ function Contact() {
                 className="text-[32px] md:text-[44px] font-medium text-[#111] leading-[1.15] mb-8"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                Meet Terry & Michele
+                Meet Michele & Terry
               </h2>
 
               {/* Team Cards */}
               <div className="space-y-4 mb-10">
+                <div className="bg-[#EEEDEA] rounded-2xl p-6 flex items-center gap-5">
+                  <img
+                    src="/images/women-img.jpg"
+                    alt="Michele"
+                    className="w-20 h-20 rounded-2xl object-cover object-top"
+                  />
+                  <div>
+                    <h3
+                      className="text-[18px] font-semibold text-[#111] mb-1"
+                      style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                    >
+                      Michele
+                    </h3>
+                    <p
+                      className="text-[14px] text-[#666] font-medium"
+                      style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                    >
+                      Broker / Owner
+                    </p>
+                  </div>
+                </div>
                 <div className="bg-[#EEEDEA] rounded-2xl p-6 flex items-center gap-5">
                   <img
                     src="/images/men-img.jpg"
@@ -207,28 +228,7 @@ function Contact() {
                       className="text-[14px] text-[#666] font-medium"
                       style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                     >
-                      Broker / Owner
-                    </p>
-                  </div>
-                </div>
-                <div className="bg-[#EEEDEA] rounded-2xl p-6 flex items-center gap-5">
-                  <img
-                    src="/images/women-img.jpg"
-                    alt="Michele"
-                    className="w-20 h-20 rounded-2xl object-cover"
-                  />
-                  <div>
-                    <h3
-                      className="text-[18px] font-semibold text-[#111] mb-1"
-                      style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                    >
-                      Michele
-                    </h3>
-                    <p
-                      className="text-[14px] text-[#666] font-medium"
-                      style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                    >
-                      Associate Broker
+                      Associate Broker / Owner
                     </p>
                   </div>
                 </div>
@@ -434,7 +434,7 @@ function Contact() {
                 Call 918-884-SOLD
               </a>
               <Link
-                href="/how-it-works"
+                href="/sellers"
                 className="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/30 text-white rounded-full px-8 py-3.5 font-semibold text-[15px] transition-all duration-300 hover:bg-white/20"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >

@@ -14,7 +14,7 @@ const HeroSection = () => {
       description: 'Full-service real estate representation — without outdated overhead.\nM&T Realty Group is a modern brokerage built for today\'s market.\nWe deliver expert strategy, professional marketing, and skilled negotiation.',
       image: '/images/slide-1.jpg',
       ctaPrimary: { text: 'Schedule a Consultation', href: '/contact' },
-      ctaSecondary: { text: 'Learn How It Works', href: '/how-it-works' }
+      ctaSecondary: { text: 'Meet Our Team', href: '/about' }
     },
     {
       id: 2,
@@ -23,7 +23,7 @@ const HeroSection = () => {
       description: 'Strategic pricing, professional photography, full MLS exposure, skilled negotiation, and contract-to-close management. Same service. Streamlined structure.',
       image: 'https://images.pexels.com/photos/2462015/pexels-photo-2462015.jpeg?auto=compress&cs=tinysrgb&w=1920',
       ctaPrimary: { text: 'Our Services', href: '/our-packages' },
-      ctaSecondary: { text: 'Learn How It Works', href: '/how-it-works', icon: Search }
+      ctaSecondary: { text: 'Sell With Us', href: '/sellers', icon: Search }
     },
     {
       id: 3,

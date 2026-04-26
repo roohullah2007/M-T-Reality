@@ -65,7 +65,7 @@ function FAQs() {
         },
         {
           question: "What areas does M&T Realty Group serve?",
-          answer: "We serve all of Oklahoma, including major cities like Oklahoma City, Tulsa, Norman, Broken Arrow, Edmond, and all surrounding areas throughout the state."
+          answer: "We serve all of Oklahoma. We are currently members of the Tulsa, Oklahoma City, and Northeastern Oklahoma MLS systems."
         }
       ]
     },
@@ -75,7 +75,7 @@ function FAQs() {
       faqs: [
         {
           question: "How much does it cost to list with M&T Realty Group?",
-          answer: "We offer competitive, transparent commission rates that are clearly outlined before you sign a listing agreement. Our lean business model allows us to deliver full-service representation at rates that save you money compared to traditional brokerages."
+          answer: "We offer competitive, transparent commission rates that are clearly outlined before you sign a listing agreement. Our lean business model allows us to deliver full-service representation at rates that save you money compared to traditional brokerages. Our commission structure is located on the Seller's page."
         },
         {
           question: "Are there any hidden fees?",
@@ -97,7 +97,7 @@ function FAQs() {
       faqs: [
         {
           question: "How will M&T Realty Group market my property?",
-          answer: "We provide comprehensive marketing for every listing, including professional HDR photography, drone aerials, MLS listing with syndication to Zillow, Trulia, Realtor.com, and 100+ websites, targeted digital advertising, social media campaigns, and open house promotion."
+          answer: "We provide comprehensive marketing for every listing, including professional HDR photography, floor plan, MLS listing with syndication to Zillow, Trulia, Realtor.com, and 100+ websites, targeted digital advertising, social media campaigns, and open house promotion."
         },
         {
           question: "Will my listing appear on Zillow, Trulia, and Realtor.com?",
@@ -105,15 +105,19 @@ function FAQs() {
         },
         {
           question: "Does M&T provide professional photography?",
-          answer: "Absolutely. Every listing includes professional HDR photography, and depending on your property, we may also include drone aerials, virtual twilight images, and 3D virtual tours to showcase your home at its best."
+          answer: "Absolutely. Every listing includes professional HDR photography, and a floor plan. We also allow our sellers to upgrade their listing with drone aerials, virtual twilight images, and 3D virtual tours to showcase your home at its best."
         },
         {
           question: "How long will my home be listed?",
-          answer: "Listing agreements are typically 6 months, but we work with you on a timeline that fits your situation. Our goal is to sell your home as quickly as possible at the best price — most of our listings sell well within the agreement period."
+          answer: "Listing agreements are typically 12 months, but we work with you on a timeline that fits your situation. Our goal is to sell your home as quickly as possible at the best price — most of our listings sell well within the agreement period."
         },
         {
           question: "Can I request changes to my listing after it goes live?",
           answer: "Of course. Your M&T agent handles all listing updates for you — price adjustments, photo changes, description updates, or any other modifications. Simply reach out to your agent and we'll take care of it promptly."
+        },
+        {
+          question: "What if I decide not to sell or go another direction?",
+          answer: "You can cancel your listing at any time as long as you're not under contract with a buyer's agent. We also ask that you pay a $500 listing fee to cover the photos, floor plan, and the MLS listing. All multimedia is owned by the seller."
         }
       ]
     },
@@ -123,23 +127,23 @@ function FAQs() {
       faqs: [
         {
           question: "How do buyers schedule showings on my property?",
-          answer: "All showing requests come through M&T Realty Group. We coordinate scheduling with you, screen potential buyers, and can conduct showings on your behalf — so you don't have to manage inquiries or be present for every visit."
+          answer: "All showing requests come through ShowingTime, which will coordinate scheduling with you and the showing agent. Sellers have 100% control of their showings."
         },
         {
-          question: "Does M&T handle showings and open houses?",
-          answer: "Yes. Your M&T agent manages all showings and open house events. We handle buyer screening, scheduling, property presentation, and follow-up — giving you a hands-off experience while ensuring your home is professionally represented."
+          question: "How will approved showing agents access my property?",
+          answer: "All listings come with a Sentrilock key box, which allows local agents to access your property. This is the same process used by the industry."
         },
         {
           question: "What happens when I receive an offer?",
-          answer: "Your M&T agent will present every offer to you, explain the terms, and provide expert guidance on how to respond. We handle all negotiations on your behalf to secure the best possible price and terms, and manage counteroffers until we reach an agreement."
+          answer: "We will present every offer to you, explain the terms, and provide expert guidance on how to respond. We handle all negotiations on your behalf to secure the best possible price and terms, and manage counteroffers until we reach an agreement."
         },
         {
           question: "How long does it typically take to sell?",
-          answer: "Sale timelines vary based on pricing, location, condition, and market conditions. Properties priced competitively with professional marketing typically sell within 30-90 days. Your M&T agent will provide a realistic timeline based on your specific market."
+          answer: "Sale timelines vary based on pricing, location, condition, and market conditions. Properties priced competitively with professional marketing typically sell within 30-90 days. We will provide a realistic timeline based on your specific market."
         },
         {
           question: "Does M&T handle the paperwork and closing process?",
-          answer: "Yes — we manage the entire transaction from accepted offer to closing day. This includes coordinating inspections, appraisals, title work, and all required documentation. Your agent ensures every detail is handled so you can close with confidence."
+          answer: "Yes — we manage the entire transaction from accepted offer to closing day. This includes coordinating inspections, appraisals, title work, and all required documentation. We ensure every detail is handled so you can close with confidence."
         }
       ]
     },
@@ -157,11 +161,11 @@ function FAQs() {
         },
         {
           question: "Does M&T help with mortgage pre-approval?",
-          answer: "We proudly partner with T&M Mortgages to provide our buyers with trusted lending solutions. Our agents can connect you with a lending specialist to get pre-approved, compare rates, and ensure a smooth financing process."
+          answer: "We proudly partner with Annie Mac Home Mortgages to provide our buyers with trusted lending solutions. Our agents can connect you with a lending specialist to get pre-approved, compare rates, and ensure a smooth financing process."
         },
         {
           question: "What does it cost to work with a buyer's agent?",
-          answer: "In most transactions, the seller pays the buyer's agent commission, so our buyer representation comes at no direct cost to you. We'll explain exactly how compensation works before you begin your home search."
+          answer: "In most transactions, the seller pays the buyer's agent commission, so our buyer representation comes at no direct cost to you. We'll explain exactly how compensation works before you begin your home search. If you buy one of our listings, you don't pay a commission, as the seller's commission to M&T covers our services. If you want to work with us to purchase a property not listed with M&T, we will negotiate with the seller to cover the agreed-upon buyer's commission. We will go more in detail on how our buyer-broker agreement works."
         }
       ]
     }
