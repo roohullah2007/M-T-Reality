@@ -53,6 +53,7 @@ const Footer = () => {
                 { label: 'Our Listings', href: '/properties' },
                 { label: 'Our Services', href: '/our-packages' },
                 { label: 'Sellers', href: '/sellers' },
+                { label: 'MLS Change Request', href: '/mlschanges' },
                 { label: 'FAQs', href: '/faqs' },
                 { label: 'Contact', href: '/contact' }
               ].map((item) => (

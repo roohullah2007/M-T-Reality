@@ -29,7 +29,7 @@ export default function UserDashboardLayout({ children, title }) {
         { name: 'MLS Changes', href: route('dashboard.mls-changes'), icon: FileEdit, current: route().current('dashboard.mls-changes*') },
         { name: 'Documents', href: route('dashboard.documents'), icon: FolderOpen, current: route().current('dashboard.documents*') },
         { name: 'Forms Library', href: route('dashboard.forms'), icon: FileText, current: route().current('dashboard.forms*') },
-        ...(isSeller ? [{ name: 'Listing Documents', href: route('dashboard.listing-documents'), icon: BookOpen, current: route().current('dashboard.listing-documents*') }] : []),
+        ...(isSeller ? [{ name: 'Listing Documents', href: '/pamphlets', icon: BookOpen, current: typeof window !== 'undefined' && window.location.pathname.startsWith('/pamphlets') }] : []),
         { name: 'Messages', href: route('dashboard.messages'), icon: MessageSquare, current: route().current('dashboard.messages*') },
         { name: 'Saved Properties', href: route('dashboard.favorites'), icon: Heart, current: route().current('dashboard.favorites*') },
         { name: 'Service Requests', href: route('dashboard.service-requests'), icon: Wrench, current: route().current('dashboard.service-requests*') },

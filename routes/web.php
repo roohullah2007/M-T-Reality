@@ -125,8 +125,11 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 // Property inquiry submission route (public)
 Route::post('/inquiry', [InquiryController::class, 'store'])->name('inquiry.store');
 
-// Public Pamphlets page (linked from DocuSign-signed receipt forms; not in nav)
-Route::get('/pamphlets', function () {
+// Pamphlets page — sellers only (linked from DocuSign-signed receipt forms; not in nav)
+Route::middleware(['auth'])->get('/pamphlets', function () {
+    if (!auth()->user()->isSeller()) {
+        abort(403);
+    }
     $forms = \App\Models\FormTemplate::active()
         ->orderBy('sort_order')->orderBy('name')
         ->get(['id', 'name', 'description', 'file_path', 'file_name', 'file_size'])
@@ -171,8 +174,6 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard')-
     // Documents (completed forms uploaded by admin)
     Route::get('/documents', [UserDashboardController::class, 'documents'])->name('.documents');
     Route::get('/documents/{sellerDocument}/download', [UserDashboardController::class, 'downloadDocument'])->name('.documents.download');
-    // Listing Documents (OREC-required pamphlets, sellers only)
-    Route::get('/listing-documents', [UserDashboardController::class, 'listingDocuments'])->name('.listing-documents');
     // Forms Library
     Route::get('/forms', [UserDashboardController::class, 'formsLibrary'])->name('.forms');
     Route::post('/forms/{formTemplate}/acknowledge', [UserDashboardController::class, 'acknowledgeForm'])->name('.forms.acknowledge');

@@ -1015,33 +1015,4 @@ class UserDashboardController extends Controller
         return response()->download($path, $sellerDocument->file_name);
     }
 
-    /**
-     * Display the OREC-required listing documents (sellers only)
-     */
-    public function listingDocuments()
-    {
-        $user = Auth::user();
-
-        if (!$user->isSeller()) {
-            abort(403);
-        }
-
-        $forms = FormTemplate::active()
-            ->orderBy('sort_order')
-            ->orderBy('name')
-            ->get(['id', 'name', 'description', 'file_path', 'file_name', 'file_size'])
-            ->map(fn ($f) => [
-                'id' => $f->id,
-                'name' => $f->name,
-                'description' => $f->description,
-                'file_name' => $f->file_name,
-                'file_size' => $f->file_size,
-                'url' => '/storage/' . $f->file_path,
-                'download_url' => route('dashboard.forms.download', $f->id),
-            ]);
-
-        return Inertia::render('Dashboard/ListingDocuments', [
-            'forms' => $forms,
-        ]);
-    }
 }
