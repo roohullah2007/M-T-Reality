@@ -619,14 +619,14 @@ function Sellers() {
             <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-[#E5E1DC]">
               {/* Header */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 bg-[#1a1a1a]">
-                <div className="text-white font-semibold" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Options
+                <div className="text-white font-semibold tracking-wide" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  OPTIONS:
                 </div>
-                <div className="text-[#2BBBAD] font-semibold text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  M&amp;T Realty Group Brokerage*
+                <div className="text-[#2BBBAD] font-semibold text-center tracking-wide" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  M&amp;T REALTY GROUP BROKERAGE*
                 </div>
-                <div className="text-white/70 font-medium text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Traditional Brokerage
+                <div className="text-white/70 font-medium text-center tracking-wide" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  TRADITIONAL BROKERAGE
                 </div>
                 <div className="text-white/70 font-medium text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   $ Savings with M&amp;T Realty Group<br />
@@ -640,7 +640,7 @@ function Sellers() {
                   If a buyer's agent is involved:
                 </div>
                 <div className="text-[#111] text-sm leading-relaxed md:text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Seller pays <span className="font-semibold text-[#2BBBAD]">1.5%</span> of the final sales price (or a minimum of $3,000) for handling the seller's side, plus the buyer's agent's compensation.
+                  <span className="font-semibold">Seller pays:</span> M&amp;T REALTY GROUP <span className="font-semibold text-[#2BBBAD]">1.5%</span> of the final sales price (or a minimum of <span className="font-semibold">$3,000</span>) for handling the seller's side, plus the buyer's agent's compensation.
                 </div>
                 <div className="text-[#666] text-sm md:text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   6% ($15,000 on $300K home)
@@ -655,8 +655,13 @@ function Sellers() {
                 <div className="text-[#111] font-semibold text-sm md:text-base" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   If a buyer's agent is not involved:
                 </div>
-                <div className="text-[#111] text-sm leading-relaxed md:text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Seller pays <span className="font-semibold text-[#2BBBAD]">3%</span> of the final sales price (or a minimum of $5,000) for handling both the buyer and seller sides. No buyer's broker compensation is paid by the seller.
+                <div className="text-[#111] text-sm leading-relaxed md:text-center space-y-3" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  <p>
+                    <span className="font-semibold">Seller pays:</span> M&amp;T REALTY GROUP <span className="font-semibold text-[#2BBBAD]">3%</span> of the final sales price (or a minimum of <span className="font-semibold">$5,000</span>) for handling both the buyer and seller sides.
+                  </p>
+                  <p>
+                    No buyer's broker compensation is paid by the seller.
+                  </p>
                 </div>
                 <div className="text-[#666] text-sm md:text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                   6% ($15,000 on $300K home)
