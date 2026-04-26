@@ -114,7 +114,7 @@ function About() {
                   <img
                     src="/images/women-img.jpg"
                     alt="Michele - Broker / Owner"
-                    className="w-full h-[300px] object-cover"
+                    className="w-full h-[380px] object-cover object-top"
                   />
                   <div className="bg-white p-4 text-center">
                     <h3 className="text-[16px] font-semibold text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Michele</h3>
@@ -125,7 +125,7 @@ function About() {
                   <img
                     src="/images/men-img.jpg"
                     alt="Terry - Associate Broker / Owner"
-                    className="w-full h-[300px] object-cover"
+                    className="w-full h-[380px] object-cover object-top"
                   />
                   <div className="bg-white p-4 text-center">
                     <h3 className="text-[16px] font-semibold text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>Terry</h3>
