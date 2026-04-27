@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import { MessageCircle, TrendingUp, Zap, Shield, CheckCircle, ArrowRight, Phone, Mail, MapPin } from 'lucide-react';
+import { MessageCircle, TrendingUp, Zap, Shield, CheckCircle, ArrowRight, Phone, Mail, MapPin, HelpCircle } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
 
 function About() {
@@ -302,7 +302,7 @@ function About() {
                 className="text-[18px] font-semibold text-[#111] mb-2"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                Visit Us
+                Mail Us
               </h3>
               <p
                 className="text-[15px] text-[#666] font-medium leading-relaxed"
@@ -311,6 +311,44 @@ function About() {
                 3701-A South Harvard Ave #320<br />Tulsa, OK 74135
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQs CTA Section */}
+      <section className="bg-[#EEEDEA] py-20 md:py-28">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
+          <div className="max-w-3xl mx-auto text-center">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 bg-white border border-[#E5E1DC] rounded-lg px-4 py-2 mb-6">
+              <HelpCircle className="w-4 h-4 text-[#2BBBAD]" />
+              <span className="text-[#666] text-sm font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                Help Center
+              </span>
+            </div>
+
+            <h2
+              className="text-[32px] md:text-[44px] font-medium text-[#111] mb-5 leading-[1.15]"
+              style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+            >
+              Frequently Asked Questions
+            </h2>
+
+            <p
+              className="text-[16px] text-[#666] font-medium mb-8 leading-relaxed"
+              style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+            >
+              Find answers to common questions about buying and selling with M&amp;T Realty Group. Can't find what you're looking for? Contact our team.
+            </p>
+
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white rounded-full px-6 py-4 font-medium transition-all duration-300 hover:bg-[#249E93] hover:shadow-lg"
+              style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+            >
+              <span>Contact Support</span>
+              <ArrowRight className="w-5 h-5" />
+            </Link>
           </div>
         </div>
       </section>
