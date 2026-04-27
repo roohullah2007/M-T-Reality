@@ -165,7 +165,7 @@ function FAQs() {
         },
         {
           question: "What does it cost to work with a buyer's agent?",
-          answer: "In most transactions, the seller pays the buyer's agent commission, so our buyer representation comes at no direct cost to you. We'll explain exactly how compensation works before you begin your home search. If you buy one of our listings, you don't pay a commission, as the seller's commission to M&T covers our services. If you want to work with us to purchase a property not listed with M&T, we will negotiate with the seller to cover the agreed-upon buyer's commission. We will go more in detail on how our buyer-broker agreement works."
+          answer: "If you buy one of our listings, you don't pay a commission, as the seller's commission to M&T covers our services. If you want to work with us to purchase a property not listed with M&T. We will negotiate with the seller to cover the agreed upon buyer's commission. We will go more in detail on how our buyer broker agreement works."
         }
       ]
     }
@@ -291,10 +291,11 @@ function FAQs() {
             Still Have Questions?
           </h2>
           <p
-            className="text-white/90 text-[16px] font-medium mb-8 max-w-2xl mx-auto"
+            className="text-white/90 text-[16px] font-medium mb-8 max-w-2xl mx-auto leading-relaxed"
             style={{ fontFamily: 'Instrument Sans, sans-serif' }}
           >
-            Our team is here to help you every step of the way. Get in touch and we'll respond within 24 hours.
+            Our team is here to help you every step of the way.<br />
+            Get in touch and we'll respond within 24 hours.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
