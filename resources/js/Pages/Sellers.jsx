@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
-import { DollarSign, Users, ChevronRight, ChevronDown, BarChart3, Camera, FileText, Handshake, Video, Box, Sun, Globe, Eye, TrendingUp, ArrowRight, Target, ClipboardList } from 'lucide-react';
+import { DollarSign, Users, ChevronRight, ChevronDown, BarChart3, Camera, FileText, Handshake, Video, Box, Sun, Globe, Eye, TrendingUp, ArrowRight, Target, ClipboardList, Check, Info } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
 import CompanyLogosGrid from '@/Components/Sections/CompanyLogosGrid';
 
@@ -606,76 +606,163 @@ function Sellers() {
                 Our Pricing
               </span>
             </div>
-            <h2 className="text-[32px] md:text-[48px] font-medium text-[#111] mb-6" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-              See How Much You Save
+            <h2 className="text-[32px] md:text-[44px] font-semibold text-[#1d3a4f] mb-6 leading-[1.15]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+              Keep More of Your Equity When You Sell Your Home
             </h2>
-            <p className="text-[16px] text-[#666] font-medium max-w-4xl mx-auto leading-relaxed" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+            <p className="text-[16px] text-[#666] font-medium max-w-4xl mx-auto leading-relaxed mb-5" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
               M&amp;T Realty Group offers a superior alternative to traditional brokerages. Our model is structured to maximize your savings by deviating from the standard practice of charging a fixed commission, regardless of who secures the buyer. As illustrated in the chart below, even with an assumed 3% buyer's agent compensation, you benefit significantly. Your potential savings increase further when M&amp;T Realty Group or the seller brings the buyer directly.
+            </p>
+            <p className="text-[18px] text-[#1d3a4f] font-semibold max-w-3xl mx-auto leading-relaxed" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+              Save <span className="font-bold">$4,500–$9,000</span> on a $300K home compared to paying the traditional 6% commission.
             </p>
           </div>
 
-          {/* Pricing Table */}
+          {/* Pricing Infographic */}
           <div className="max-w-6xl mx-auto">
-            <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-[#E5E1DC]">
-              {/* Header */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 bg-[#1a1a1a]">
-                <div className="text-white font-semibold tracking-wide" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  OPTIONS:
-                </div>
-                <div className="text-[#2BBBAD] font-semibold text-center tracking-wide" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  M&amp;T REALTY GROUP BROKERAGE*
-                </div>
-                <div className="text-white/70 font-medium text-center tracking-wide" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  TRADITIONAL BROKERAGE
-                </div>
-                <div className="text-white/70 font-medium text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  $ Savings with M&amp;T Realty Group<br />
-                  <span className="text-white/50 text-xs font-normal">(i.e., $300K home)</span>
-                </div>
-              </div>
+            <div className="bg-white rounded-2xl shadow-xl border border-[#E5E1DC] p-5 md:p-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
 
-              {/* Row 1 — Buyer's agent involved */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 bg-white border-b border-[#E5E1DC]">
-                <div className="text-[#111] font-semibold text-sm md:text-base" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  If a buyer's agent is involved:
-                </div>
-                <div className="text-[#111] text-sm leading-relaxed md:text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  <span className="font-semibold">Seller pays:</span> M&amp;T REALTY GROUP <span className="font-semibold text-[#2BBBAD]">1.5%</span> of the final sales price (or a minimum of <span className="font-semibold">$3,000</span>) for handling the seller's side, plus the buyer's agent's compensation.
-                </div>
-                <div className="text-[#666] text-sm md:text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  6% ($15,000 on $300K home)
-                </div>
-                <div className="text-[#2BBBAD] font-semibold text-lg md:text-2xl md:text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  $4,500
-                </div>
-              </div>
+                {/* Panel: WITH BUYER'S AGENT */}
+                <div className="bg-[#F8F7F5] rounded-2xl p-5 md:p-6">
+                  {/* Banner */}
+                  <div className="bg-[#1d3a4f] text-white text-center py-3 px-4 rounded-lg mb-5 shadow-md">
+                    <span className="text-sm md:text-base font-bold tracking-[0.15em]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                      WITH BUYER'S AGENT
+                    </span>
+                  </div>
+                  <p className="text-center text-[#1d3a4f] font-semibold text-sm md:text-base mb-5" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                    For a $300,000 Home:
+                  </p>
 
-              {/* Row 2 — Buyer's agent not involved */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 bg-[#F8F7F5]">
-                <div className="text-[#111] font-semibold text-sm md:text-base" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  If a buyer's agent is not involved:
+                  {/* Compare cards */}
+                  <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 md:gap-3 mb-6">
+                    {/* Traditional */}
+                    <div className="bg-white rounded-xl p-3 md:p-4 text-center border border-[#E5E1DC] shadow-sm">
+                      <p className="text-[10px] md:text-[11px] text-[#1d3a4f] font-semibold tracking-wide leading-tight mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                        TRADITIONAL<br />BROKERAGE
+                      </p>
+                      <p className="text-[22px] md:text-[28px] font-bold text-[#D4A03E] leading-none mb-3" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                        $15,000
+                      </p>
+                      <div className="bg-[#D4A03E] text-white text-[11px] md:text-xs font-semibold rounded-md py-1.5 px-2 leading-tight">
+                        6% Commission
+                      </div>
+                    </div>
+
+                    <ArrowRight className="w-5 h-5 md:w-7 md:h-7 text-[#1d3a4f]" strokeWidth={2.5} />
+
+                    {/* M&T */}
+                    <div className="bg-white rounded-xl p-3 md:p-4 text-center border border-[#E5E1DC] shadow-sm">
+                      <p className="text-[10px] md:text-[11px] text-[#1d3a4f] font-semibold tracking-wide leading-tight mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                        M&amp;T REALTY<br />GROUP
+                      </p>
+                      <p className="text-[22px] md:text-[28px] font-bold text-[#1d3a4f] leading-none mb-3" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                        $10,500
+                      </p>
+                      <div className="bg-[#1d3a4f] text-white text-[11px] md:text-xs font-semibold rounded-md py-1.5 px-2 leading-tight">
+                        1.5% + 3% Commission
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Totals */}
+                  <div className="grid grid-cols-2 gap-4 text-center mb-5">
+                    <div>
+                      <p className="text-[11px] text-[#666] font-semibold tracking-wide mb-1" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>TRADITIONAL</p>
+                      <p className="text-lg md:text-xl font-bold text-[#1d3a4f]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>$15,000</p>
+                    </div>
+                    <div>
+                      <p className="text-[11px] text-[#666] font-semibold tracking-wide mb-1" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>M&amp;T REALTY GROUP</p>
+                      <p className="text-lg md:text-xl font-bold text-[#1d3a4f]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>$10,500</p>
+                    </div>
+                  </div>
+
+                  {/* You Save */}
+                  <div className="bg-[#4A8B3A] text-white rounded-xl py-3 px-4 flex items-center justify-center gap-3 shadow-md">
+                    <Check className="w-5 h-5 md:w-6 md:h-6 stroke-[3] bg-white text-[#4A8B3A] rounded-full p-0.5" />
+                    <span className="text-base md:text-lg font-bold tracking-wide" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                      YOU SAVE <span className="text-xl md:text-2xl">$4,500</span>
+                    </span>
+                  </div>
                 </div>
-                <div className="text-[#111] text-sm leading-relaxed md:text-center space-y-3" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  <p>
-                    <span className="font-semibold">Seller pays:</span> M&amp;T REALTY GROUP <span className="font-semibold text-[#2BBBAD]">3%</span> of the final sales price (or a minimum of <span className="font-semibold">$5,000</span>) for handling both the buyer and seller sides.
+
+                {/* Panel: NO BUYER'S AGENT */}
+                <div className="bg-[#F8F7F5] rounded-2xl p-5 md:p-6">
+                  {/* Banner */}
+                  <div className="bg-[#1d3a4f] text-white text-center py-3 px-4 rounded-lg mb-5 shadow-md">
+                    <span className="text-sm md:text-base font-bold tracking-[0.15em]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                      NO BUYER'S AGENT
+                    </span>
+                  </div>
+                  <p className="text-center text-[#1d3a4f] font-semibold text-sm md:text-base mb-5" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                    For a $300,000 Home:
                   </p>
-                  <p>
-                    No buyer's broker compensation is paid by the seller.
-                  </p>
+
+                  {/* Compare cards */}
+                  <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 md:gap-3 mb-6">
+                    {/* Traditional */}
+                    <div className="bg-white rounded-xl p-3 md:p-4 text-center border border-[#E5E1DC] shadow-sm">
+                      <p className="text-[10px] md:text-[11px] text-[#1d3a4f] font-semibold tracking-wide leading-tight mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                        TRADITIONAL<br />BROKERAGE
+                      </p>
+                      <p className="text-[22px] md:text-[28px] font-bold text-[#D4A03E] leading-none mb-3" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                        $15,000
+                      </p>
+                      <div className="bg-[#D4A03E] text-white text-[11px] md:text-xs font-semibold rounded-md py-1.5 px-2 leading-tight">
+                        6% Commission
+                      </div>
+                    </div>
+
+                    <ArrowRight className="w-5 h-5 md:w-7 md:h-7 text-[#1d3a4f]" strokeWidth={2.5} />
+
+                    {/* M&T */}
+                    <div className="bg-white rounded-xl p-3 md:p-4 text-center border border-[#E5E1DC] shadow-sm">
+                      <p className="text-[10px] md:text-[11px] text-[#1d3a4f] font-semibold tracking-wide leading-tight mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                        M&amp;T REALTY<br />GROUP
+                      </p>
+                      <p className="text-[22px] md:text-[28px] font-bold text-[#1d3a4f] leading-none mb-3" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                        $6,000
+                      </p>
+                      <div className="bg-[#1d3a4f] text-white text-[11px] md:text-xs font-semibold rounded-md py-1.5 px-2 leading-tight">
+                        3% Commission
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Totals */}
+                  <div className="grid grid-cols-2 gap-4 text-center mb-5">
+                    <div>
+                      <p className="text-[11px] text-[#666] font-semibold tracking-wide mb-1" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>TRADITIONAL</p>
+                      <p className="text-lg md:text-xl font-bold text-[#1d3a4f]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>$15,000</p>
+                    </div>
+                    <div>
+                      <p className="text-[11px] text-[#666] font-semibold tracking-wide mb-1" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>M&amp;T REALTY GROUP</p>
+                      <p className="text-lg md:text-xl font-bold text-[#1d3a4f]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>$6,000</p>
+                    </div>
+                  </div>
+
+                  {/* You Save */}
+                  <div className="bg-[#4A8B3A] text-white rounded-xl py-3 px-4 flex items-center justify-center gap-3 shadow-md">
+                    <Check className="w-5 h-5 md:w-6 md:h-6 stroke-[3] bg-white text-[#4A8B3A] rounded-full p-0.5" />
+                    <span className="text-base md:text-lg font-bold tracking-wide" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                      YOU SAVE <span className="text-xl md:text-2xl">$9,000</span>
+                    </span>
+                  </div>
                 </div>
-                <div className="text-[#666] text-sm md:text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  6% ($15,000 on $300K home)
-                </div>
-                <div className="text-[#2BBBAD] font-semibold text-lg md:text-2xl md:text-center" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  $9,000
-                </div>
+
               </div>
             </div>
 
             {/* Footnote */}
-            <p className="text-[13px] text-[#666] mt-6 leading-relaxed" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-              * $500 is due upon listing cancellation to cover the upfront cost of the listing. The seller owns all multimedia.
-            </p>
+            <div className="flex items-start gap-3 mt-6 max-w-4xl mx-auto">
+              <div className="w-8 h-8 bg-[#1d3a4f] rounded-full flex items-center justify-center flex-shrink-0">
+                <Info className="w-4 h-4 text-white" />
+              </div>
+              <div className="text-[13px] text-[#666] leading-relaxed space-y-1" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                <p>$500 is due upon cancellation of the listing to cover the upfront cost. The seller owns all multimedia.</p>
+                <p>Minimum commission is $3,000 if a buyer's agent is involved, or $5,000 if no buyer's agent is involved.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
