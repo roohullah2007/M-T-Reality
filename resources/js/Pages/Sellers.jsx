@@ -417,8 +417,8 @@ function Sellers() {
             <h2 className="text-[32px] md:text-[48px] font-medium text-[#111] mb-4" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
               Your Home, Presented at Its Best
             </h2>
-            <p className="text-[16px] text-[#666] font-medium max-w-2xl mx-auto" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-              Professional marketing sells homes faster and for more money.
+            <p className="text-[16px] text-[#666] font-medium max-w-2xl mx-auto leading-relaxed" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+              Professional marketing sells homes faster and for more money. Professional photography, a floor plan, and a virtual twilight tour come with each listing. Or upgrade to other professional services, such as video walkthroughs or 3D tours.
             </p>
           </div>
 
