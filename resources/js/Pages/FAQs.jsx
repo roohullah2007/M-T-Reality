@@ -165,7 +165,7 @@ function FAQs() {
         },
         {
           question: "What does it cost to work with a buyer's agent?",
-          answer: "If you buy one of our listings, you don't pay a commission, as the seller's commission to M&T covers our services. If you want to work with us to purchase a property not listed with M&T. We will negotiate with the seller to cover the agreed upon buyer's commission. We will go more in detail on how our buyer broker agreement works."
+          answer: "If you buy one of our listings, you don't pay a commission, as the seller's commission to M&T covers our services. If you want to work with us to purchase a property not listed with M&T, we will negotiate with the seller to cover the agreed upon buyer's commission. We will go more in detail on how our buyer broker agreement works."
         }
       ]
     }
