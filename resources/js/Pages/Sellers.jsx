@@ -609,10 +609,14 @@ function Sellers() {
             <h2 className="text-[32px] md:text-[44px] font-semibold text-[#1d3a4f] mb-6 leading-[1.15]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
               Keep More of Your Equity When You Sell Your Home
             </h2>
-            <p className="text-[16px] text-[#666] font-medium max-w-4xl mx-auto leading-relaxed mb-5" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-              M&amp;T Realty Group offers a superior alternative to traditional brokerages. Our model is structured to maximize your savings by deviating from the standard practice of charging a fixed commission, regardless of who secures the buyer. As illustrated in the chart below, even with an assumed 3% buyer's agent compensation, you benefit significantly. Your potential savings increase further when M&amp;T Realty Group or the seller brings the buyer directly.
+            <p className="text-[16px] text-[#666] font-medium max-w-5xl mx-auto leading-relaxed mb-5" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+              M&amp;T Realty Group offers a superior alternative to traditional brokerages. Our model is structured to <br className="hidden md:inline" />
+              maximize your savings by deviating from the standard practice of charging a fixed commission, <br className="hidden md:inline" />
+              regardless of who secures the buyer. As illustrated in the chart below, even with an assumed 3% <br className="hidden md:inline" />
+              buyer's agent compensation, you benefit significantly. Your potential savings increase further when <br className="hidden md:inline" />
+              M&amp;T Realty Group or the seller brings the buyer directly.
             </p>
-            <p className="text-[18px] text-[#1d3a4f] font-semibold max-w-3xl mx-auto leading-relaxed" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+            <p className="text-[18px] text-[#1d3a4f] font-semibold max-w-4xl mx-auto leading-relaxed" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
               Save <span className="font-bold">$4,500–$9,000</span> on a $300K home compared to paying the traditional 6% commission.
             </p>
           </div>
