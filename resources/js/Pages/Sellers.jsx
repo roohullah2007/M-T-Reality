@@ -596,31 +596,6 @@ function Sellers() {
         </div>
       </section>
 
-      {/* Pricing Comparison Section */}
-      <section className="bg-white py-20 md:py-28">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
-          {/* Pricing Infographic */}
-          <div className="max-w-6xl mx-auto">
-            <img
-              src="/keep-more-of-your-equity.png"
-              alt="Keep more of your equity: M&T Realty Group savings compared to traditional brokerage on a $300,000 home"
-              className="w-full h-auto rounded-2xl"
-            />
-
-            {/* Footnote */}
-            <div className="flex items-start gap-3 mt-6 max-w-4xl mx-auto">
-              <div className="w-8 h-8 bg-[#1d3a4f] rounded-full flex items-center justify-center flex-shrink-0">
-                <Info className="w-4 h-4 text-white" />
-              </div>
-              <div className="text-[13px] text-[#666] leading-relaxed space-y-1" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                <p>$500 is due upon cancellation of the listing to cover the upfront cost. The seller owns all multimedia.</p>
-                <p>Minimum commission is $3,000 if a buyer's agent is involved, or $5,000 if no buyer's agent is involved.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Testimonials Section */}
       <section className="bg-white py-20 md:py-28">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
@@ -678,6 +653,31 @@ function Sellers() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Comparison Section */}
+      <section className="bg-white py-20 md:py-28">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
+          {/* Pricing Infographic */}
+          <div className="max-w-6xl mx-auto">
+            <img
+              src="/keep-more-of-your-equity.png"
+              alt="Keep more of your equity: M&T Realty Group savings compared to traditional brokerage on a $300,000 home"
+              className="w-full h-auto rounded-2xl"
+            />
+
+            {/* Footnote */}
+            <div className="flex items-start gap-3 mt-6 max-w-4xl mx-auto">
+              <div className="w-8 h-8 bg-[#1d3a4f] rounded-full flex items-center justify-center flex-shrink-0">
+                <Info className="w-4 h-4 text-white" />
+              </div>
+              <div className="text-[13px] text-[#666] leading-relaxed space-y-1" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                <p>$500 is due upon cancellation of the listing to cover the upfront cost. The seller owns all multimedia.</p>
+                <p>Minimum commission is $3,000 if a buyer's agent is involved, or $5,000 if no buyer's agent is involved.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
