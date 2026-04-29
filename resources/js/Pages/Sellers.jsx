@@ -596,67 +596,6 @@ function Sellers() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="bg-white py-20 md:py-28">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
-          {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-12">
-            <div>
-              {/* Badge */}
-              <div className="inline-flex items-center bg-[#E5E1DC] rounded-lg px-4 py-2 mb-6">
-                <span className="text-[#666] text-sm font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Testimonials
-                </span>
-              </div>
-
-              {/* Heading */}
-              <h2
-                className="text-[32px] md:text-[48px] font-medium text-[#111] leading-tight"
-                style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-              >
-                What Our Clients Are Saying
-              </h2>
-            </div>
-          </div>
-
-          {/* Testimonials Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {testimonials.map((testimonial) => (
-              <div
-                key={testimonial.id}
-                className="bg-[#EEEDEA] rounded-2xl p-8 border border-gray-300 flex flex-col justify-between"
-                style={{ minHeight: '400px' }}
-              >
-                <div>
-                  <p
-                    className="text-[#111] text-[18px] font-medium leading-relaxed"
-                    style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                  >
-                    "{testimonial.quote}"
-                  </p>
-                </div>
-
-                {/* Author Info */}
-                <div className="mt-8">
-                  <h4
-                    className="text-[#111] text-[18px] font-medium mb-1"
-                    style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                  >
-                    {testimonial.name}
-                  </h4>
-                  <p
-                    className="text-[#111] text-[14px] font-medium opacity-70"
-                    style={{ fontFamily: 'Instrument Sans, sans-serif' }}
-                  >
-                    {testimonial.role}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Pricing Comparison Section */}
       <section className="bg-white py-20 md:py-28">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
@@ -760,6 +699,67 @@ function Sellers() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="bg-white py-20 md:py-28">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-12">
+            <div>
+              {/* Badge */}
+              <div className="inline-flex items-center bg-[#E5E1DC] rounded-lg px-4 py-2 mb-6">
+                <span className="text-[#666] text-sm font-medium" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  Testimonials
+                </span>
+              </div>
+
+              {/* Heading */}
+              <h2
+                className="text-[32px] md:text-[48px] font-medium text-[#111] leading-tight"
+                style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+              >
+                What Our Clients Are Saying
+              </h2>
+            </div>
+          </div>
+
+          {/* Testimonials Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {testimonials.map((testimonial) => (
+              <div
+                key={testimonial.id}
+                className="bg-[#EEEDEA] rounded-2xl p-8 border border-gray-300 flex flex-col justify-between"
+                style={{ minHeight: '400px' }}
+              >
+                <div>
+                  <p
+                    className="text-[#111] text-[18px] font-medium leading-relaxed"
+                    style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                  >
+                    "{testimonial.quote}"
+                  </p>
+                </div>
+
+                {/* Author Info */}
+                <div className="mt-8">
+                  <h4
+                    className="text-[#111] text-[18px] font-medium mb-1"
+                    style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                  >
+                    {testimonial.name}
+                  </h4>
+                  <p
+                    className="text-[#111] text-[14px] font-medium opacity-70"
+                    style={{ fontFamily: 'Instrument Sans, sans-serif' }}
+                  >
+                    {testimonial.role}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
