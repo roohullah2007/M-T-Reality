@@ -147,7 +147,7 @@ function Mortgages() {
                 className="text-white/90 text-[16px] sm:text-[18px] font-medium mb-8 leading-relaxed max-w-2xl drop-shadow-lg"
                 style={{ fontFamily: 'Instrument Sans, sans-serif' }}
               >
-                M&T Realty Group has partnered with AnnieMac Home Mortgage as its preferred lender. Get pre-approved in minutes and close with confidence — one seamless experience from home search to keys in hand.
+                M&T Realty Group has partnered with AnnieMac Home Mortgage as its trusted lender. Get pre-approved in minutes and close with confidence — one seamless experience from home search to keys in hand.
               </p>
 
               {/* CTA Buttons */}
@@ -231,7 +231,7 @@ function Mortgages() {
                 className="text-[16px] text-[#666] font-medium mb-8 leading-relaxed"
                 style={{ fontFamily: 'Instrument Sans, sans-serif', fontWeight: 500 }}
               >
-                When you find your dream home through M&T Realty Group, getting financing shouldn't slow you down. AnnieMac Home Mortgage is our preferred mortgage partner, providing you with a seamless home-buying experience from start to finish.
+                When you find your dream home through M&T Realty Group, getting financing shouldn't slow you down. AnnieMac Home Mortgage is our trusted mortgage partner, providing you with a seamless home-buying experience from start to finish.
               </p>
 
               {/* Benefits */}
@@ -490,7 +490,7 @@ function Mortgages() {
                     Get Pre-Approved with AnnieMac
                   </h4>
                   <p className="text-sm text-white/80 mb-4" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                    Our preferred mortgage team understands Oklahoma programs and works seamlessly with M&T Realty Group. Let us help you get the best rate.
+                    Our trusted mortgage team understands Oklahoma programs and works seamlessly with M&T Realty Group. Let us help you get the best rate.
                   </p>
                   <a
                     href={PRE_APPROVAL_URL}
