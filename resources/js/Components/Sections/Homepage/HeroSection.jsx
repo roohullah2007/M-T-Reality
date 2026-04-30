@@ -62,7 +62,7 @@ const HeroSection = () => {
       onMouseLeave={() => setIsPaused(false)}
     >
       {/* Hero Section */}
-      <div className="relative min-h-[85vh] flex items-center pt-0 md:pt-[77px] pb-20 overflow-hidden">
+      <div className="relative min-h-[85vh] flex items-center pt-[77px] pb-20 overflow-hidden">
 
         {/* Background Images - Crossfade */}
         {slides.map((slide, index) => (
