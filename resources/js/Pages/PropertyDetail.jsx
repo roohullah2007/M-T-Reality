@@ -1069,7 +1069,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                     </div>
                     <div>
                       <p className="font-semibold text-[#111]">{property.contact_name}</p>
-                      <p className="text-sm text-[#666]">Property Owner</p>
+                      <p className="text-sm text-[#666]">Seller</p>
                     </div>
                   </div>
 

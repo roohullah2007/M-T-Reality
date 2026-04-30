@@ -840,15 +840,16 @@ export default function EditProperty({ property, users = [], listingStatuses = {
                     />
                 </div>
 
-                {/* Contact Information */}
+                {/* Seller Information */}
                 <div className="bg-white rounded-xl shadow-sm p-6">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-2">
                         <User className="w-5 h-5 text-[#2BBBAD]" />
-                        Contact Information
+                        Seller Information
                     </h2>
+                    <p className="text-sm text-gray-500 mb-4">This is the seller's contact info shown publicly on the listing's "Contact Seller" card. The Property Owner above is the agent account that manages this listing.</p>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Contact Name</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Seller Name *</label>
                             <input
                                 type="text"
                                 value={data.contact_name}
@@ -857,7 +858,7 @@ export default function EditProperty({ property, users = [], listingStatuses = {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Seller Email</label>
                             <input
                                 type="email"
                                 value={data.contact_email}
@@ -866,7 +867,7 @@ export default function EditProperty({ property, users = [], listingStatuses = {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Seller Phone</label>
                             <input
                                 type="tel"
                                 value={data.contact_phone}
