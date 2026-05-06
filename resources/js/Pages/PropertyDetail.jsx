@@ -4,6 +4,13 @@ import { MapPin, BedDouble, Bath, Maximize2, Calendar, Home, Heart, Share2, Arro
 import MainLayout from '@/Layouts/MainLayout';
 import SinglePropertyMap from '@/Components/Properties/SinglePropertyMap';
 
+const getAgentImage = (name) => {
+  const lowered = (name || '').toLowerCase();
+  if (lowered.includes('michele')) return '/images/women-img.jpg';
+  if (lowered.includes('terry')) return '/images/men-img.jpg';
+  return '/images/men-img.jpg';
+};
+
 function PropertyDetail({ property, openHouses = [] }) {
   const [showGalleryModal, setShowGalleryModal] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
@@ -1060,21 +1067,25 @@ function PropertyDetail({ property, openHouses = [] }) {
             {/* Sidebar - Contact */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-2xl p-6 sticky top-24">
-                <h2 className="text-xl font-semibold text-[#111] mb-4" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Contact Agent
+                <h2 className="text-[18px] font-bold text-[#111] mb-5 tracking-wide" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                  LISTED BY / SHOWN BY
                 </h2>
 
-                <div className="space-y-4 mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-[#EEEDEA] p-3 rounded-full">
-                      <Home className="w-5 h-5 text-[#2BBBAD]" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-[#111]">{property.contact_name}</p>
-                      <p className="text-sm text-[#666]">Agent</p>
-                    </div>
+                <div className="flex gap-4 mb-6">
+                  <img
+                    src={getAgentImage(property.contact_name)}
+                    alt={property.contact_name || 'Listing agent'}
+                    className="w-24 h-24 rounded-2xl object-cover object-top flex-shrink-0"
+                  />
+                  <div className="flex-1 space-y-1 text-[14px]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                    <p className="text-[#666] font-medium mb-1">Listed By</p>
+                    <p className="text-[#111] leading-snug"><span className="font-semibold">Agency Name:</span> M&amp;T Realty</p>
+                    <p className="text-[#111] leading-snug"><span className="font-semibold">Agency Phone:</span> {property.contact_phone || '918-884-7653'}</p>
+                    <p className="text-[#111] leading-snug"><span className="font-semibold">Agent Name:</span> {property.contact_name}</p>
                   </div>
+                </div>
 
+                <div className="space-y-4 mb-6">
                   <a
                     href={`tel:${property.contact_phone}`}
                     className="flex items-center gap-3 p-3 bg-[#EEEDEA] rounded-xl hover:bg-[#E5E1DC] transition-colors"
