@@ -32,12 +32,15 @@ class ContactController extends Controller
             'status' => 'new',
         ]);
 
-        // Send confirmation to user and notification to admin (with delay between)
-        EmailService::sendToUserAndAdmin(
-            $contactMessage->email,
-            new ContactFormConfirmation($contactMessage),
-            new NewContactMessageToAdmin($contactMessage)
-        );
+        try {
+            EmailService::sendToUserAndAdmin(
+                $contactMessage->email,
+                new ContactFormConfirmation($contactMessage),
+                new NewContactMessageToAdmin($contactMessage)
+            );
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Contact email dispatch failed: ' . $e->getMessage());
+        }
 
         return redirect()->back()->with('success', 'Thank you for your message! We\'ll get back to you within 24 hours.');
     }

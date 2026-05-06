@@ -1059,7 +1059,7 @@ function PropertyDetail({ property, openHouses = [] }) {
             <div className="lg:col-span-1">
               <div className="bg-white rounded-2xl p-6 sticky top-24">
                 <h2 className="text-xl font-semibold text-[#111] mb-4" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Contact Seller
+                  Contact Agent
                 </h2>
 
                 <div className="space-y-4 mb-6">
@@ -1069,7 +1069,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                     </div>
                     <div>
                       <p className="font-semibold text-[#111]">{property.contact_name}</p>
-                      <p className="text-sm text-[#666]">Seller</p>
+                      <p className="text-sm text-[#666]">Agent</p>
                     </div>
                   </div>
 
