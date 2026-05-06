@@ -18,6 +18,8 @@ function Contact() {
   const handleSubmit = (e) => {
     e.preventDefault();
     post(route('contact.store'), {
+      preserveScroll: true,
+      preserveState: true,
       onSuccess: () => {
         reset();
         setSubmitted(true);
@@ -369,8 +371,6 @@ function Contact() {
                     <option value="">Select a topic</option>
                     <option value="selling">Selling my home</option>
                     <option value="buying">Buying a home</option>
-                    <option value="pricing">Pricing strategy consultation</option>
-                    <option value="marketing">Marketing my property</option>
                     <option value="general">General inquiry</option>
                   </select>
                   {errors.subject && <p className="text-red-500 text-xs mt-1">{errors.subject}</p>}
@@ -400,7 +400,7 @@ function Contact() {
                   style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                 >
                   <Send className="w-5 h-5" />
-                  {processing ? 'Sending...' : 'Schedule Consultation'}
+                  {processing ? 'Sending...' : 'Submit'}
                 </button>
               </form>
             </div>

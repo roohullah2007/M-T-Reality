@@ -247,6 +247,8 @@ function PropertyDetail({ property, openHouses = [] }) {
   const handleContactSubmit = (e) => {
     e.preventDefault();
     post(route('inquiry.store'), {
+      preserveScroll: true,
+      preserveState: true,
       onSuccess: () => {
         setMessageSent(true);
         reset();
@@ -255,7 +257,7 @@ function PropertyDetail({ property, openHouses = [] }) {
         setTimeout(() => {
           setMessageSent(false);
           setShowContactForm(false);
-        }, 3000);
+        }, 4000);
       },
     });
   };
