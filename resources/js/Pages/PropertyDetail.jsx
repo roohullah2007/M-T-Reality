@@ -1066,40 +1066,51 @@ function PropertyDetail({ property, openHouses = [] }) {
 
             {/* Sidebar - Contact */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl p-6 sticky top-24">
-                <h2 className="text-[18px] font-bold text-[#111] mb-5 tracking-wide" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  LISTED BY / SHOWN BY
-                </h2>
+              <div className="bg-white rounded-2xl p-6 sticky top-24 border border-[#EEEDEA] shadow-[0_2px_12px_-4px_rgba(0,0,0,0.06)]">
+                <div className="flex items-center gap-2.5 mb-4">
+                  <span className="block w-1 h-5 bg-[#2BBBAD] rounded-full"></span>
+                  <h2 className="text-[14px] font-bold text-[#111] tracking-[0.06em] uppercase" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                    Listed By / Shown By
+                  </h2>
+                </div>
+
+                <div className="h-px bg-[#EEEDEA] mb-5"></div>
 
                 <div className="flex gap-4 mb-6">
                   <img
                     src={getAgentImage(property.contact_name)}
                     alt={property.contact_name || 'Listing agent'}
-                    className="w-24 h-24 rounded-2xl object-cover object-top flex-shrink-0"
+                    className="w-24 h-24 rounded-2xl object-cover object-top flex-shrink-0 ring-1 ring-[#EEEDEA] shadow-sm"
                   />
-                  <div className="flex-1 space-y-1 text-[14px]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                    <p className="text-[#666] font-medium mb-1">Listed By</p>
-                    <p className="text-[#111] leading-snug"><span className="font-semibold">Agency Name:</span> M&amp;T Realty</p>
-                    <p className="text-[#111] leading-snug"><span className="font-semibold">Agency Phone:</span> {property.contact_phone || '918-884-7653'}</p>
-                    <p className="text-[#111] leading-snug"><span className="font-semibold">Agent Name:</span> {property.contact_name}</p>
+                  <div className="flex-1 min-w-0" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                    <p className="text-[10px] uppercase tracking-[0.1em] text-[#999] font-bold mb-1.5">Listed By</p>
+                    <div className="space-y-1 text-[13.5px] leading-snug">
+                      <p className="text-[#111]"><span className="font-semibold">Agency Name:</span> M&amp;T Realty</p>
+                      <p className="text-[#111]"><span className="font-semibold">Agency Phone:</span> {property.contact_phone || '918-884-7653'}</p>
+                      <p className="text-[#111]"><span className="font-semibold">Agent Name:</span> {property.contact_name}</p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-4 mb-6">
-                  <a
-                    href={`tel:${property.contact_phone}`}
-                    className="flex items-center gap-3 p-3 bg-[#EEEDEA] rounded-xl hover:bg-[#E5E1DC] transition-colors"
-                  >
-                    <Phone className="w-5 h-5 text-[#2BBBAD]" />
-                    <span className="text-[#111]" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>{property.contact_phone}</span>
-                  </a>
-                </div>
+                <a
+                  href={`tel:${property.contact_phone}`}
+                  className="flex items-center gap-3 p-3.5 bg-[#F5F3EF] rounded-xl hover:bg-[#EEEDEA] transition-colors mb-3 group"
+                >
+                  <span className="bg-white p-2 rounded-lg shadow-sm group-hover:shadow-md transition-shadow">
+                    <Phone className="w-4 h-4 text-[#2BBBAD]" />
+                  </span>
+                  <span className="flex-1" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                    <span className="block text-[10px] text-[#999] uppercase tracking-[0.08em] font-bold">Call Now</span>
+                    <span className="block text-[15px] font-semibold text-[#111] leading-tight">{property.contact_phone}</span>
+                  </span>
+                </a>
 
                 <button
                   onClick={() => setShowContactForm(!showContactForm)}
-                  className="w-full bg-[#2BBBAD] text-white py-3 rounded-xl font-medium hover:bg-[#249E93] transition-colors"
+                  className="w-full bg-[#2BBBAD] text-white py-3.5 rounded-xl font-semibold text-[15px] hover:bg-[#249E93] hover:shadow-lg hover:shadow-[#2BBBAD]/30 transition-all flex items-center justify-center gap-2"
                   style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                 >
+                  <Mail className="w-4 h-4" />
                   {showContactForm ? 'Hide Form' : 'Send Message'}
                 </button>
 
