@@ -264,7 +264,7 @@ function PropertyDetail({ property, openHouses = [] }) {
         setTimeout(() => {
           setMessageSent(false);
           setShowContactForm(false);
-        }, 4000);
+        }, 8000);
       },
     });
   };
@@ -1115,11 +1115,25 @@ function PropertyDetail({ property, openHouses = [] }) {
                 </button>
 
                 {/* Contact Form */}
-                {showContactForm && (
-                  <form onSubmit={handleContactSubmit} className="mt-6 space-y-4">
-                    {messageSent && (
-                      <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">
+                {messageSent && (
+                  <div className="mt-6 bg-green-50 border border-green-200 rounded-xl p-4 flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-green-800 font-semibold text-sm" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                         Message sent successfully!
+                      </p>
+                      <p className="text-green-700 text-xs mt-1" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
+                        The agent will be in touch shortly.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {showContactForm && !messageSent && (
+                  <form onSubmit={handleContactSubmit} className="mt-6 space-y-4">
+                    {Object.keys(errors).length > 0 && (
+                      <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
+                        Please check the form and try again.
                       </div>
                     )}
                     <div>
@@ -1154,7 +1168,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                     <div>
                       <input
                         type="text"
-                        placeholder="Your Question (e.g., Is the price negotiable?)"
+                        placeholder="Your Question (e.g., How old is the roof?)"
                         value={data.question}
                         onChange={(e) => setData('question', e.target.value)}
                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#2BBBAD]"

@@ -27,7 +27,7 @@ class EmailService
      */
     public static function getAdminEmail(): string
     {
-        return Setting::get('admin_email', 'info@mandtrealty.com');
+        return Setting::get('admin_email', 'team@mandtrealty.com');
     }
 
     /**
