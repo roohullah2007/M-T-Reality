@@ -30,6 +30,56 @@ use Inertia\Inertia;
 // QR Code Short URL Redirect (public, no auth required)
 Route::get('/p/{code}', [QrCodeController::class, 'handleScan'])->name('qr.scan');
 
+// XML Sitemap for search engines
+Route::get('/sitemap.xml', function () {
+    $base = rtrim(config('app.url'), '/');
+
+    $staticPages = [
+        ['path' => '/',                'changefreq' => 'daily',   'priority' => '1.0'],
+        ['path' => '/properties',      'changefreq' => 'daily',   'priority' => '0.9'],
+        ['path' => '/buyers',          'changefreq' => 'monthly', 'priority' => '0.7'],
+        ['path' => '/sellers',         'changefreq' => 'monthly', 'priority' => '0.7'],
+        ['path' => '/about',           'changefreq' => 'monthly', 'priority' => '0.6'],
+        ['path' => '/contact',         'changefreq' => 'monthly', 'priority' => '0.6'],
+        ['path' => '/faqs',            'changefreq' => 'monthly', 'priority' => '0.5'],
+        ['path' => '/testimonials',    'changefreq' => 'monthly', 'priority' => '0.5'],
+        ['path' => '/mortgages',       'changefreq' => 'monthly', 'priority' => '0.5'],
+        ['path' => '/our-packages',    'changefreq' => 'monthly', 'priority' => '0.5'],
+        ['path' => '/privacy-policy',  'changefreq' => 'yearly',  'priority' => '0.3'],
+        ['path' => '/terms-of-use',    'changefreq' => 'yearly',  'priority' => '0.3'],
+    ];
+
+    $properties = \App\Models\Property::where('is_active', true)
+        ->where('approval_status', 'approved')
+        ->get(['id', 'address', 'updated_at']);
+
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+
+    foreach ($staticPages as $page) {
+        $xml .= "  <url>\n";
+        $xml .= '    <loc>' . htmlspecialchars($base . $page['path'], ENT_XML1) . "</loc>\n";
+        $xml .= '    <changefreq>' . $page['changefreq'] . "</changefreq>\n";
+        $xml .= '    <priority>' . $page['priority'] . "</priority>\n";
+        $xml .= "  </url>\n";
+    }
+
+    foreach ($properties as $property) {
+        $xml .= "  <url>\n";
+        $xml .= '    <loc>' . htmlspecialchars($base . '/properties/' . $property->slug, ENT_XML1) . "</loc>\n";
+        if ($property->updated_at) {
+            $xml .= '    <lastmod>' . $property->updated_at->toAtomString() . "</lastmod>\n";
+        }
+        $xml .= "    <changefreq>weekly</changefreq>\n";
+        $xml .= "    <priority>0.8</priority>\n";
+        $xml .= "  </url>\n";
+    }
+
+    $xml .= '</urlset>' . "\n";
+
+    return response($xml, 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
+})->name('sitemap');
+
 // Public routes
 Route::get('/', function () {
     // Get featured properties first, then fill with latest approved properties
