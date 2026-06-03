@@ -896,7 +896,7 @@ export default function EditProperty({ property, users = [], listingStatuses = {
                         {/* Existing Photos */}
                         {photos.map((photo, index) => (
                             <div key={`existing-${index}`} className="relative group aspect-square rounded-lg overflow-hidden bg-gray-100">
-                                <img src={photo} alt={`Photo ${index + 1}`} className="w-full h-full object-cover object-[center_20%]" />
+                                <img src={photo} alt={`Photo ${index + 1}`} className="w-full h-full object-cover object-center" />
                                 <button
                                     type="button"
                                     onClick={() => handleDeleteExistingPhoto(index)}
@@ -914,7 +914,7 @@ export default function EditProperty({ property, users = [], listingStatuses = {
                         {newPhotoPreviews.map((preview) => (
                             <div key={preview.id} className="relative group aspect-square rounded-lg overflow-hidden bg-gray-100">
                                 {preview.url ? (
-                                    <img src={preview.url} alt={preview.name} className="w-full h-full object-cover object-[center_20%]" />
+                                    <img src={preview.url} alt={preview.name} className="w-full h-full object-cover object-center" />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-400">
                                         <Image className="w-8 h-8" />
@@ -995,7 +995,7 @@ export default function EditProperty({ property, users = [], listingStatuses = {
                         <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete Photo</h3>
                         <p className="text-gray-600 mb-4">Are you sure you want to delete this photo?</p>
                         {photoToDelete !== null && photos[photoToDelete] && (
-                            <img src={photos[photoToDelete]} alt="Photo to delete" className="w-full h-32 object-cover object-[center_20%] rounded-lg mb-4" />
+                            <img src={photos[photoToDelete]} alt="Photo to delete" className="w-full h-32 object-cover object-center rounded-lg mb-4" />
                         )}
                         <div className="flex justify-end gap-3">
                             <button

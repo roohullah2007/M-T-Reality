@@ -1209,7 +1209,7 @@ export default function EditListing({ property }) {
                                             <img
                                                 src={preview.url}
                                                 alt={preview.name}
-                                                className="w-full h-full object-cover object-[center_20%]"
+                                                className="w-full h-full object-cover object-center"
                                             />
                                         )}
 
@@ -1307,7 +1307,7 @@ export default function EditListing({ property }) {
                                         <img
                                             src={photo}
                                             alt={`Property photo ${index + 1}`}
-                                            className="w-full h-full object-cover object-[center_20%]"
+                                            className="w-full h-full object-cover object-center"
                                             onError={(e) => e.target.src = '/images/property-placeholder.svg'}
                                         />
                                         {/* Main Photo Badge */}
@@ -1417,7 +1417,7 @@ export default function EditListing({ property }) {
                                 <img
                                     src={photos[photoToDelete]}
                                     alt="Photo to delete"
-                                    className="w-full h-40 object-cover object-[center_20%]"
+                                    className="w-full h-40 object-cover object-center"
                                 />
                             </div>
                         )}

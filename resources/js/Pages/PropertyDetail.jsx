@@ -343,7 +343,7 @@ function PropertyDetail({ property, openHouses = [] }) {
               <img
                 src={photos[0]}
                 alt={`${property.property_title} - Image 1`}
-                className="w-full h-full object-cover object-[center_20%]"
+                className="w-full h-full object-cover object-center"
                 onError={(e) => e.target.src = '/images/property-placeholder.svg'}
               />
 
@@ -455,7 +455,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                   <img
                     src={photos[1]}
                     alt={`${property.property_title} - Image 2`}
-                    className="w-full h-full object-cover object-[center_20%]"
+                    className="w-full h-full object-cover object-center"
                     onError={(e) => e.target.src = '/images/property-placeholder.svg'}
                   />
                 ) : (
@@ -472,7 +472,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                     <img
                       src={photos[2]}
                       alt={`${property.property_title} - Image 3`}
-                      className="w-full h-full object-cover object-[center_20%]"
+                      className="w-full h-full object-cover object-center"
                       onError={(e) => e.target.src = '/images/property-placeholder.svg'}
                     />
                     {photos.length > 3 && (
@@ -500,7 +500,7 @@ function PropertyDetail({ property, openHouses = [] }) {
               <img
                 src={photos[mobileIndex]}
                 alt={`${property.property_title} - Image ${mobileIndex + 1}`}
-                className="w-full h-[400px] object-cover object-[center_20%]"
+                className="w-full h-[400px] object-cover object-center"
                 onError={(e) => e.target.src = '/images/property-placeholder.svg'}
               />
             </div>

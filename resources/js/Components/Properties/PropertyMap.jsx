@@ -349,7 +349,7 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
                   <img
                     src={photo}
                     alt={property.property_title || ''}
-                    className="w-16 h-16 object-cover object-[center_20%] rounded-lg flex-shrink-0"
+                    className="w-16 h-16 object-cover object-center rounded-lg flex-shrink-0"
                     onError={(e) => e.target.src = '/images/property-placeholder.svg'}
                   />
                   <div className="flex-1 min-w-0">

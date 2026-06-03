@@ -227,7 +227,7 @@ export default function Listings({ listings, filters = {}, counts = {} }) {
                                     <img
                                         src={listing.photos?.[0] || '/images/property-placeholder.jpg'}
                                         alt={listing.property_title}
-                                        className="w-full h-full object-cover object-[center_20%]"
+                                        className="w-full h-full object-cover object-center"
                                         onError={(e) => e.target.src = '/images/property-placeholder.jpg'}
                                     />
                                 </div>

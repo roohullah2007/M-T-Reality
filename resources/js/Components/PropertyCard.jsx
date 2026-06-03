@@ -96,7 +96,7 @@ const PropertyCard = ({ property, onAuthRequired }) => {
           <img
             src={propertyImage}
             alt={property.property_title || property.address}
-            className="w-full h-full object-cover object-[center_20%] transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
             onError={(e) => e.target.src = '/images/property-placeholder.svg'}
           />
           {/* Status Badge */}
