@@ -36,7 +36,7 @@ function Buyers() {
   const faqs = [
     {
       question: 'Do I need to get pre-approved before looking at homes?',
-      answer: 'We strongly recommend it. Pre-approval gives you a clear budget, strengthens your offer in competitive situations, and shows sellers you\'re a serious buyer. We partner with T&M Mortgages to make the process simple and fast.'
+      answer: 'We strongly recommend it. Pre-approval gives you a clear budget, strengthens your offer in competitive situations, and shows sellers you\'re a serious buyer. We partner with AnnieMac to make the process simple and fast.'
     },
     {
       question: 'What does buyer representation include?',

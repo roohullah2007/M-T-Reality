@@ -95,7 +95,9 @@
       "Bash(sips -s format png \"/Users/macbookair/M-T-Reality/public/images/for-sale.webp\" --out \"/tmp/for-sale.png\" --resampleWidth 400)",
       "Bash(sips -s format png \"/Users/macbookair/M-T-Reality/public/images/84ThfxeixSTqgPeVHnjMy4tXX4SsZeNXbv2hAnqi.jpeg\" --out \"/tmp/mystery.png\" --resampleWidth 400)",
       "Bash(sips -g pixelWidth -g pixelHeight /tmp/bath-8186489.jpg)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "WebFetch(domain:mandtrealty.com)",
+      "Bash(xmllint --noout /tmp/sitemap-out.xml)"
     ],
     "deny": [],
     "ask": []

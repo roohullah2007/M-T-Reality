@@ -1206,7 +1206,7 @@ function PropertyDetail({ property, openHouses = [] }) {
                   </h3>
                 </div>
                 <p className="text-sm text-white/80 mb-4 leading-relaxed" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                  Get pre-approved in 15 minutes with T&M Mortgages. Compare rates from 25+ lenders.
+                  Get pre-approved in 15 minutes with AnnieMac. Compare rates from 25+ lenders.
                 </p>
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center gap-2 text-sm text-white/90">
