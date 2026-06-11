@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\BuyerInquiryConfirmation;
 use App\Mail\NewBuyerInquiryToAdmin;
 use App\Models\BuyerInquiry;
 use App\Services\EmailService;
@@ -28,8 +29,13 @@ class BuyerInquiryController extends Controller
 
         $inquiry = BuyerInquiry::create($validated);
 
-        // Send notification email to admin
-        EmailService::sendToAdmin(new NewBuyerInquiryToAdmin($inquiry));
+        // Send confirmation to the buyer and notification to admin
+        // (EmailService logs failures and never throws)
+        EmailService::sendToUserAndAdmin(
+            $inquiry->email,
+            new BuyerInquiryConfirmation($inquiry),
+            new NewBuyerInquiryToAdmin($inquiry)
+        );
 
         return back()->with('success', 'Thank you! We\'ll be in touch soon with property alerts matching your criteria.');
     }
