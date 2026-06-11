@@ -104,12 +104,12 @@ class AdminSettingsController extends Controller
 
         try {
             Mail::to($adminEmail)->send(new TestEmail($adminEmail));
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('Failed to send test email to ' . $adminEmail . ': ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to send test email. Check the mail configuration and logs for details.',
+                'message' => 'Failed to send test email (mailer: ' . config('mail.default') . '): ' . $e->getMessage(),
             ], 500);
         }
 
