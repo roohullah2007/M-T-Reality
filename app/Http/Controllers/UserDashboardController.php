@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\MlsChangeRequestToAdmin;
 use App\Mail\PropertyUpdatedNotification;
+use App\Mail\PropertyUpdatedToAdmin;
 use App\Mail\ServiceRequestReceived;
 use App\Mail\ServiceRequestToAdmin;
 use App\Models\Property;
@@ -19,7 +21,6 @@ use App\Services\GeocodingService;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class UserDashboardController extends Controller
@@ -257,9 +258,15 @@ class UserDashboardController extends Controller
             GeocodingService::geocodeProperty($property);
         }
 
-        // Send update notification email
+        // Send update notification email to the owner and a copy to admin
         if ($property->contact_email) {
-            EmailService::sendToUser($property->contact_email, new PropertyUpdatedNotification($property));
+            EmailService::sendToUserAndAdmin(
+                $property->contact_email,
+                new PropertyUpdatedNotification($property),
+                new PropertyUpdatedToAdmin($property)
+            );
+        } else {
+            EmailService::sendToAdmin(new PropertyUpdatedToAdmin($property));
         }
 
         return redirect()->route('dashboard.listings')->with('success', 'Property updated successfully!');
@@ -876,7 +883,7 @@ class UserDashboardController extends Controller
             abort(403, 'You do not own this property.');
         }
 
-        MlsChangeRequest::create([
+        $changeRequest = MlsChangeRequest::create([
             'user_id' => Auth::id(),
             'property_id' => $validated['property_id'],
             'request_type' => $validated['request_type'],
@@ -884,6 +891,11 @@ class UserDashboardController extends Controller
             'changes' => $validated['changes'] ?? null,
             'status' => 'pending',
         ]);
+
+        // Notify admin about the new MLS change request
+        // (EmailService logs failures and never throws)
+        $changeRequest->load(['user', 'property']);
+        EmailService::sendToAdmin(new MlsChangeRequestToAdmin($changeRequest));
 
         return redirect()->route('dashboard.mls-changes')->with('success', 'Your MLS change request has been submitted! We will process it shortly.');
     }

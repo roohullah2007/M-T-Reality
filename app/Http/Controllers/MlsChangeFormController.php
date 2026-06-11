@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContactFormConfirmation;
 use App\Mail\NewContactMessageToAdmin;
 use App\Models\ContactMessage;
 use App\Services\EmailService;
@@ -38,7 +39,13 @@ class MlsChangeFormController extends Controller
             'status' => 'new',
         ]);
 
-        EmailService::sendToAdmin(new NewContactMessageToAdmin($message));
+        // Confirmation to the submitter and notification to admin
+        // (EmailService logs failures and never throws)
+        EmailService::sendToUserAndAdmin(
+            $message->email,
+            new ContactFormConfirmation($message),
+            new NewContactMessageToAdmin($message)
+        );
 
         return redirect()->route('mlschanges')
             ->with('success', 'Your MLS change request has been submitted. We will process it shortly.');

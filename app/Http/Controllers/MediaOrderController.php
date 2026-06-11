@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\MediaOrderReceived;
+use App\Mail\NewMediaOrderToAdmin;
 use App\Models\MediaOrder;
 use App\Models\User;
+use App\Services\EmailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 
@@ -169,8 +171,17 @@ class MediaOrderController extends Controller
             'status' => 'pending',
         ]);
 
-        // TODO: Send confirmation email to customer
-        // TODO: Send notification to admin
+        // Send confirmation email to customer and notification to admin
+        // (EmailService logs failures and never throws, so the order always succeeds)
+        if ($mediaOrder->email) {
+            EmailService::sendToUserAndAdmin(
+                $mediaOrder->email,
+                new MediaOrderReceived($mediaOrder),
+                new NewMediaOrderToAdmin($mediaOrder)
+            );
+        } else {
+            EmailService::sendToAdmin(new NewMediaOrderToAdmin($mediaOrder));
+        }
 
         // Redirect to success page or dashboard
         if ($user) {
