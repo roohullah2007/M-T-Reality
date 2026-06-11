@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\TestEmail;
 use App\Models\Setting;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class AdminSettingsController extends Controller
@@ -73,6 +76,48 @@ class AdminSettingsController extends Controller
         Setting::clearCache();
 
         return back()->with('success', 'Setting deleted successfully.');
+    }
+
+    /**
+     * Send a test email to the configured admin email address.
+     *
+     * Attempts to send even if email notifications are disabled, so admins
+     * can verify their mail configuration before enabling notifications.
+     */
+    public function sendTestEmail()
+    {
+        $adminEmail = trim((string) Setting::get('admin_email', ''));
+
+        if ($adminEmail === '') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Admin email is not set. Please set the "Admin Email" setting first.',
+            ], 422);
+        }
+
+        if (!filter_var($adminEmail, FILTER_VALIDATE_EMAIL)) {
+            return response()->json([
+                'success' => false,
+                'message' => "The configured admin email \"{$adminEmail}\" is not a valid email address.",
+            ], 422);
+        }
+
+        try {
+            Mail::to($adminEmail)->send(new TestEmail($adminEmail));
+        } catch (\Exception $e) {
+            Log::error('Failed to send test email to ' . $adminEmail . ': ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send test email. Check the mail configuration and logs for details.',
+            ], 500);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "Test email sent to {$adminEmail}",
+            'admin_email' => $adminEmail,
+        ]);
     }
 
     /**

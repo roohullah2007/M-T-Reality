@@ -13,7 +13,9 @@ import {
     Search as SearchIcon,
     X,
     AlertCircle,
-    CheckCircle
+    CheckCircle,
+    Send,
+    Loader2
 } from 'lucide-react';
 
 export default function SettingsIndex({ settings = {} }) {
@@ -25,6 +27,8 @@ export default function SettingsIndex({ settings = {} }) {
     const [hasChanges, setHasChanges] = useState(false);
     const [saving, setSaving] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
+    const [sendingTestEmail, setSendingTestEmail] = useState(false);
+    const [testEmailResult, setTestEmailResult] = useState(null);
 
     const tabs = [
         { key: 'general', label: 'General', icon: Globe },
@@ -117,6 +121,26 @@ export default function SettingsIndex({ settings = {} }) {
                 reset();
             }
         });
+    };
+
+    const sendTestEmail = async () => {
+        setSendingTestEmail(true);
+        setTestEmailResult(null);
+
+        try {
+            const response = await window.axios.post(route('admin.settings.test-email'));
+            setTestEmailResult({
+                type: 'success',
+                message: response.data?.message || 'Test email sent!'
+            });
+        } catch (error) {
+            setTestEmailResult({
+                type: 'error',
+                message: error.response?.data?.message || 'Failed to send test email. Please try again.'
+            });
+        } finally {
+            setSendingTestEmail(false);
+        }
     };
 
     const getSettingsByGroup = (group) => {
@@ -245,7 +269,7 @@ export default function SettingsIndex({ settings = {} }) {
                             return (
                                 <button
                                     key={tab.key}
-                                    onClick={() => setActiveTab(tab.key)}
+                                    onClick={() => { setActiveTab(tab.key); setTestEmailResult(null); }}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
                                         activeTab === tab.key
                                             ? 'bg-[#2BBBAD] text-white'
@@ -271,10 +295,47 @@ export default function SettingsIndex({ settings = {} }) {
                     {/* Settings Form */}
                     <div className="bg-white rounded-xl shadow-sm">
                         <div className="p-6 border-b border-gray-200">
-                            <h2 className="text-lg font-semibold text-gray-900 capitalize">{activeTab} Settings</h2>
-                            <p className="text-sm text-gray-500 mt-1">
-                                Configure your {activeTab.toLowerCase()} preferences
-                            </p>
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                <div>
+                                    <h2 className="text-lg font-semibold text-gray-900 capitalize">{activeTab} Settings</h2>
+                                    <p className="text-sm text-gray-500 mt-1">
+                                        Configure your {activeTab.toLowerCase()} preferences
+                                    </p>
+                                </div>
+                                {activeTab === 'email' && (
+                                    <button
+                                        onClick={sendTestEmail}
+                                        disabled={sendingTestEmail}
+                                        className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white px-4 py-2 rounded-lg hover:bg-[#249E93] transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                                    >
+                                        {sendingTestEmail ? (
+                                            <>
+                                                <Loader2 className="w-4 h-4 animate-spin" />
+                                                Sending...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Send className="w-4 h-4" />
+                                                Send Test Email
+                                            </>
+                                        )}
+                                    </button>
+                                )}
+                            </div>
+                            {activeTab === 'email' && testEmailResult && (
+                                <div className={`mt-4 flex items-center gap-2 p-3 rounded-lg text-sm ${
+                                    testEmailResult.type === 'success'
+                                        ? 'bg-green-50 border border-green-200 text-green-700'
+                                        : 'bg-red-50 border border-red-200 text-red-700'
+                                }`}>
+                                    {testEmailResult.type === 'success' ? (
+                                        <CheckCircle className="w-4 h-4 flex-shrink-0" />
+                                    ) : (
+                                        <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                                    )}
+                                    {testEmailResult.message}
+                                </div>
+                            )}
                         </div>
 
                         {currentSettings.length === 0 ? (
