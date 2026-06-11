@@ -19,7 +19,13 @@ class EmailService
      */
     public static function isEnabled(): bool
     {
-        return Setting::get('email_notifications', '1') === '1';
+        // The setting may be stored with type "boolean" (Setting::get() then
+        // returns a PHP bool) or as a string like '1'/'0'. A strict === '1'
+        // comparison silently disabled ALL notifications when the setting row
+        // existed with boolean type, so normalize both representations here.
+        $value = Setting::get('email_notifications', '1');
+
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN);
     }
 
     /**
@@ -93,12 +99,12 @@ class EmailService
         // Send to user first
         $results['user'] = self::sendToUser($userEmail, $userMailable);
 
-        // Add delay before sending to admin
-        if ($results['user']) {
-            sleep($delaySeconds);
-        }
+        // Always delay before sending to admin: even a failed user send
+        // counts as an API request against Resend's ~2 req/sec rate limit,
+        // so skipping the delay could rate-limit the admin email too.
+        sleep($delaySeconds);
 
-        // Send to admin
+        // Send to admin (always attempted, even if the user email failed)
         $results['admin'] = self::sendToAdmin($adminMailable);
 
         return $results;

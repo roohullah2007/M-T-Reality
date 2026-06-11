@@ -5,15 +5,14 @@ namespace App\Http\Controllers;
 use App\Mail\PropertySubmittedToAdmin;
 use App\Mail\PropertySubmittedToOwner;
 use App\Mail\PropertyUpdatedNotification;
+use App\Mail\PropertyUpdatedToAdmin;
 use App\Models\Property;
 use App\Models\QrScan;
-use App\Models\Setting;
 use App\Models\User;
 use App\Services\EmailService;
 use App\Services\GeocodingService;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class PropertyController extends Controller
@@ -629,9 +628,15 @@ class PropertyController extends Controller
             return;
         }
 
-        // Send update notification to property owner
+        // Send update notification to property owner and a copy to admin
         if ($property->contact_email) {
-            EmailService::sendToUser($property->contact_email, new PropertyUpdatedNotification($property));
+            EmailService::sendToUserAndAdmin(
+                $property->contact_email,
+                new PropertyUpdatedNotification($property),
+                new PropertyUpdatedToAdmin($property)
+            );
+        } else {
+            EmailService::sendToAdmin(new PropertyUpdatedToAdmin($property));
         }
     }
 }

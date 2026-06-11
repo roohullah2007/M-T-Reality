@@ -4,12 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Mail\WelcomeEmail;
-use App\Models\Setting;
 use App\Models\User;
+use App\Services\EmailService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Inertia\Response;
 use Laravel\Socialite\Facades\Socialite;
@@ -111,16 +110,9 @@ class GoogleController extends Controller
         // Clear session
         session()->forget('google_user');
 
-        // Send welcome email (don't let email failure break login)
-        try {
-            $emailNotificationsEnabled = Setting::get('email_notifications', '1') === '1';
-            if ($emailNotificationsEnabled) {
-                Mail::to($user->email)->send(new WelcomeEmail($user));
-            }
-        } catch (\Exception $e) {
-            // Log error but don't break login flow
-            \Log::error('Failed to send welcome email: ' . $e->getMessage());
-        }
+        // Send welcome email (EmailService checks the email_notifications
+        // setting, logs failures, and never breaks the login flow)
+        EmailService::sendToUser($user->email, new WelcomeEmail($user));
 
         Auth::login($user, true);
 
