@@ -20,7 +20,7 @@
             </tr>
             <tr>
                 <td>Import Source</td>
-                <td>{{ ucfirst($property->import_source) }}</td>
+                <td>{{ ucfirst($property->import_source ?? 'N/A') }}</td>
             </tr>
         </table>
     </div>
@@ -29,7 +29,7 @@
         <h4>Claimed By</h4>
         <p><strong>Name:</strong> {{ $claimedBy->name }}</p>
         <p><strong>Email:</strong> {{ $claimedBy->email }}</p>
-        <p><strong>Claimed At:</strong> {{ $property->claimed_at->format('F j, Y \a\t g:i A') }}</p>
+        <p><strong>Claimed At:</strong> {{ $property->claimed_at?->format('F j, Y \a\t g:i A') ?? now()->format('F j, Y \a\t g:i A') }}</p>
     </div>
 
     <p>The property is now live and visible to buyers.</p>

@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Mail\EmailVerificationCode;
 use App\Mail\NewUserRegisteredToAdmin;
 use App\Mail\WelcomeEmail;
-use App\Models\Setting;
 use App\Models\User;
 use App\Services\EmailService;
 use Illuminate\Auth\Events\Registered;
@@ -112,15 +111,9 @@ class RegisteredUserController extends Controller
         // Mark email as verified
         $user->markEmailAsVerified();
 
-        // Send welcome email after verification
-        try {
-            $emailNotificationsEnabled = Setting::get('email_notifications', '1') === '1';
-            if ($emailNotificationsEnabled) {
-                Mail::to($user->email)->send(new WelcomeEmail($user));
-            }
-        } catch (\Exception $e) {
-            \Log::error('Failed to send welcome email: ' . $e->getMessage());
-        }
+        // Send welcome email after verification (EmailService checks the
+        // email_notifications setting, logs failures, and never throws)
+        EmailService::sendToUser($user->email, new WelcomeEmail($user));
 
         return redirect()->route('dashboard')->with('success', 'Email verified successfully! Welcome to ' . config('app.name') . '.');
     }
