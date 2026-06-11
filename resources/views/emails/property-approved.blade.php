@@ -8,7 +8,7 @@
 
     <p>Hello {{ $property->contact_name }},</p>
 
-    <p>We're pleased to inform you that your property listing has been reviewed and approved. Your listing is now live and visible to potential buyers on OK By Owner!</p>
+    <p>We're pleased to inform you that your property listing has been reviewed and approved. Your listing is now live and visible to potential buyers on {{ config('app.name') }}!</p>
 
     <div class="highlight">
         <p><strong>Your property is now active and ready to receive inquiries!</strong></p>
@@ -64,9 +64,9 @@
         <a href="{{ $dashboardUrl }}" class="btn" style="background-color: #6b7280;">Go to Dashboard</a>
     </p>
 
-    <p>Thank you for choosing OK By Owner. We wish you success with your sale!</p>
+    <p>Thank you for choosing {{ config('app.name') }}. We wish you success with your sale!</p>
 
     <p>
-        <strong>The OK By Owner Team</strong>
+        <strong>The {{ config('app.name') }} Team</strong>
     </p>
 @endsection

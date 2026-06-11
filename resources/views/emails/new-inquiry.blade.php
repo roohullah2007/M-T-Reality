@@ -63,6 +63,6 @@
     <p>Good luck with your sale!</p>
 
     <p>
-        <strong>The OK By Owner Team</strong>
+        <strong>The {{ config('app.name') }} Team</strong>
     </p>
 @endsection

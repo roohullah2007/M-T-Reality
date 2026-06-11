@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'OK By Owner')</title>
+    <title>@yield('title', config('app.name'))</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -24,21 +24,29 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
+        .email-logo-bar {
+            background-color: #ffffff;
+            padding: 24px 20px 20px 20px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .email-logo-bar img {
+            display: block;
+            margin: 0 auto;
+            width: 180px;
+            height: auto;
+            border: 0;
+        }
         .email-header {
-            background-color: #2563eb;
+            background-color: #2BBBAD;
             color: #ffffff;
-            padding: 30px 20px;
+            padding: 22px 20px;
             text-align: center;
         }
         .email-header h1 {
             margin: 0;
             font-size: 24px;
             font-weight: 600;
-        }
-        .email-header .logo {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 10px;
         }
         .email-body {
             padding: 30px 20px;
@@ -85,7 +93,7 @@
         .btn {
             display: inline-block;
             padding: 12px 24px;
-            background-color: #2563eb;
+            background-color: #2BBBAD;
             color: #ffffff !important;
             text-decoration: none;
             border-radius: 6px;
@@ -93,7 +101,7 @@
             margin: 10px 5px 10px 0;
         }
         .btn:hover {
-            background-color: #1d4ed8;
+            background-color: #239a8f;
         }
         .btn-secondary {
             background-color: #6b7280;
@@ -113,19 +121,19 @@
             color: #6b7280;
         }
         .email-footer a {
-            color: #2563eb;
+            color: #2BBBAD;
             text-decoration: none;
         }
         .highlight {
-            background-color: #dbeafe;
-            border-left: 4px solid #2563eb;
+            background-color: #d9f3f0;
+            border-left: 4px solid #2BBBAD;
             padding: 15px;
             margin: 20px 0;
             border-radius: 0 8px 8px 0;
         }
         .highlight p {
             margin: 0;
-            color: #1e40af;
+            color: #14655d;
         }
         .user-info {
             background-color: #fef3c7;
@@ -143,16 +151,20 @@
 <body>
     <div class="email-wrapper">
         <div class="email-container">
+            <div class="email-logo-bar">
+                <a href="https://mandtrealty.com" target="_blank">
+                    <img src="https://mandtrealty.com/images/m%26t_logo.png" alt="{{ config('app.name') }}" width="180" style="display: block; margin: 0 auto; width: 180px; height: auto; border: 0;">
+                </a>
+            </div>
             <div class="email-header">
-                <div class="logo">OK By Owner</div>
                 <h1>@yield('header-title', 'Notification')</h1>
             </div>
             <div class="email-body">
                 @yield('content')
             </div>
             <div class="email-footer">
-                <p>&copy; {{ date('Y') }} OK By Owner. All rights reserved.</p>
-                <p>Oklahoma's #1 For Sale By Owner Marketplace</p>
+                <p>&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
+                <p>Licensed Real Estate Brokerage in Oklahoma</p>
                 <p><a href="{{ url('/') }}">Visit our website</a></p>
             </div>
         </div>

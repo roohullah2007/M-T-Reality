@@ -53,6 +53,6 @@
     </p>
 
     <p>
-        <strong>OK By Owner Admin System</strong>
+        <strong>{{ config('app.name') }} Admin System</strong>
     </p>
 @endsection

@@ -41,7 +41,7 @@
     </div>
 
     <p>
-        <a href="mailto:{{ $inquiry->email }}?subject=Your Inquiry at OK By Owner" class="btn">Reply via Email</a>
+        <a href="mailto:{{ $inquiry->email }}?subject={{ rawurlencode('Your Inquiry at ' . config('app.name')) }}" class="btn">Reply via Email</a>
         @if($inquiry->phone)
         <a href="tel:{{ $inquiry->phone }}" class="btn btn-secondary">Call Buyer</a>
         @endif
@@ -52,6 +52,6 @@
     </p>
 
     <p>
-        <strong>OK By Owner Admin System</strong>
+        <strong>{{ config('app.name') }} Admin System</strong>
     </p>
 @endsection

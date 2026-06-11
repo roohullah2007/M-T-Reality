@@ -73,6 +73,6 @@
     <p>If you have any questions, feel free to contact us.</p>
 
     <p>
-        <strong>The OK By Owner Team</strong>
+        <strong>The {{ config('app.name') }} Team</strong>
     </p>
 @endsection

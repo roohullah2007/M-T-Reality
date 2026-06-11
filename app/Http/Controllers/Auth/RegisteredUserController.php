@@ -122,7 +122,7 @@ class RegisteredUserController extends Controller
             \Log::error('Failed to send welcome email: ' . $e->getMessage());
         }
 
-        return redirect()->route('dashboard')->with('success', 'Email verified successfully! Welcome to OK By Owner.');
+        return redirect()->route('dashboard')->with('success', 'Email verified successfully! Welcome to ' . config('app.name') . '.');
     }
 
     /**

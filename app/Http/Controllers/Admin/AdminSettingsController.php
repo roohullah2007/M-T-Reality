@@ -127,8 +127,8 @@ class AdminSettingsController extends Controller
     {
         $defaults = [
             // General Settings
-            ['key' => 'site_name', 'value' => 'OK BY OWNER', 'type' => 'string', 'group' => 'general', 'label' => 'Site Name'],
-            ['key' => 'site_tagline', 'value' => 'For Sale By Owner Real Estate', 'type' => 'string', 'group' => 'general', 'label' => 'Site Tagline'],
+            ['key' => 'site_name', 'value' => 'M&T Realty Group', 'type' => 'string', 'group' => 'general', 'label' => 'Site Name'],
+            ['key' => 'site_tagline', 'value' => 'Licensed Real Estate Brokerage in Oklahoma', 'type' => 'string', 'group' => 'general', 'label' => 'Site Tagline'],
             ['key' => 'contact_email', 'value' => 'team@mandtrealty.com', 'type' => 'string', 'group' => 'general', 'label' => 'Contact Email'],
             ['key' => 'contact_phone', 'value' => '(555) 123-4567', 'type' => 'string', 'group' => 'general', 'label' => 'Contact Phone'],
             ['key' => 'address', 'value' => 'Oklahoma City, OK', 'type' => 'string', 'group' => 'general', 'label' => 'Address'],
@@ -143,8 +143,8 @@ class AdminSettingsController extends Controller
             ['key' => 'admin_email', 'value' => 'team@mandtrealty.com', 'type' => 'string', 'group' => 'email', 'label' => 'Admin Email'],
 
             // SEO Settings
-            ['key' => 'meta_title', 'value' => 'OK BY OWNER - For Sale By Owner Real Estate in Oklahoma', 'type' => 'string', 'group' => 'seo', 'label' => 'Meta Title'],
-            ['key' => 'meta_description', 'value' => 'List and find properties for sale by owner in Oklahoma. No commission fees, direct buyer-seller connection.', 'type' => 'string', 'group' => 'seo', 'label' => 'Meta Description'],
+            ['key' => 'meta_title', 'value' => 'M&T Realty Group - Oklahoma Real Estate', 'type' => 'string', 'group' => 'seo', 'label' => 'Meta Title'],
+            ['key' => 'meta_description', 'value' => 'Browse homes for sale across Oklahoma with M&T Realty Group, a licensed real estate brokerage.', 'type' => 'string', 'group' => 'seo', 'label' => 'Meta Description'],
         ];
 
         foreach ($defaults as $default) {

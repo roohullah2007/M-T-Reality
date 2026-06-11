@@ -76,9 +76,9 @@
         <a href="{{ $propertyUrl }}" class="btn">View Property Again</a>
     </p>
 
-    <p>Thank you for using OK By Owner to find your next home!</p>
+    <p>Thank you for using {{ config('app.name') }} to find your next home!</p>
 
     <p>
-        <strong>The OK By Owner Team</strong>
+        <strong>The {{ config('app.name') }} Team</strong>
     </p>
 @endsection

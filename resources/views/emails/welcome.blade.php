@@ -1,14 +1,14 @@
 @extends('emails.layout')
 
-@section('title', 'Welcome to OK By Owner')
+@section('title', 'Welcome to ' . config('app.name'))
 @section('header-title', 'Welcome!')
 
 @section('content')
-    <h2>Welcome to OK By Owner!</h2>
+    <h2>Welcome to {{ config('app.name') }}!</h2>
 
     <p>Hello {{ $user->name }},</p>
 
-    <p>Thank you for creating an account with OK By Owner - Oklahoma's premier For Sale By Owner marketplace!</p>
+    <p>Thank you for creating an account with {{ config('app.name') }} - your trusted Oklahoma real estate brokerage!</p>
 
     <div class="highlight">
         <p><strong>Your account is now active and ready to use.</strong></p>
@@ -78,6 +78,6 @@
     <p>Welcome aboard!</p>
 
     <p>
-        <strong>The OK By Owner Team</strong>
+        <strong>The {{ config('app.name') }} Team</strong>
     </p>
 @endsection
