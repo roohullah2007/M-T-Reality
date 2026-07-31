@@ -27,6 +27,15 @@ class Property extends Model
         self::STATUS_INACTIVE => 'Inactive',
     ];
 
+    /**
+     * Listing statuses the public may browse. Inactive is admin-only.
+     */
+    const PUBLIC_STATUSES = [
+        self::STATUS_FOR_SALE,
+        self::STATUS_PENDING,
+        self::STATUS_SOLD,
+    ];
+
     protected $fillable = [
         'user_id',
         'original_user_id',
@@ -286,11 +295,25 @@ class Property extends Model
     }
 
     /**
-     * Scope for publicly visible properties
+     * Scope for publicly visible properties.
+     *
+     * This is the single definition of "a guest may see this listing" - the
+     * listing index, homepage and sitemap all build on it. Previously each
+     * surface hand-rolled its own conditions and they drifted apart, which is
+     * how inactive listings kept leaking. Add new rules here, not at call sites.
      */
     public function scopePublic($query)
     {
-        return $query->active()->approved();
+        return $query->active()
+            ->approved()
+            // Whitelist, not "!= inactive": a status that is neither listed here
+            // nor browsable (e.g. the legacy 'for_rent') must not leak either.
+            ->whereIn('listing_status', self::PUBLIC_STATUSES)
+            // Imported listings that nobody has claimed carry the real owner's
+            // details and 404 on the detail page, so never advertise them.
+            ->where(function ($q) {
+                $q->whereNull('import_source')->orWhereNotNull('claimed_at');
+            });
     }
 
     /**

@@ -49,8 +49,7 @@ Route::get('/sitemap.xml', function () {
         ['path' => '/terms-of-use',    'changefreq' => 'yearly',  'priority' => '0.3'],
     ];
 
-    $properties = \App\Models\Property::where('is_active', true)
-        ->where('approval_status', 'approved')
+    $properties = \App\Models\Property::public()
         ->get(['id', 'address', 'updated_at']);
 
     $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
@@ -83,8 +82,7 @@ Route::get('/sitemap.xml', function () {
 // Public routes
 Route::get('/', function () {
     // Get featured properties first, then fill with latest approved properties
-    $featuredProperties = \App\Models\Property::where('is_active', true)
-        ->where('approval_status', 'approved')
+    $featuredProperties = \App\Models\Property::public()
         ->orderByDesc('is_featured') // Featured properties first
         ->latest()
         ->take(8)
@@ -386,6 +384,23 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 // Short URL: /74 redirects to /properties/74-123-main-street
 Route::get('/{propertyId}', function ($propertyId, \Illuminate\Http\Request $request) {
     $property = \App\Models\Property::findOrFail($propertyId);
+
+    // The slug is built from the street address, so redirecting without a
+    // visibility check would disclose it in the Location header for hidden
+    // listings - and let anyone enumerate /1, /2, /3 to harvest addresses.
+    // Mirror the guard in PropertyController::show().
+    $isAdmin = auth()->check() && auth()->user()->role === 'admin';
+    $isOwner = auth()->check() && auth()->id() === $property->user_id;
+
+    $isPubliclyVisible = $property->is_active
+        && $property->listing_status !== \App\Models\Property::STATUS_INACTIVE
+        && $property->approval_status === 'approved'
+        && !($property->isImported() && !$property->isClaimed());
+
+    if (!$isPubliclyVisible && !$isAdmin && !$isOwner) {
+        abort(404);
+    }
+
     $queryString = $request->getQueryString();
     $url = '/properties/' . $property->slug . ($queryString ? '?' . $queryString : '');
     return redirect()->to($url, 301);

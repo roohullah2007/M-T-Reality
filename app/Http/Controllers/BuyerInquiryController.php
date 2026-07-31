@@ -63,7 +63,7 @@ class BuyerInquiryController extends Controller
             });
         }
 
-        $inquiries = $query->orderBy('created_at', 'desc')->paginate(20);
+        $inquiries = $query->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
 
         // Get counts for status badges
         $counts = [
