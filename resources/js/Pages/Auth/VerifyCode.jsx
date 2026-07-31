@@ -182,7 +182,7 @@ function VerifyCode({ email }) {
                             <p className="text-xs text-gray-500 text-center">
                                 The code expires in 15 minutes. Check your spam folder if you don't see the email.
                                 <br />
-                                <span className="text-gray-400">Code sent from noreply@mandtrealty.com</span>
+                                <span className="text-gray-400">Code sent from noreply@updates.mandtrealty.com</span>
                             </p>
                         </div>
 

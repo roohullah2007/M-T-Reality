@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\TestEmail;
 use App\Models\Setting;
 use App\Models\ActivityLog;
+use App\Services\EmailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -32,14 +33,18 @@ class AdminSettingsController extends Controller
 
         foreach ($validated['settings'] as $settingData) {
             $setting = Setting::where('key', $settingData['key'])->first();
+            $oldValue = $setting?->value;
 
-            if ($setting) {
-                $oldValue = $setting->value;
-                $setting->update(['value' => $settingData['value']]);
+            // Create the row if it doesn't exist yet. This silently discarded
+            // the submitted value on a fresh install (where the settings table
+            // is empty) while still reporting "Settings updated successfully".
+            $setting = Setting::updateOrCreate(
+                ['key' => $settingData['key']],
+                ['value' => $settingData['value']]
+            );
 
-                if ($oldValue !== $settingData['value']) {
-                    ActivityLog::log('setting_updated', $setting, ['value' => $oldValue], ['value' => $settingData['value']], "Updated setting: {$setting->key}");
-                }
+            if ($oldValue !== $settingData['value']) {
+                ActivityLog::log('setting_updated', $setting, ['value' => $oldValue], ['value' => $settingData['value']], "Updated setting: {$setting->key}");
             }
         }
 
@@ -86,14 +91,9 @@ class AdminSettingsController extends Controller
      */
     public function sendTestEmail()
     {
-        $adminEmail = trim((string) Setting::get('admin_email', ''));
-
-        if ($adminEmail === '') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Admin email is not set. Please set the "Admin Email" setting first.',
-            ], 422);
-        }
+        // Resolve through EmailService so the test hits exactly the address real
+        // admin notifications use, including its fallback when no setting exists.
+        $adminEmail = EmailService::getAdminEmail();
 
         if (!filter_var($adminEmail, FILTER_VALIDATE_EMAIL)) {
             return response()->json([
@@ -129,7 +129,9 @@ class AdminSettingsController extends Controller
             // General Settings
             ['key' => 'site_name', 'value' => 'M&T Realty Group', 'type' => 'string', 'group' => 'general', 'label' => 'Site Name'],
             ['key' => 'site_tagline', 'value' => 'Licensed Real Estate Brokerage in Oklahoma', 'type' => 'string', 'group' => 'general', 'label' => 'Site Tagline'],
-            ['key' => 'contact_email', 'value' => 'team@mandtrealty.com', 'type' => 'string', 'group' => 'general', 'label' => 'Contact Email'],
+            // Public-facing contact address - deliberately a separate value from
+            // the admin notification inbox so reverting one doesn't move the other.
+            ['key' => 'contact_email', 'value' => 'mntrealtygroup@gmail.com', 'type' => 'string', 'group' => 'general', 'label' => 'Contact Email'],
             ['key' => 'contact_phone', 'value' => '(555) 123-4567', 'type' => 'string', 'group' => 'general', 'label' => 'Contact Phone'],
             ['key' => 'address', 'value' => 'Oklahoma City, OK', 'type' => 'string', 'group' => 'general', 'label' => 'Address'],
 
@@ -140,7 +142,7 @@ class AdminSettingsController extends Controller
 
             // Email Settings
             ['key' => 'email_notifications', 'value' => '1', 'type' => 'boolean', 'group' => 'email', 'label' => 'Enable Email Notifications'],
-            ['key' => 'admin_email', 'value' => 'team@mandtrealty.com', 'type' => 'string', 'group' => 'email', 'label' => 'Admin Email'],
+            ['key' => 'admin_email', 'value' => EmailService::DEFAULT_ADMIN_EMAIL, 'type' => 'string', 'group' => 'email', 'label' => 'Admin Email'],
 
             // SEO Settings
             ['key' => 'meta_title', 'value' => 'M&T Realty Group - Oklahoma Real Estate', 'type' => 'string', 'group' => 'seo', 'label' => 'Meta Title'],
