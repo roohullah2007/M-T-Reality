@@ -184,7 +184,7 @@ const PropertyMap = ({ properties = [], onPropertyClick }) => {
       const popupContent = `
         <div style="padding:0;min-width:220px;font-family:'Instrument Sans',sans-serif;">
           <a href="/properties/${property.slug || property.id}" style="text-decoration:none;color:inherit;">
-            <img src="${photo}" alt="${property.property_title || ''}" style="width:100%;height:120px;object-fit:cover;object-position:center 20%;border-radius:8px 8px 0 0;" onerror="this.src='/images/property-placeholder.svg'" />
+            <img src="${photo}" alt="${property.property_title || ''}" style="width:100%;height:120px;object-fit:cover;object-position:center;border-radius:8px 8px 0 0;" onerror="this.src='/images/property-placeholder.svg'" />
             <div style="padding:10px;">
               <div style="font-weight:700;font-size:16px;color:#2BBBAD;margin-bottom:4px;">$${Number(property.price).toLocaleString()}</div>
               <div style="font-size:13px;color:#111;margin-bottom:4px;line-height:1.3;">${property.address || ''}</div>
