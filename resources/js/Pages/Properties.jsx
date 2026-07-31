@@ -6,23 +6,35 @@ import PropertyCard from '@/Components/PropertyCard';
 import PropertyMap from '@/Components/Properties/PropertyMap';
 import AuthModal from '@/Components/AuthModal';
 
+// The unfiltered state of the page - also what "Clear Filters" resets back to.
+const DEFAULT_SEARCH_PARAMS = {
+  keyword: '',
+  location: '',
+  status: 'for-sale',
+  propertyType: '',
+  priceMin: '',
+  priceMax: '',
+  bedrooms: '',
+  bathrooms: '',
+  schoolDistrict: '',
+  hasOpenHouse: '',
+  sort: 'newest',
+};
+
 function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, allPropertiesForMap = [] }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [showMoreFilters, setShowMoreFilters] = useState(false);
-  const [searchParams, setSearchParams] = useState({
-    keyword: String(filters.keyword || ''),
-    location: String(filters.location || ''),
-    status: String(filters.status || 'for-sale'),
-    propertyType: String(filters.propertyType || ''),
-    priceMin: String(filters.priceMin || ''),
-    priceMax: String(filters.priceMax || ''),
-    bedrooms: String(filters.bedrooms || ''),
-    bathrooms: String(filters.bathrooms || ''),
-    schoolDistrict: String(filters.schoolDistrict || ''),
-    hasOpenHouse: String(filters.hasOpenHouse || ''),
-    sort: String(filters.sort || 'newest'),
-  });
+  // Derived from DEFAULT_SEARCH_PARAMS so the two can't drift apart - the
+  // "Clear Filters" check below compares against exactly this set of keys.
+  const [searchParams, setSearchParams] = useState(
+    Object.fromEntries(
+      Object.entries(DEFAULT_SEARCH_PARAMS).map(([field, fallback]) => {
+        const value = String(filters[field] ?? '');
+        return [field, value !== '' ? value : fallback];
+      })
+    )
+  );
 
   // Get properties data from pagination
   const propertyList = properties.data || properties || [];
@@ -32,36 +44,59 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
     setSearchParams({ ...searchParams, [field]: value });
   };
 
+  // Empty values are dropped so the URL stays readable, and `page` is never
+  // carried over — a changed filter has to restart at page 1, or the user can
+  // land on an empty page of a now-shorter result set.
+  const applyFilters = (params) => {
+    const query = {};
+    Object.entries(params).forEach(([field, value]) => {
+      const trimmed = String(value ?? '').trim();
+      if (trimmed !== '') {
+        query[field] = trimmed;
+      }
+    });
+    router.get('/properties', query, { preserveState: true });
+  };
+
   const handleSearch = (e) => {
     e?.preventDefault();
-    router.get('/properties', searchParams, { preserveState: true });
+    applyFilters(searchParams);
   };
 
   const handleSortChange = (value) => {
     const newParams = { ...searchParams, sort: value };
     setSearchParams(newParams);
-    router.get('/properties', newParams, { preserveState: true });
+    applyFilters(newParams);
   };
 
   const clearFilters = () => {
-    setSearchParams({
-      keyword: '',
-      location: '',
-      status: 'for-sale',
-      propertyType: '',
-      priceMin: '',
-      priceMax: '',
-      bedrooms: '',
-      bathrooms: '',
-      schoolDistrict: '',
-      hasOpenHouse: '',
-      sort: 'newest',
-    });
+    setSearchParams({ ...DEFAULT_SEARCH_PARAMS });
     router.get('/properties');
   };
 
-  // Check if any filters are active
-  const hasActiveFilters = searchParams.location || searchParams.propertyType || searchParams.priceMin || searchParams.priceMax || searchParams.bedrooms || searchParams.bathrooms || searchParams.schoolDistrict || searchParams.hasOpenHouse;
+  // Build a pagination URL carrying every currently-applied filter, so that
+  // page 2+ keeps the chosen status instead of resetting to the "For Sale" default.
+  const buildPageUrl = (page) => {
+    const query = new URLSearchParams();
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && String(value) !== '') {
+        query.set(key, String(value));
+      }
+    });
+    query.set('page', page);
+    return `/properties?${query.toString()}`;
+  };
+
+  // Anything at all differing from the defaults - drives "Clear All" and the
+  // empty-state message. Derived from DEFAULT_SEARCH_PARAMS so it can't drift.
+  const hasActiveFilters = Object.entries(DEFAULT_SEARCH_PARAMS)
+    .some(([field, fallback]) => String(searchParams[field] ?? '') !== fallback);
+
+  // Only the fields inside the collapsible "More Filters" panel. Keyword, status
+  // and sort live in the toolbar, so counting them here would badge the panel
+  // for a change the user can already see.
+  const hasPanelFilters = ['location', 'propertyType', 'priceMin', 'priceMax', 'bedrooms', 'bathrooms', 'schoolDistrict', 'hasOpenHouse']
+    .some((field) => String(searchParams[field] ?? '') !== DEFAULT_SEARCH_PARAMS[field]);
 
   return (
     <>
@@ -169,7 +204,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                   >
                     <SlidersHorizontal className="w-4 h-4" />
                     {showMoreFilters ? 'Less Filters' : 'More Filters'}
-                    {hasActiveFilters && (
+                    {hasPanelFilters && (
                       <span className="w-2 h-2 bg-[#2BBBAD] rounded-full"></span>
                     )}
                   </button>
@@ -369,11 +404,11 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                 No Properties Found
               </h3>
               <p className="text-[#666] mb-6" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
-                {searchParams.keyword || searchParams.location
+                {hasActiveFilters
                   ? 'Try adjusting your search criteria or filters'
                   : 'Check back soon for new listings'}
               </p>
-              {(searchParams.keyword || searchParams.location) && (
+              {hasActiveFilters && (
                 <button
                   onClick={clearFilters}
                   className="inline-flex items-center gap-2 bg-[#2BBBAD] text-white px-6 py-3 rounded-full font-medium hover:bg-[#249E93] transition-colors"
@@ -425,7 +460,7 @@ function Properties({ properties = { data: [] }, filters = {}, isAdmin = false, 
                         <span className="px-2 text-gray-400">...</span>
                       )}
                       <Link
-                        href={`/properties?page=${page}${searchParams.keyword ? `&keyword=${searchParams.keyword}` : ''}${searchParams.sort !== 'newest' ? `&sort=${searchParams.sort}` : ''}`}
+                        href={buildPageUrl(page)}
                         className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
                           page === pagination.current_page
                             ? 'bg-[#2BBBAD] text-white'

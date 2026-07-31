@@ -47,7 +47,7 @@ class AdminMediaOrderController extends Controller
             $query->where('broker_assisted', true);
         }
 
-        $orders = $query->latest()->paginate(15);
+        $orders = $query->latest()->paginate(15)->withQueryString();
 
         // Get counts for status tabs
         $counts = [

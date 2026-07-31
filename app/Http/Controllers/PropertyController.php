@@ -164,11 +164,24 @@ class PropertyController extends Controller
      */
     public function show(Request $request, Property $property)
     {
+        $isAdmin = auth()->check() && auth()->user()->role === 'admin';
+        $isOwner = auth()->check() && auth()->id() === $property->user_id;
+
         // Guard: hide unclaimed imported properties from public
         if ($property->isImported() && !$property->isClaimed()) {
-            if (!auth()->check() || auth()->user()->role !== 'admin') {
+            if (!$isAdmin) {
                 abort(404);
             }
+        }
+
+        // Guard: inactive or unapproved listings are only reachable by an admin
+        // or the listing's own owner, never by the public.
+        $isPubliclyVisible = $property->is_active
+            && $property->listing_status !== Property::STATUS_INACTIVE
+            && $property->approval_status === 'approved';
+
+        if (!$isPubliclyVisible && !$isAdmin && !$isOwner) {
+            abort(404);
         }
 
         // Redirect to SEO-friendly URL with slug if accessed by ID only
@@ -281,38 +294,34 @@ class PropertyController extends Controller
      */
     public function publicIndex(Request $request)
     {
-        $query = Property::where('approval_status', 'approved');
-
         // Map frontend status values to listing_status
         $statusMap = [
-            'for-sale' => 'for_sale',
-            'pending' => 'pending',
-            'sold' => 'sold',
-            'inactive' => 'inactive',
+            'for-sale' => Property::STATUS_FOR_SALE,
+            'pending' => Property::STATUS_PENDING,
+            'sold' => Property::STATUS_SOLD,
+            'inactive' => Property::STATUS_INACTIVE,
         ];
 
+        $isAdmin = auth()->check() && auth()->user()->role === 'admin';
+
         $status = $request->status ?? 'for-sale';
+        $listingStatus = $status === 'all' ? null : ($statusMap[$status] ?? Property::STATUS_FOR_SALE);
 
-        // Handle "all" status - show for_sale, pending, and sold
-        if ($status === 'all') {
-            $query->where('is_active', true);
-            $query->whereIn('listing_status', ['for_sale', 'pending', 'sold']);
+        // Inactive is only visible to admins
+        if ($listingStatus === Property::STATUS_INACTIVE && !$isAdmin) {
+            $listingStatus = Property::STATUS_FOR_SALE;
+        }
+
+        if ($listingStatus === Property::STATUS_INACTIVE) {
+            // Admin-only view: deliberately steps outside scopePublic().
+            $query = Property::where('approval_status', 'approved')
+                ->where('listing_status', Property::STATUS_INACTIVE);
         } else {
-            $listingStatus = $statusMap[$status] ?? 'for_sale';
+            $query = Property::public();
 
-            // Inactive is only visible to admins
-            if ($listingStatus === 'inactive') {
-                if (!auth()->check() || auth()->user()->role !== 'admin') {
-                    $listingStatus = 'for_sale';
-                }
+            if ($listingStatus !== null) {
+                $query->where('listing_status', $listingStatus);
             }
-
-            // For non-inactive statuses, only show active listings
-            if ($listingStatus !== 'inactive') {
-                $query->where('is_active', true);
-            }
-
-            $query->where('listing_status', $listingStatus);
         }
 
         // Search by keyword
@@ -421,9 +430,6 @@ class PropertyController extends Controller
                 'latitude', 'longitude', 'photos'
             ])
             ->get();
-
-        // Check if current user is admin for inactive filter visibility
-        $isAdmin = auth()->check() && auth()->user()->role === 'admin';
 
         return Inertia::render('Properties', [
             'properties' => $properties,
