@@ -1,4 +1,4 @@
-import { Head, Link, useForm, router } from '@inertiajs/react';
+import { Head, Link, useForm, router, usePage } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { useState, useRef, useCallback } from 'react';
 import axios from 'axios';
@@ -32,7 +32,13 @@ import {
 } from 'lucide-react';
 
 export default function EditProperty({ property, users = [], listingStatuses = {} }) {
-    const { data, setData, put, processing, errors } = useForm({
+    // This page submits via router.put rather than useForm's put, so useForm's
+    // `processing` and `errors` never update. Track the in-flight state ourselves,
+    // and read validation errors from the page props instead - otherwise a failed
+    // save (e.g. a cleared Price) renders nothing at all and looks like a no-op.
+    const [saving, setSaving] = useState(false);
+    const errors = usePage().props.errors || {};
+    const { data, setData } = useForm({
         user_id: property.user_id || '',
         property_title: property.property_title || '',
         property_type: property.property_type || 'single-family-home',
@@ -265,10 +271,19 @@ export default function EditProperty({ property, users = [], listingStatuses = {
             mls_virtual_tour_url: data.mls_virtual_tour_url || '',
         };
 
+        setSaving(true);
         router.put(route('admin.properties.update', property.id), submitData, {
             preserveScroll: true,
             onSuccess: () => {
                 setNewPhotoPreviews([]);
+            },
+            onError: () => {
+                // preserveScroll keeps the page still, so with the Save button now
+                // at the top the errors could be far off screen. Go to them.
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+            onFinish: () => {
+                setSaving(false);
             }
         });
     };
@@ -355,7 +370,7 @@ export default function EditProperty({ property, users = [], listingStatuses = {
                         <p className="text-sm text-gray-500">{property.address}, {property.city}</p>
                     </div>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-3">
                     <Link
                         href={route('admin.properties.show', property.id)}
                         className="inline-flex items-center gap-2 px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
@@ -371,10 +386,34 @@ export default function EditProperty({ property, users = [], listingStatuses = {
                         <Globe className="w-4 h-4" />
                         View Public Page
                     </a>
+                    {/* Same submit as the bottom of the page. The `form` attribute
+                        lets it live outside the <form>, so a quick price edit
+                        doesn't mean scrolling to the footer. */}
+                    <button
+                        type="submit"
+                        form="property-edit-form"
+                        disabled={saving || isUploading}
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-[#2BBBAD] text-white rounded-lg hover:bg-[#249E93] disabled:opacity-50"
+                    >
+                        {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                        {saving ? 'Saving...' : 'Save Changes'}
+                    </button>
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form id="property-edit-form" onSubmit={handleSubmit} className="space-y-6">
+                {Object.keys(errors).length > 0 && (
+                    <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+                        <p className="text-sm font-semibold text-red-800">
+                            This property couldn't be saved. Please fix the following:
+                        </p>
+                        <ul className="mt-2 list-disc list-inside text-sm text-red-700 space-y-1">
+                            {Object.values(errors).map((message, i) => (
+                                <li key={i}>{message}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
                 {/* Assign to User */}
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -979,11 +1018,11 @@ export default function EditProperty({ property, users = [], listingStatuses = {
                     </Link>
                     <button
                         type="submit"
-                        disabled={processing || isUploading}
+                        disabled={saving || isUploading}
                         className="px-6 py-2 bg-[#2BBBAD] text-white rounded-lg hover:bg-[#249E93] disabled:opacity-50 flex items-center gap-2"
                     >
-                        {processing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                        {processing ? 'Saving...' : 'Save Changes'}
+                        {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                        {saving ? 'Saving...' : 'Save Changes'}
                     </button>
                 </div>
             </form>

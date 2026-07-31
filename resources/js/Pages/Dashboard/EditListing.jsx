@@ -442,19 +442,35 @@ export default function EditListing({ property }) {
             <Head title={`Edit - ${property.property_title}`} />
 
             {/* Header */}
-            <div className="flex items-center gap-4 mb-6">
+            <div className="flex flex-wrap items-center gap-4 mb-6">
                 <Link
                     href={route('dashboard.listings')}
                     className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                 >
                     <ArrowLeft className="w-5 h-5 text-gray-600" />
                 </Link>
-                <div>
+                <div className="flex-1">
                     <h1 className="text-2xl font-bold text-gray-900" style={{ fontFamily: '"Instrument Sans", sans-serif' }}>
                         Edit Listing
                     </h1>
                     <p className="text-gray-500">Update your property details</p>
                 </div>
+                {/* Same submit as the bottom of the page. The `form` attribute
+                    lets it sit outside the <form>, so a quick price change
+                    doesn't mean scrolling to the footer. */}
+                <button
+                    type="submit"
+                    form="listing-edit-form"
+                    disabled={processing || savingPhotos || isUploading}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#2BBBAD] text-white rounded-xl font-medium hover:bg-[#249E93] transition-colors disabled:opacity-50 whitespace-nowrap"
+                >
+                    {(processing || savingPhotos) ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                        <Save className="w-5 h-5" />
+                    )}
+                    {savingPhotos ? 'Saving Photos...' : processing ? 'Saving...' : 'Save Changes'}
+                </button>
             </div>
 
             {/* Approval Status Alert */}
@@ -479,7 +495,7 @@ export default function EditListing({ property }) {
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form id="listing-edit-form" onSubmit={handleSubmit} className="space-y-6">
                 {/* Validation Errors Summary */}
                 {Object.keys(errors).length > 0 && (
                     <div className="bg-red-50 border border-red-200 rounded-xl p-4">
@@ -1279,7 +1295,7 @@ export default function EditListing({ property }) {
                                                     {successfulNewPhotos.length} photo(s) ready to save
                                                 </p>
                                                 <p className="text-xs text-green-600 mt-0.5">
-                                                    Click "Save Photos" or "Save Changes" at the bottom to add them to your listing
+                                                    Click "Save Photos" or "Save Changes" to add them to your listing
                                                 </p>
                                             </div>
                                         </div>
