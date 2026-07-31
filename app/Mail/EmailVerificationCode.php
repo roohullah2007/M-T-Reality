@@ -5,7 +5,6 @@ namespace App\Mail;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -27,8 +26,10 @@ class EmailVerificationCode extends Mailable
      */
     public function envelope(): Envelope
     {
+        // No `from` override: this used to hardcode noreply@mandtrealty.com,
+        // which is a different domain than the verified sender in MAIL_FROM_ADDRESS
+        // and got rejected by the mail provider. Use the configured sender.
         return new Envelope(
-            from: new Address('noreply@mandtrealty.com', 'M&T Realty Group'),
             subject: 'Your Verification Code: ' . $this->code,
         );
     }

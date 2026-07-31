@@ -15,6 +15,15 @@ class EmailService
     protected const DEFAULT_DELAY_SECONDS = 2;
 
     /**
+     * Where admin-bound mail goes when no `admin_email` setting row exists.
+     *
+     * Interim address: mail to the mandtrealty.com inbox was not being received,
+     * so admin notifications are pointed at the Gmail account until the domain
+     * mailbox is working again.
+     */
+    public const DEFAULT_ADMIN_EMAIL = 'mntrealtygroup@gmail.com';
+
+    /**
      * Check if email notifications are enabled
      */
     public static function isEnabled(): bool
@@ -33,7 +42,19 @@ class EmailService
      */
     public static function getAdminEmail(): string
     {
-        return Setting::get('admin_email', 'team@mandtrealty.com');
+        $value = Setting::get('admin_email', '');
+
+        // Setting::get() casts by the row's declared type, so this can come back
+        // as an array (json), or as "1" (boolean) - both of which would sail past
+        // an empty check and then silently fail every send. Only accept a value
+        // that is actually a deliverable address.
+        $email = is_scalar($value) ? trim((string) $value) : '';
+
+        if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return self::DEFAULT_ADMIN_EMAIL;
+        }
+
+        return $email;
     }
 
     /**
