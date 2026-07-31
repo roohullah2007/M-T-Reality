@@ -158,7 +158,7 @@ function PropertyDetail({ property, openHouses = [] }) {
           .logo { font-size: 24px; font-weight: bold; color: #2BBBAD; margin-bottom: 10px; }
           .price { font-size: 36px; font-weight: bold; color: #2BBBAD; margin: 20px 0; }
           .address { font-size: 18px; color: #333; }
-          .photo { width: 100%; height: 300px; object-fit: cover; object-position: center 20%; border-radius: 10px; margin: 20px 0; }
+          .photo { width: 100%; height: 300px; object-fit: cover; object-position: center; border-radius: 10px; margin: 20px 0; }
           .details { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0; }
           .detail-box { text-align: center; padding: 15px; background: #f5f5f5; border-radius: 8px; }
           .detail-label { font-size: 12px; color: #666; text-transform: uppercase; }
@@ -337,7 +337,11 @@ function PropertyDetail({ property, openHouses = [] }) {
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
 
           {/* Desktop 3-Image Grid (hidden on mobile) */}
-          <div className="hidden md:grid grid-cols-3 gap-2 rounded-2xl overflow-hidden" style={{ height: '500px' }}>
+          {/* Taller once the container hits its 1280px max width, where the main
+              cell becomes ~819px and 600px tall puts it near the 4:3 ratio listing
+              photos ship in. Deliberately xl: not lg: - between 1024 and 1280 the
+              cell is still narrow, so 600px there would crop the sides instead. */}
+          <div className="hidden md:grid grid-cols-3 gap-2 rounded-2xl overflow-hidden h-[500px] xl:h-[600px]">
             {/* Left - Main Image */}
             <div className="col-span-2 relative cursor-pointer" onClick={() => openGallery(0)}>
               <img

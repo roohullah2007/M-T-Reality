@@ -168,7 +168,7 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
                                     </div>
                                 ) : (
                                     <div className="flex-1 relative cursor-pointer" onClick={() => openGallery(0)}>
-                                        <img src={photos[0]} alt="Image 1" className="w-full h-full object-cover object-[center_60%]" onError={(e) => e.target.src = '/images/property-placeholder.svg'} />
+                                        <img src={photos[0]} alt="Image 1" className="w-full h-full object-cover object-center" onError={(e) => e.target.src = '/images/property-placeholder.svg'} />
                                     </div>
                                 )}
                             </div>
