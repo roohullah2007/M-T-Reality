@@ -132,6 +132,19 @@ const Header = () => {
                             <User className="w-4 h-4 text-gray-400" />
                             Profile Settings
                           </Link>
+                          {/* Without this, the post-login redirect is an admin's
+                              only route into /admin - returning on a remembered
+                              session meant signing out and back in to get there. */}
+                          {user.role === 'admin' && (
+                            <Link
+                              href={route('admin.dashboard')}
+                              className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#2BBBAD] hover:bg-[#2BBBAD]/10 transition-colors"
+                              onClick={() => setProfileMenuOpen(false)}
+                            >
+                              <Shield className="w-4 h-4" />
+                              Admin Panel
+                            </Link>
+                          )}
                         </div>
 
                         {/* Logout */}
@@ -272,6 +285,16 @@ const Header = () => {
                       <User className="w-5 h-5" />
                       Profile Settings
                     </Link>
+                    {user.role === 'admin' && (
+                      <Link
+                        href={route('admin.dashboard')}
+                        className="flex items-center gap-3 text-[16px] font-semibold text-[#2BBBAD] hover:text-[#249E93] transition-colors py-2"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Shield className="w-5 h-5" />
+                        Admin Panel
+                      </Link>
+                    )}
                     <Link
                       href={route('logout')}
                       method="post"
