@@ -8,6 +8,7 @@ use App\Mail\NewUserRegisteredToAdmin;
 use App\Mail\WelcomeEmail;
 use App\Models\User;
 use App\Services\EmailService;
+use App\Services\SpamGuard;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,11 +22,18 @@ use Inertia\Response;
 class RegisteredUserController extends Controller
 {
     /**
+     * Maximum registrations per IP per hour.
+     */
+    protected const MAX_PER_HOUR = 2;
+
+    /**
      * Display the registration view.
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Register');
+        return Inertia::render('Auth/Register', [
+            'form_token' => SpamGuard::token(),
+        ]);
     }
 
     /**
@@ -35,12 +43,29 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Bot gating (honeypot + minimum-time token + per-IP rate limit).
+        // All blocks return the same generic error so bots get no signal
+        // about which check failed.
+        if ($reason = SpamGuard::botCheck($request)) {
+            SpamGuard::logBlock('registration', $request, $reason);
+
+            return $this->genericFailure();
+        }
+
+        if (SpamGuard::tooManyAttempts($request, 'register', self::MAX_PER_HOUR)) {
+            SpamGuard::logBlock('registration', $request, 'rate limit exceeded');
+
+            return $this->genericFailure();
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'user_type' => 'required|in:buyer,seller',
         ]);
+
+        SpamGuard::recordAttempt($request, 'register');
 
         $user = User::create([
             'name' => $request->name,
@@ -68,6 +93,17 @@ class RegisteredUserController extends Controller
 
         // Redirect to verification page instead of dashboard
         return redirect()->route('verification.code');
+    }
+
+    /**
+     * Generic response for blocked (bot-like) registration attempts.
+     * Deliberately vague - it must not reveal which check failed.
+     */
+    protected function genericFailure(): RedirectResponse
+    {
+        return back()->withErrors([
+            'email' => 'Registration could not be completed. Please try again in a little while.',
+        ]);
     }
 
     /**

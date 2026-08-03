@@ -122,7 +122,9 @@ Route::get('/about', function () {
 })->name('about');
 
 Route::get('/contact', function () {
-    return Inertia::render('Contact');
+    return Inertia::render('Contact', [
+        'form_token' => \App\Services\SpamGuard::token(),
+    ]);
 })->name('contact');
 
 Route::get('/faqs', function () {
