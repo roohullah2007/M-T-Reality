@@ -2,7 +2,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { Eye, EyeOff, Home, Search } from 'lucide-react';
 import { useState } from 'react';
 
-function Register() {
+function Register({ form_token }) {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -11,6 +11,8 @@ function Register() {
         password: '',
         password_confirmation: '',
         user_type: 'buyer',
+        website: '', // Honeypot - hidden from real users, bots fill it
+        form_token: form_token || '',
     });
 
     const submit = (e) => {
@@ -91,6 +93,23 @@ function Register() {
                         </div>
 
                         <form onSubmit={submit} className="space-y-4">
+                            {/* Honeypot field - visually hidden, real users never fill it */}
+                            <div
+                                aria-hidden="true"
+                                style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }}
+                            >
+                                <label htmlFor="register_website">Website</label>
+                                <input
+                                    id="register_website"
+                                    type="text"
+                                    name="website"
+                                    tabIndex={-1}
+                                    autoComplete="off"
+                                    value={data.website}
+                                    onChange={(e) => setData('website', e.target.value)}
+                                />
+                            </div>
+
                             {/* User Type Selection */}
                             <div>
                                 <label className="block text-sm font-bold text-[#111111] mb-3">

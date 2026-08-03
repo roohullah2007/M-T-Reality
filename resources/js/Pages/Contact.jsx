@@ -3,14 +3,16 @@ import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { Mail, Phone, MapPin, Send, MessageSquare, CheckCircle, TrendingUp, Camera, Handshake, HelpCircle, ArrowRight } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
 
-function Contact() {
+function Contact({ form_token }) {
   const { flash } = usePage().props;
   const { data, setData, post, processing, errors, reset } = useForm({
     name: '',
     email: '',
     phone: '',
     subject: '',
-    message: ''
+    message: '',
+    website: '', // Honeypot - hidden from real users, bots fill it
+    form_token: form_token || ''
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -306,6 +308,23 @@ function Contact() {
               )}
 
               <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Honeypot field - visually hidden, real users never fill it */}
+                <div
+                  aria-hidden="true"
+                  style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }}
+                >
+                  <label htmlFor="contact_website">Website</label>
+                  <input
+                    id="contact_website"
+                    type="text"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={data.website}
+                    onChange={e => setData('website', e.target.value)}
+                  />
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-[#111] mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                     Full Name
