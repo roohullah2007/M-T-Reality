@@ -311,7 +311,7 @@ function Contact({ form_token }) {
                 {/* Honeypot field - visually hidden, real users never fill it */}
                 <div
                   aria-hidden="true"
-                  style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }}
+                  style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap', border: 0 }}
                 >
                   <label htmlFor="contact_website">Website</label>
                   <input
