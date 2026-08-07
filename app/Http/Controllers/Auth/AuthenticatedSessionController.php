@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,6 +22,9 @@ class AuthenticatedSessionController extends Controller
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
+            // Set when a login attempt was refused for an unverified address;
+            // lets the page offer a one-click "resend verification code".
+            'pendingVerificationEmail' => session(RegisteredUserController::PENDING_EMAIL_KEY),
         ]);
     }
 

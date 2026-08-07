@@ -2,13 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+/**
+ * Implements MustVerifyEmail so the "verified" middleware actually bites and
+ * unverified accounts cannot sign in. Verification itself runs through the
+ * app's own 6-digit code flow (see generateVerificationCode /
+ * isVerificationCodeValid below and RegisteredUserController), not Laravel's
+ * signed-link notification - markEmailAsVerified() is shared by both.
+ */
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 

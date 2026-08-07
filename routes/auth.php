@@ -35,6 +35,20 @@ Route::middleware('guest')->group(function () {
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
 
+    // Code-based verification for users who are NOT signed in. Logging in is
+    // refused while an address is unverified, so these give them a way to
+    // finish verifying instead of being locked out permanently.
+    Route::post('verify-email/resend', [RegisteredUserController::class, 'resendPublicCode'])
+        ->middleware('throttle:6,1')
+        ->name('verification.resend');
+
+    Route::get('verify-email/code', [RegisteredUserController::class, 'showGuestVerifyCode'])
+        ->name('verification.code.guest');
+
+    Route::post('verify-email/code', [RegisteredUserController::class, 'verifyGuestCode'])
+        ->middleware('throttle:6,1')
+        ->name('verification.code.guest.verify');
+
     // Google OAuth Routes
     Route::get('auth/google', [GoogleController::class, 'redirect'])->name('auth.google');
     Route::get('auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');

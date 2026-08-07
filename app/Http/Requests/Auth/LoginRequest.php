@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Auth\Events\Lockout;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -49,7 +51,43 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        $this->ensureEmailIsVerified();
+
         RateLimiter::clear($this->throttleKey());
+    }
+
+    /**
+     * Refuse to hand out a session to an account whose email is not verified.
+     *
+     * The credentials were correct, so Auth::attempt() has already logged the
+     * user in - we undo that completely (logout + session invalidation) rather
+     * than leaving a half-authenticated session lying around.
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function ensureEmailIsVerified(): void
+    {
+        $user = Auth::user();
+
+        if (! $user instanceof MustVerifyEmail || $user->hasVerifiedEmail()) {
+            return;
+        }
+
+        $email = $user->email;
+
+        Auth::guard('web')->logout();
+        $this->session()->invalidate();
+        $this->session()->regenerateToken();
+
+        // Remember who was trying to get in so the login page can offer to
+        // resend the code without asking for the address again.
+        $this->session()->flash(RegisteredUserController::PENDING_EMAIL_KEY, $email);
+
+        RateLimiter::clear($this->throttleKey());
+
+        throw ValidationException::withMessages([
+            'email' => 'Please verify your email address before signing in. Check your inbox for the verification code, or request a new one below.',
+        ]);
     }
 
     /**

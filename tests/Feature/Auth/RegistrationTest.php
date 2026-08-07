@@ -2,8 +2,10 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Services\SpamGuard;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
@@ -87,5 +89,109 @@ class RegistrationTest extends TestCase
         $this->assertGuest();
         $response->assertSessionHasErrors('email');
         $this->assertDatabaseMissing('users', ['email' => 'notoken@example.com']);
+    }
+
+    public function test_registration_succeeds_when_recaptcha_is_not_configured(): void
+    {
+        config(['services.recaptcha.secret_key' => null]);
+        Http::fake();
+
+        $response = $this->post('/register', [
+            'name' => 'Test User',
+            'email' => 'nocaptcha@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'user_type' => 'buyer',
+            'form_token' => $this->validFormToken(),
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertRedirect(route('verification.code', absolute: false));
+        $this->assertDatabaseHas('users', ['email' => 'nocaptcha@example.com']);
+
+        // Verification must not have been attempted at all.
+        Http::assertNothingSent();
+    }
+
+    public function test_registration_is_blocked_when_recaptcha_rejects_the_token(): void
+    {
+        config(['services.recaptcha.secret_key' => 'test-secret-key']);
+
+        Http::fake([
+            'www.google.com/recaptcha/api/siteverify' => Http::response([
+                'success' => false,
+                'error-codes' => ['invalid-input-response'],
+            ]),
+        ]);
+
+        $response = $this->post('/register', [
+            'name' => 'Test User',
+            'email' => 'badcaptcha@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'user_type' => 'buyer',
+            'form_token' => $this->validFormToken(),
+            'g-recaptcha-response' => 'a-bogus-token',
+        ]);
+
+        $this->assertGuest();
+        $response->assertSessionHasErrors(SpamGuard::RECAPTCHA_FIELD);
+        $this->assertDatabaseMissing('users', ['email' => 'badcaptcha@example.com']);
+    }
+
+    public function test_registration_is_blocked_when_recaptcha_token_is_missing(): void
+    {
+        config(['services.recaptcha.secret_key' => 'test-secret-key']);
+        Http::fake();
+
+        $response = $this->post('/register', [
+            'name' => 'Test User',
+            'email' => 'nocaptchatoken@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'user_type' => 'buyer',
+            'form_token' => $this->validFormToken(),
+        ]);
+
+        $this->assertGuest();
+        $response->assertSessionHasErrors(SpamGuard::RECAPTCHA_FIELD);
+        $this->assertDatabaseMissing('users', ['email' => 'nocaptchatoken@example.com']);
+        Http::assertNothingSent();
+    }
+
+    public function test_registration_succeeds_when_recaptcha_accepts_the_token(): void
+    {
+        config(['services.recaptcha.secret_key' => 'test-secret-key']);
+
+        Http::fake([
+            'www.google.com/recaptcha/api/siteverify' => Http::response(['success' => true]),
+        ]);
+
+        $response = $this->post('/register', [
+            'name' => 'Test User',
+            'email' => 'goodcaptcha@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'user_type' => 'buyer',
+            'form_token' => $this->validFormToken(),
+            'g-recaptcha-response' => 'a-good-token',
+        ]);
+
+        $response->assertRedirect(route('verification.code', absolute: false));
+        $this->assertDatabaseHas('users', ['email' => 'goodcaptcha@example.com']);
+
+        Http::assertSent(fn ($request) => $request['secret'] === 'test-secret-key'
+            && $request['response'] === 'a-good-token'
+            && array_key_exists('remoteip', $request->data()));
+    }
+
+    public function test_register_page_receives_the_site_key_from_the_server(): void
+    {
+        config(['services.recaptcha.site_key' => 'public-site-key']);
+
+        $this->get('/register')->assertInertia(
+            fn ($page) => $page->component('Auth/Register')
+                ->where('recaptcha_site_key', 'public-site-key')
+        );
     }
 }

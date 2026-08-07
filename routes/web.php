@@ -176,7 +176,7 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 Route::post('/inquiry', [InquiryController::class, 'store'])->name('inquiry.store');
 
 // Pamphlets page — sellers only (linked from DocuSign-signed receipt forms; not in nav)
-Route::middleware(['auth'])->get('/pamphlets', function () {
+Route::middleware(['auth', 'verified'])->get('/pamphlets', function () {
     if (!auth()->user()->isSeller()) {
         abort(403);
     }
@@ -238,14 +238,14 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard')-
 });
 
 // User Profile routes
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 // Admin routes - Protected by admin middleware
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin'])->group(function () {
     // Dashboard
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
