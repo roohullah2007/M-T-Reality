@@ -56,6 +56,16 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Verification runs on the 6-digit code below, not Laravel's signed links,
+     * so the notification the Registered event would otherwise fire is both a
+     * duplicate email and an unhandled failure point during registration.
+     */
+    public function sendEmailVerificationNotification(): void
+    {
+        // Intentionally empty - see generateVerificationCode().
+    }
+
+    /**
      * Generate a new verification code
      */
     public function generateVerificationCode(): string
