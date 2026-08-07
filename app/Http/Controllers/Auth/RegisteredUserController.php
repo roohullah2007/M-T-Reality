@@ -14,8 +14,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -27,12 +29,19 @@ class RegisteredUserController extends Controller
     protected const MAX_PER_HOUR = 2;
 
     /**
+     * Session key holding the address of an account that still needs to be
+     * verified, so a logged-out user can finish verifying (see the login flow).
+     */
+    public const PENDING_EMAIL_KEY = 'pending_verification_email';
+
+    /**
      * Display the registration view.
      */
     public function create(): Response
     {
         return Inertia::render('Auth/Register', [
             'form_token' => SpamGuard::token(),
+            'recaptcha_site_key' => SpamGuard::recaptchaSiteKey(),
         ]);
     }
 
@@ -56,6 +65,17 @@ class RegisteredUserController extends Controller
             SpamGuard::logBlock('registration', $request, 'rate limit exceeded');
 
             return $this->genericFailure();
+        }
+
+        // Google reCAPTCHA v2. Unlike the checks above this one gets a specific
+        // error: a human who simply forgot to tick the box needs to be told.
+        // No-op when RECAPTCHA_SECRET_KEY is unset (see SpamGuard).
+        if ($reason = SpamGuard::recaptchaCheck($request)) {
+            SpamGuard::logBlock('registration', $request, $reason);
+
+            throw ValidationException::withMessages([
+                SpamGuard::RECAPTCHA_FIELD => 'Please confirm you are not a robot and try again.',
+            ]);
         }
 
         $request->validate([
@@ -120,7 +140,110 @@ class RegisteredUserController extends Controller
 
         return Inertia::render('Auth/VerifyCode', [
             'email' => $user->email,
+            'guest' => false,
         ]);
+    }
+
+    /**
+     * Show the verification code entry page to a *logged-out* user.
+     *
+     * Login is refused while an address is unverified, so without this page a
+     * user whose session has expired could never finish verifying. The address
+     * comes from the session (set by the blocked login attempt or by a resend),
+     * never from user input, so this cannot be used to probe for accounts.
+     */
+    public function showGuestVerifyCode(Request $request): Response|RedirectResponse
+    {
+        $email = $request->session()->get(self::PENDING_EMAIL_KEY);
+
+        if (! $email) {
+            return redirect()->route('login');
+        }
+
+        // Keep it around for the POST that follows.
+        $request->session()->keep(self::PENDING_EMAIL_KEY);
+
+        return Inertia::render('Auth/VerifyCode', [
+            'email' => $email,
+            'guest' => true,
+        ]);
+    }
+
+    /**
+     * Verify a code entered by a logged-out user, then sign them in.
+     */
+    public function verifyGuestCode(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'code' => 'required|string|size:6',
+        ]);
+
+        $email = $request->session()->get(self::PENDING_EMAIL_KEY);
+        $user = $email ? User::where('email', $email)->first() : null;
+
+        if (! $user) {
+            return redirect()->route('login')->withErrors([
+                'email' => 'Your verification session expired. Please sign in again.',
+            ]);
+        }
+
+        if ($user->email_verified_at) {
+            $request->session()->forget(self::PENDING_EMAIL_KEY);
+
+            return redirect()->route('login')->with('status', 'Your email is already verified. Please sign in.');
+        }
+
+        if (! $user->isVerificationCodeValid($request->code)) {
+            $request->session()->keep(self::PENDING_EMAIL_KEY);
+
+            return back()->withErrors([
+                'code' => 'Invalid or expired verification code. Please try again or request a new code.',
+            ]);
+        }
+
+        $user->markEmailAsVerified();
+
+        EmailService::sendToUser($user->email, new WelcomeEmail($user));
+
+        $request->session()->forget(self::PENDING_EMAIL_KEY);
+
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        return redirect()->route($user->isAdmin() ? 'admin.dashboard' : 'dashboard')
+            ->with('success', 'Email verified successfully! Welcome to ' . config('app.name') . '.');
+    }
+
+    /**
+     * Resend a verification code to an address supplied by a logged-out user
+     * (the login page offers this after refusing an unverified account).
+     *
+     * Always reports the same thing so this cannot be used to enumerate
+     * registered addresses. Throttled at the route.
+     */
+    public function resendPublicCode(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'email' => 'required|string|email|max:255',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user && ! $user->email_verified_at) {
+            $code = $user->generateVerificationCode();
+
+            try {
+                Mail::to($user->email)->send(new EmailVerificationCode($user, $code));
+            } catch (\Exception $e) {
+                Log::error('Failed to send verification code email: ' . $e->getMessage());
+            }
+
+            $request->session()->put(self::PENDING_EMAIL_KEY, $user->email);
+
+            return redirect()->route('verification.code.guest');
+        }
+
+        return back()->with('status', 'If that address needs verifying, a new code is on its way.');
     }
 
     /**

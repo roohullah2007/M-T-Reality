@@ -2,7 +2,7 @@ import { Head, Link, useForm, router } from '@inertiajs/react';
 import { useState, useRef, useEffect } from 'react';
 import { Mail, RefreshCw, CheckCircle, AlertCircle } from 'lucide-react';
 
-function VerifyCode({ email }) {
+function VerifyCode({ email, guest = false }) {
     const [resending, setResending] = useState(false);
     const [resendSuccess, setResendSuccess] = useState(false);
     const inputRefs = useRef([]);
@@ -55,14 +55,20 @@ function VerifyCode({ email }) {
         const cleanCode = data.code.replace(/\s/g, '');
         if (cleanCode.length !== 6) return;
 
-        post(route('verification.code.verify'));
+        post(route(guest ? 'verification.code.guest.verify' : 'verification.code.verify'));
     };
 
     const resendCode = () => {
         setResending(true);
         setResendSuccess(false);
 
-        router.post(route('verification.code.resend'), {}, {
+        // Signed-out users resend by address; signed-in users resend for their
+        // own account.
+        const [name, payload] = guest
+            ? ['verification.resend', { email }]
+            : ['verification.code.resend', {}];
+
+        router.post(route(name), payload, {
             onSuccess: () => {
                 setResendSuccess(true);
                 setResending(false);
@@ -189,14 +195,23 @@ function VerifyCode({ email }) {
                         {/* Back to Login */}
                         <p className="mt-6 text-center text-sm text-gray-600">
                             Wrong email?{' '}
-                            <Link
-                                href={route('logout')}
-                                method="post"
-                                as="button"
-                                className="text-[#2BBBAD] font-medium hover:underline"
-                            >
-                                Sign out and try again
-                            </Link>
+                            {guest ? (
+                                <Link
+                                    href={route('login')}
+                                    className="text-[#2BBBAD] font-medium hover:underline"
+                                >
+                                    Back to sign in
+                                </Link>
+                            ) : (
+                                <Link
+                                    href={route('logout')}
+                                    method="post"
+                                    as="button"
+                                    className="text-[#2BBBAD] font-medium hover:underline"
+                                >
+                                    Sign out and try again
+                                </Link>
+                            )}
                         </p>
                     </div>
                 </div>

@@ -1,9 +1,10 @@
-import { Head, Link, useForm } from '@inertiajs/react';
-import { Eye, EyeOff } from 'lucide-react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
+import { Eye, EyeOff, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
 
-function Login({ status, canResetPassword }) {
+function Login({ status, canResetPassword, pendingVerificationEmail }) {
     const [showPassword, setShowPassword] = useState(false);
+    const [resending, setResending] = useState(false);
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -15,6 +16,16 @@ function Login({ status, canResetPassword }) {
         post(route('login'), {
             onFinish: () => reset('password'),
         });
+    };
+
+    // Shown when a sign-in was refused because the address is not verified.
+    const resendVerification = () => {
+        setResending(true);
+        router.post(
+            route('verification.resend'),
+            { email: pendingVerificationEmail },
+            { onFinish: () => setResending(false) },
+        );
     };
 
     return (
@@ -99,6 +110,19 @@ function Login({ status, canResetPassword }) {
                                 />
                                 {errors.email && (
                                     <p className="mt-2 text-sm text-red-600">{errors.email}</p>
+                                )}
+                                {pendingVerificationEmail && (
+                                    <button
+                                        type="button"
+                                        onClick={resendVerification}
+                                        disabled={resending}
+                                        className="mt-2 inline-flex items-center gap-2 text-sm text-[#2BBBAD] font-medium hover:underline disabled:opacity-50"
+                                    >
+                                        <RefreshCw className={`w-4 h-4 ${resending ? 'animate-spin' : ''}`} />
+                                        {resending
+                                            ? 'Sending...'
+                                            : `Send a new verification code to ${pendingVerificationEmail}`}
+                                    </button>
                                 )}
                             </div>
 

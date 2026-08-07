@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 
@@ -37,6 +38,26 @@ class SpamGuard
      * Minimum seconds between the form being rendered and submitted.
      */
     public const MIN_SECONDS = 3;
+
+    /**
+     * Name of the field Google's reCAPTCHA v2 widget writes its token into.
+     */
+    public const RECAPTCHA_FIELD = 'g-recaptcha-response';
+
+    /**
+     * Google's token verification endpoint.
+     */
+    public const RECAPTCHA_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify';
+
+    /**
+     * Seconds to wait on Google before giving up.
+     */
+    public const RECAPTCHA_TIMEOUT = 5;
+
+    /**
+     * Whether the "unconfigured" warning has already been logged this request.
+     */
+    protected static bool $recaptchaWarned = false;
 
     /**
      * Generate the encrypted timestamp token to render into a form.
@@ -73,6 +94,81 @@ class SpamGuard
 
         if (now()->timestamp - $issuedAt < self::MIN_SECONDS) {
             return 'submitted too fast (' . (now()->timestamp - $issuedAt) . 's)';
+        }
+
+        return null;
+    }
+
+    /**
+     * The reCAPTCHA v2 site key to render into a form, or null when the
+     * integration is not configured (local dev / test).
+     */
+    public static function recaptchaSiteKey(): ?string
+    {
+        $key = config('services.recaptcha.site_key');
+
+        return filled($key) ? (string) $key : null;
+    }
+
+    /**
+     * Whether reCAPTCHA verification is switched on. Verification is driven by
+     * the SECRET key only - without it we have no way to validate a token, so
+     * we must not pretend to.
+     */
+    public static function recaptchaConfigured(): bool
+    {
+        return filled(config('services.recaptcha.secret_key'));
+    }
+
+    /**
+     * Verify the reCAPTCHA v2 token on an incoming request.
+     *
+     * Returns null when the request may proceed, otherwise a short reason
+     * string (server-side logging only).
+     *
+     * Graceful degradation: when no secret key is configured the check is
+     * skipped and a warning is logged once per request, so local development
+     * and the test suite keep working. As soon as the secret IS configured a
+     * valid token becomes mandatory.
+     */
+    public static function recaptchaCheck(Request $request): ?string
+    {
+        if (! self::recaptchaConfigured()) {
+            if (! self::$recaptchaWarned) {
+                self::$recaptchaWarned = true;
+                Log::warning('reCAPTCHA is not configured (RECAPTCHA_SECRET_KEY is empty); skipping verification.');
+            }
+
+            return null;
+        }
+
+        $token = $request->input(self::RECAPTCHA_FIELD);
+
+        if (! is_string($token) || $token === '') {
+            return 'missing recaptcha token';
+        }
+
+        try {
+            $response = Http::asForm()
+                ->timeout(self::RECAPTCHA_TIMEOUT)
+                ->post(self::RECAPTCHA_VERIFY_URL, [
+                    'secret' => (string) config('services.recaptcha.secret_key'),
+                    'response' => $token,
+                    'remoteip' => $request->ip(),
+                ]);
+        } catch (\Throwable $e) {
+            // Fail closed: an unreachable Google is not a licence to register.
+            return 'recaptcha verification request failed: ' . $e->getMessage();
+        }
+
+        if (! $response->successful()) {
+            return 'recaptcha verification returned HTTP ' . $response->status();
+        }
+
+        if ($response->json('success') !== true) {
+            $errors = $response->json('error-codes') ?? [];
+
+            return 'recaptcha rejected the token' . ($errors ? ' (' . implode(', ', (array) $errors) . ')' : '');
         }
 
         return null;

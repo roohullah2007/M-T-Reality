@@ -43,6 +43,13 @@ class GoogleController extends Controller
                     ]);
                 }
 
+                // Google has already proven ownership of the address, so an
+                // account that never completed the code flow becomes verified
+                // here rather than being locked out by the "verified" middleware.
+                if (! $user->email_verified_at) {
+                    $user->markEmailAsVerified();
+                }
+
                 Auth::login($user, true);
 
                 return redirect()->intended(route('dashboard'));
