@@ -6,6 +6,8 @@ use App\Services\SpamGuard;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
@@ -183,6 +185,39 @@ class RegistrationTest extends TestCase
         Http::assertSent(fn ($request) => $request['secret'] === 'test-secret-key'
             && $request['response'] === 'a-good-token'
             && array_key_exists('remoteip', $request->data()));
+    }
+
+    public function test_registration_survives_a_mail_transport_failure(): void
+    {
+        Mail::shouldReceive('to')->andThrow(new \RuntimeException('mail transport down'));
+
+        $response = $this->post('/register', [
+            'name' => 'Mail Failure',
+            'email' => 'mailfail@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'user_type' => 'buyer',
+            'form_token' => $this->validFormToken(),
+        ]);
+
+        $response->assertRedirect(route('verification.code', absolute: false));
+        $this->assertDatabaseHas('users', ['email' => 'mailfail@example.com']);
+    }
+
+    public function test_registering_does_not_send_the_unused_signed_link_notification(): void
+    {
+        Notification::fake();
+
+        $this->post('/register', [
+            'name' => 'Code Flow',
+            'email' => 'codeflow@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'user_type' => 'buyer',
+            'form_token' => $this->validFormToken(),
+        ]);
+
+        Notification::assertNothingSent();
     }
 
     public function test_register_page_receives_the_site_key_from_the_server(): void

@@ -105,9 +105,17 @@ class RegisteredUserController extends Controller
             \Log::error('Failed to send verification code email: ' . $e->getMessage());
         }
 
-        // Send notification to admin about new user registration (with delay)
+        // Notify the admin. A delivery failure here is the admin's problem to
+        // chase in the logs, not a reason to fail a registration that has
+        // already been committed. The pause keeps the two sends inside
+        // Resend's per-second limit.
         sleep(2);
-        EmailService::sendToAdmin(new NewUserRegisteredToAdmin($user));
+
+        try {
+            EmailService::sendToAdmin(new NewUserRegisteredToAdmin($user));
+        } catch (\Throwable $e) {
+            Log::error('Failed to send new-registration admin notification: ' . $e->getMessage());
+        }
 
         Auth::login($user);
 
