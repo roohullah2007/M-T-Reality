@@ -2,18 +2,19 @@ import React, { useState } from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { Mail, Phone, MapPin, Send, MessageSquare, CheckCircle, TrendingUp, Camera, Handshake, HelpCircle, ArrowRight } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
+import SpamGuardFields, { spamGuardDefaults, useSpamGuard } from '@/Components/SpamGuardFields';
 
-function Contact({ form_token }) {
+function Contact() {
   const { flash } = usePage().props;
   const { data, setData, post, processing, errors, reset } = useForm({
+    ...spamGuardDefaults,
     name: '',
     email: '',
     phone: '',
     subject: '',
-    message: '',
-    website: '', // Honeypot - hidden from real users, bots fill it
-    form_token: form_token || ''
+    message: ''
   });
+  const guard = useSpamGuard(setData);
 
   const [submitted, setSubmitted] = useState(false);
 
@@ -23,10 +24,15 @@ function Contact({ form_token }) {
       preserveScroll: true,
       preserveState: true,
       onSuccess: () => {
-        reset();
+        // Reset only the user-entered fields: a blanket reset() would also wipe
+        // the spam-guard token this still-mounted form needs for a second send.
+        reset('name', 'email', 'phone', 'subject', 'message');
+        guard.reset();
         setSubmitted(true);
         setTimeout(() => setSubmitted(false), 5000);
       },
+      // reCAPTCHA tokens are single-use, so a failed attempt needs a fresh one.
+      onError: () => guard.reset(),
     });
   };
 
@@ -308,23 +314,6 @@ function Contact({ form_token }) {
               )}
 
               <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Honeypot field - visually hidden, real users never fill it */}
-                <div
-                  aria-hidden="true"
-                  style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap', border: 0 }}
-                >
-                  <label htmlFor="contact_website">Website</label>
-                  <input
-                    id="contact_website"
-                    type="text"
-                    name="website"
-                    tabIndex={-1}
-                    autoComplete="off"
-                    value={data.website}
-                    onChange={e => setData('website', e.target.value)}
-                  />
-                </div>
-
                 <div>
                   <label className="block text-sm font-medium text-[#111] mb-2" style={{ fontFamily: 'Instrument Sans, sans-serif' }}>
                     Full Name
@@ -412,9 +401,17 @@ function Contact({ form_token }) {
                   {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message}</p>}
                 </div>
 
+                <SpamGuardFields
+                  guard={guard}
+                  data={data}
+                  setData={setData}
+                  errors={errors}
+                  idPrefix="contact"
+                />
+
                 <button
                   type="submit"
-                  disabled={processing}
+                  disabled={processing || !guard.solved(data)}
                   className="w-full inline-flex items-center justify-center gap-2 bg-[#2BBBAD] text-white rounded-full px-8 py-3.5 font-semibold text-[15px] transition-all duration-300 hover:bg-[#249E93] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                 >

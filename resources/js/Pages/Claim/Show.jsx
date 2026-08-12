@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Head, useForm, Link } from '@inertiajs/react';
 import { MapPin, BedDouble, Bath, Maximize2, Calendar, Home, CheckCircle2, ChevronLeft, ChevronRight, X, Shield, QrCode, DollarSign, Mail, BadgeCheck } from 'lucide-react';
 import SinglePropertyMap from '@/Components/Properties/SinglePropertyMap';
+import SpamGuardFields, { spamGuardDefaults, useSpamGuard } from '@/Components/SpamGuardFields';
 
 export default function ClaimShow({ property, token, isAuthenticated, user }) {
     const [showGalleryModal, setShowGalleryModal] = useState(false);
@@ -10,12 +11,14 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
 
     const claimForm = useForm({});
     const registerForm = useForm({
+        ...spamGuardDefaults,
         name: property.owner_name || '',
         email: property.owner_email || '',
         password: '',
         password_confirmation: '',
         phone: property.owner_phone || '',
     });
+    const guard = useSpamGuard(registerForm.setData);
 
     const handleClaim = (e) => {
         e.preventDefault();
@@ -24,7 +27,11 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
 
     const handleRegister = (e) => {
         e.preventDefault();
-        registerForm.post(route('claim.register', token));
+        registerForm.post(route('claim.register', token), {
+            // The token is single-use: without a reset every retry after a
+            // failed submit would be rejected by Google.
+            onError: () => guard.reset(),
+        });
     };
 
     const photos = property.photos && property.photos.length > 0
@@ -481,9 +488,16 @@ export default function ClaimShow({ property, token, isAuthenticated, user }) {
                                                     <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
                                                     <input type="password" value={registerForm.data.password_confirmation} onChange={(e) => registerForm.setData('password_confirmation', e.target.value)} className="w-full px-3 py-2.5 border rounded-xl focus:ring-[#2BBBAD] focus:border-[#2BBBAD]" required />
                                                 </div>
+                                                <SpamGuardFields
+                                                    guard={guard}
+                                                    data={registerForm.data}
+                                                    setData={registerForm.setData}
+                                                    errors={registerForm.errors}
+                                                    idPrefix="claim"
+                                                />
                                                 <button
                                                     type="submit"
-                                                    disabled={registerForm.processing}
+                                                    disabled={registerForm.processing || !guard.solved(registerForm.data)}
                                                     className="w-full py-3.5 bg-[#2BBBAD] text-white rounded-xl font-semibold hover:bg-[#249E93] disabled:opacity-50 transition-colors text-lg"
                                                     style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                                                 >

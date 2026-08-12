@@ -6,16 +6,32 @@ use App\Mail\BuyerInquiryConfirmation;
 use App\Mail\NewBuyerInquiryToAdmin;
 use App\Models\BuyerInquiry;
 use App\Services\EmailService;
+use App\Services\SpamGuard;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class BuyerInquiryController extends Controller
 {
     /**
+     * Maximum buyer inquiries per IP per hour.
+     */
+    protected const MAX_PER_HOUR = 3;
+
+    /**
      * Store a new buyer inquiry from the public form
      */
     public function store(Request $request)
     {
+        // Honeypot + minimum-time token + per-IP rate limit + reCAPTCHA.
+        // Blocked submissions get the same response a real one would, so bots
+        // learn nothing about which check stopped them.
+        if ($reason = SpamGuard::guard($request, 'buyer-inquiry', self::MAX_PER_HOUR)) {
+            SpamGuard::logBlock('buyer-inquiry', $request, $reason);
+
+            return $this->genericSuccess();
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -27,16 +43,55 @@ class BuyerInquiryController extends Controller
             'preapproved' => 'required|in:yes,no',
         ]);
 
+        // The spam wave filled every field with a random token, so check the
+        // free-text fields for machine-generated content.
+        $reason = SpamGuard::gibberishCheck([
+            'name' => $validated['name'],
+            'preferred area' => $validated['preferred_area'],
+        ]) ?? SpamGuard::contactContentCheck(
+            $validated['name'],
+            $validated['email'],
+            $validated['preferred_area']
+        );
+
+        if ($reason) {
+            SpamGuard::logBlock('buyer-inquiry', $request, $reason);
+
+            return $this->genericSuccess();
+        }
+
+        // Repeat submissions from the same inbox (dotted gmail aliases are
+        // normalized so rotating the dots does not evade the check).
+        if (SpamGuard::isRepeatSender(BuyerInquiry::query(), $validated['email'])) {
+            SpamGuard::logBlock('buyer-inquiry', $request, 'too many recent inquiries from same (normalized) email');
+
+            return $this->genericSuccess();
+        }
+
+        SpamGuard::recordAttempt($request, 'buyer-inquiry');
+
         $inquiry = BuyerInquiry::create($validated);
 
         // Send confirmation to the buyer and notification to admin
         // (EmailService logs failures and never throws)
-        EmailService::sendToUserAndAdmin(
-            $inquiry->email,
-            new BuyerInquiryConfirmation($inquiry),
-            new NewBuyerInquiryToAdmin($inquiry)
-        );
+        try {
+            EmailService::sendToUserAndAdmin(
+                $inquiry->email,
+                new BuyerInquiryConfirmation($inquiry),
+                new NewBuyerInquiryToAdmin($inquiry)
+            );
+        } catch (\Throwable $e) {
+            Log::error('Buyer inquiry email dispatch failed: ' . $e->getMessage());
+        }
 
+        return $this->genericSuccess();
+    }
+
+    /**
+     * The response every submission gets - accepted or silently blocked.
+     */
+    protected function genericSuccess()
+    {
         return back()->with('success', 'Thank you! We\'ll be in touch soon with property alerts matching your criteria.');
     }
 

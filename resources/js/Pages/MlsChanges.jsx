@@ -1,5 +1,6 @@
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { CheckCircle, FileEdit, Send } from 'lucide-react';
+import SpamGuardFields, { spamGuardDefaults, useSpamGuard } from '@/Components/SpamGuardFields';
 
 const REQUEST_TYPES = [
     'Listing Change',
@@ -13,6 +14,7 @@ const REQUEST_TYPES = [
 export default function MlsChanges() {
     const { flash } = usePage().props;
     const form = useForm({
+        ...spamGuardDefaults,
         name: '',
         email: '',
         phone: '',
@@ -20,11 +22,14 @@ export default function MlsChanges() {
         request_type: 'Listing Change',
         details: '',
     });
+    const guard = useSpamGuard(form.setData);
 
     const submit = (e) => {
         e.preventDefault();
         form.post(route('mlschanges.store'), {
             onSuccess: () => form.reset(),
+            // reCAPTCHA tokens are single-use, so a failed attempt needs a fresh one.
+            onError: () => guard.reset(),
         });
     };
 
@@ -138,9 +143,17 @@ export default function MlsChanges() {
                         />
                     </Field>
 
+                    <SpamGuardFields
+                        guard={guard}
+                        data={form.data}
+                        setData={form.setData}
+                        errors={form.errors}
+                        idPrefix="mls"
+                    />
+
                     <button
                         type="submit"
-                        disabled={form.processing}
+                        disabled={form.processing || !guard.solved(form.data)}
                         className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#2BBBAD] text-white font-medium hover:bg-[#249E93] transition-colors disabled:opacity-60"
                     >
                         <Send className="w-4 h-4" />

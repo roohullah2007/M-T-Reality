@@ -122,9 +122,8 @@ Route::get('/about', function () {
 })->name('about');
 
 Route::get('/contact', function () {
-    return Inertia::render('Contact', [
-        'form_token' => \App\Services\SpamGuard::token(),
-    ]);
+    // The form token comes from the shared "spamGuard" Inertia prop.
+    return Inertia::render('Contact');
 })->name('contact');
 
 Route::get('/faqs', function () {

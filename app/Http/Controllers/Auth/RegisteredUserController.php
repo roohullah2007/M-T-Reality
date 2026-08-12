@@ -39,10 +39,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Register', [
-            'form_token' => SpamGuard::token(),
-            'recaptcha_site_key' => SpamGuard::recaptchaSiteKey(),
-        ]);
+        // The form token and reCAPTCHA site key come from the shared
+        // "spamGuard" Inertia prop (see HandleInertiaRequests).
+        return Inertia::render('Auth/Register');
     }
 
     /**
@@ -55,6 +54,11 @@ class RegisteredUserController extends Controller
         // Bot gating (honeypot + minimum-time token + per-IP rate limit).
         // All blocks return the same generic error so bots get no signal
         // about which check failed.
+        //
+        // Deliberately NOT SpamGuard::guard(): the checks run in the same
+        // order, but registration has to answer a failed reCAPTCHA differently
+        // from the silent checks, and guard() folds every outcome into one
+        // log-only reason string that we would have to sniff to tell apart.
         if ($reason = SpamGuard::botCheck($request)) {
             SpamGuard::logBlock('registration', $request, $reason);
 
