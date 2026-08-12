@@ -7,14 +7,21 @@ use App\Mail\NewMediaOrderToAdmin;
 use App\Models\MediaOrder;
 use App\Models\User;
 use App\Services\EmailService;
+use App\Services\SpamGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 
 class MediaOrderController extends Controller
 {
+    /**
+     * Maximum media orders per IP per hour.
+     */
+    protected const MAX_PER_HOUR = 3;
+
     /**
      * Display the packages page
      */
@@ -41,6 +48,16 @@ class MediaOrderController extends Controller
      */
     public function store(Request $request)
     {
+        // Honeypot + minimum-time token + per-IP rate limit + reCAPTCHA, run
+        // before anything else because a guest order also creates (and signs
+        // in to) an account. Blocked submissions get the same response a real
+        // one would, so bots learn nothing about which check stopped them.
+        if ($reason = SpamGuard::guard($request, 'media-order', self::MAX_PER_HOUR)) {
+            SpamGuard::logBlock('media-order', $request, $reason);
+
+            return $this->genericSuccess();
+        }
+
         // Validate the request
         $validated = $request->validate([
             // Property Details
@@ -90,6 +107,22 @@ class MediaOrderController extends Controller
             // Total
             'totalPrice' => 'required|numeric|min:0',
         ]);
+
+        // The spam wave filled every field with a random token, so check the
+        // free-text fields for machine-generated content.
+        $reason = SpamGuard::gibberishCheck([
+            'address' => $validated['address'],
+            'city' => $validated['city'],
+            'special instructions' => $validated['specialInstructions'] ?? null,
+        ]);
+
+        if ($reason) {
+            SpamGuard::logBlock('media-order', $request, $reason);
+
+            return $this->genericSuccess();
+        }
+
+        SpamGuard::recordAttempt($request, 'media-order');
 
         // Determine user - existing or create new
         $user = Auth::user();
@@ -173,18 +206,31 @@ class MediaOrderController extends Controller
 
         // Send confirmation email to customer and notification to admin
         // (EmailService logs failures and never throws, so the order always succeeds)
-        if ($mediaOrder->email) {
-            EmailService::sendToUserAndAdmin(
-                $mediaOrder->email,
-                new MediaOrderReceived($mediaOrder),
-                new NewMediaOrderToAdmin($mediaOrder)
-            );
-        } else {
-            EmailService::sendToAdmin(new NewMediaOrderToAdmin($mediaOrder));
+        try {
+            if ($mediaOrder->email) {
+                EmailService::sendToUserAndAdmin(
+                    $mediaOrder->email,
+                    new MediaOrderReceived($mediaOrder),
+                    new NewMediaOrderToAdmin($mediaOrder)
+                );
+            } else {
+                EmailService::sendToAdmin(new NewMediaOrderToAdmin($mediaOrder));
+            }
+        } catch (\Throwable $e) {
+            Log::error('Media order email dispatch failed: ' . $e->getMessage());
         }
 
         // Redirect to success page or dashboard
-        if ($user) {
+        return $this->genericSuccess();
+    }
+
+    /**
+     * The response every submission gets - accepted or silently blocked.
+     * Signed-in customers land on their orders list, guests on the home page.
+     */
+    protected function genericSuccess()
+    {
+        if (Auth::check()) {
             return redirect()->route('dashboard.media-orders')
                 ->with('success', 'Your media order has been submitted successfully! We will contact you within 24 hours to confirm your appointment.');
         }

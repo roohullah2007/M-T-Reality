@@ -1,18 +1,25 @@
 import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
+import SpamGuardFields, { spamGuardDefaults, useSpamGuard } from '@/Components/SpamGuardFields';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, useForm } from '@inertiajs/react';
 
 export default function ForgotPassword({ status }) {
     const { data, setData, post, processing, errors } = useForm({
+        ...spamGuardDefaults,
         email: '',
     });
+    const guard = useSpamGuard(setData);
 
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('password.email'));
+        post(route('password.email'), {
+            // The token is single-use: without a reset every retry after a
+            // failed submit would be rejected by Google.
+            onError: () => guard.reset(),
+        });
     };
 
     return (
@@ -44,8 +51,16 @@ export default function ForgotPassword({ status }) {
 
                 <InputError message={errors.email} className="mt-2" />
 
+                <SpamGuardFields
+                    guard={guard}
+                    data={data}
+                    setData={setData}
+                    errors={errors}
+                    idPrefix="forgot"
+                />
+
                 <div className="mt-4 flex items-center justify-end">
-                    <PrimaryButton className="ms-4" disabled={processing}>
+                    <PrimaryButton className="ms-4" disabled={processing || !guard.solved(data)}>
                         Email Password Reset Link
                     </PrimaryButton>
                 </div>

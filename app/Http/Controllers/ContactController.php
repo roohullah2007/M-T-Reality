@@ -8,6 +8,7 @@ use App\Models\ContactMessage;
 use App\Services\EmailService;
 use App\Services\SpamGuard;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ContactController extends Controller
 {
@@ -21,17 +22,11 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        // Bot gating (honeypot + minimum-time token). Blocked submissions
-        // receive the same success response a real one would, so bots get
-        // no signal about which check failed.
-        if ($reason = SpamGuard::botCheck($request)) {
+        // Honeypot + minimum-time token + per-IP rate limit + reCAPTCHA.
+        // Blocked submissions receive the same success response a real one
+        // would, so bots get no signal about which check failed.
+        if ($reason = SpamGuard::guard($request, 'contact', self::MAX_PER_HOUR)) {
             SpamGuard::logBlock('contact', $request, $reason);
-
-            return $this->genericSuccess();
-        }
-
-        if (SpamGuard::tooManyAttempts($request, 'contact', self::MAX_PER_HOUR)) {
-            SpamGuard::logBlock('contact', $request, 'rate limit exceeded');
 
             return $this->genericSuccess();
         }
@@ -44,9 +39,15 @@ class ContactController extends Controller
             'message' => 'required|string',
         ]);
 
-        // Conservative content heuristics (gibberish name, dotted-gmail
-        // alias trick, link spam).
-        $reason = SpamGuard::contactContentCheck(
+        // The spam wave filled every field with a random token, so check the
+        // free-text fields for machine-generated content, then apply the
+        // conservative heuristics (gibberish name, dotted-gmail alias trick,
+        // link spam).
+        $reason = SpamGuard::gibberishCheck([
+            'name' => $validated['name'],
+            'subject' => $validated['subject'],
+            'message' => $validated['message'],
+        ]) ?? SpamGuard::contactContentCheck(
             $validated['name'],
             $validated['email'],
             $validated['message']
@@ -60,7 +61,7 @@ class ContactController extends Controller
 
         // Repeat submissions from the same inbox (dotted gmail aliases are
         // normalized so rotating the dots does not evade the check).
-        if ($this->isRepeatSender($validated['email'])) {
+        if (SpamGuard::isRepeatSender(ContactMessage::query(), $validated['email'])) {
             SpamGuard::logBlock('contact', $request, 'too many recent messages from same (normalized) email');
 
             return $this->genericSuccess();
@@ -84,27 +85,10 @@ class ContactController extends Controller
                 new NewContactMessageToAdmin($contactMessage)
             );
         } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::error('Contact email dispatch failed: ' . $e->getMessage());
+            Log::error('Contact email dispatch failed: ' . $e->getMessage());
         }
 
         return $this->genericSuccess();
-    }
-
-    /**
-     * Whether this (normalized) email already sent several messages in the
-     * last 24 hours. Volume is low enough to compare in PHP, which lets us
-     * normalize dotted gmail aliases that SQL cannot match directly.
-     */
-    protected function isRepeatSender(string $email): bool
-    {
-        $normalized = SpamGuard::normalizeEmail($email);
-
-        $recentCount = ContactMessage::where('created_at', '>=', now()->subDay())
-            ->pluck('email')
-            ->filter(fn ($existing) => SpamGuard::normalizeEmail($existing) === $normalized)
-            ->count();
-
-        return $recentCount >= 3;
     }
 
     /**

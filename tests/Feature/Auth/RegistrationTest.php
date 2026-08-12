@@ -220,13 +220,25 @@ class RegistrationTest extends TestCase
         Notification::assertNothingSent();
     }
 
+    /**
+     * The site key and form token reach the page through the shared
+     * "spamGuard" Inertia prop, so every public form gets them.
+     */
     public function test_register_page_receives_the_site_key_from_the_server(): void
     {
         config(['services.recaptcha.site_key' => 'public-site-key']);
 
         $this->get('/register')->assertInertia(
             fn ($page) => $page->component('Auth/Register')
-                ->where('recaptcha_site_key', 'public-site-key')
+                ->where('spamGuard.recaptchaSiteKey', 'public-site-key')
+                ->has('spamGuard.token')
+        );
+    }
+
+    public function test_public_pages_receive_the_shared_spam_guard_prop(): void
+    {
+        $this->get('/mlschanges')->assertInertia(
+            fn ($page) => $page->component('MlsChanges')->has('spamGuard.token')
         );
     }
 }

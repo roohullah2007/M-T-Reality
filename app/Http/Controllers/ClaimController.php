@@ -9,16 +9,24 @@ use App\Models\ActivityLog;
 use App\Models\Property;
 use App\Models\User;
 use App\Services\EmailService;
+use App\Services\SpamGuard;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class ClaimController extends Controller
 {
+    /**
+     * Maximum claim registrations per IP per hour.
+     */
+    protected const MAX_PER_HOUR = 5;
+
     /**
      * Show the claim landing page.
      */
@@ -88,6 +96,18 @@ class ClaimController extends Controller
      */
     public function register(Request $request, string $token)
     {
+        // Honeypot + minimum-time token + per-IP rate limit + reCAPTCHA.
+        // This one creates an account, so unlike the public message forms a
+        // block gets a real (if deliberately vague) validation error - a human
+        // who tripped the check has to be able to try again.
+        if ($reason = SpamGuard::guard($request, 'claim-register', self::MAX_PER_HOUR)) {
+            SpamGuard::logBlock('claim-register', $request, $reason);
+
+            throw ValidationException::withMessages([
+                SpamGuard::RECAPTCHA_FIELD => 'Please confirm you are not a robot and try again.',
+            ]);
+        }
+
         $property = Property::where('claim_token', $token)->firstOrFail();
 
         if ($property->isClaimed()) {
@@ -105,6 +125,8 @@ class ClaimController extends Controller
             'phone' => 'nullable|string|max:20',
         ]);
 
+        SpamGuard::recordAttempt($request, 'claim-register');
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -119,7 +141,7 @@ class ClaimController extends Controller
         try {
             Mail::to($user->email)->send(new EmailVerificationCode($user, $code));
         } catch (\Exception $e) {
-            \Log::error('Failed to send verification code: ' . $e->getMessage());
+            Log::error('Failed to send verification code: ' . $e->getMessage());
         }
 
         Auth::login($user);
@@ -148,14 +170,20 @@ class ClaimController extends Controller
             return;
         }
 
-        // Send to owner
-        if ($user->email) {
-            EmailService::sendToUser($user->email, new PropertyClaimedToOwner($property, $user));
-        }
+        // A delivery failure is never a reason to fail a claim that has
+        // already been committed (EmailService logs and never throws).
+        try {
+            // Send to owner
+            if ($user->email) {
+                EmailService::sendToUser($user->email, new PropertyClaimedToOwner($property, $user));
+            }
 
-        // Delay then send to admin
-        sleep(2);
-        EmailService::sendToAdmin(new PropertyClaimedToAdmin($property, $user));
+            // Delay then send to admin
+            sleep(2);
+            EmailService::sendToAdmin(new PropertyClaimedToAdmin($property, $user));
+        } catch (\Throwable $e) {
+            Log::error('Property claim email dispatch failed: ' . $e->getMessage());
+        }
     }
 
     protected function formatProperty(Property $property): array

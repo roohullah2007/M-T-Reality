@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import { Home, CheckCircle, ChevronRight, AlertCircle, Loader2, Phone, Mail, Clock, TrendingUp, Megaphone } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
+import SpamGuardFields, { spamGuardDefaults, useSpamGuard } from '@/Components/SpamGuardFields';
 
 function ListProperty() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const { data, setData, post, processing, errors, reset } = useForm({
+    ...spamGuardDefaults,
     name: '',
     email: '',
     phone: '',
@@ -17,35 +19,39 @@ function ListProperty() {
     propertyType: '',
     estimatedValue: '',
     timeframe: '',
-    message: '',
+    notes: '',
     subject: 'Seller Consultation Request',
+    message: '',
   });
+  const guard = useSpamGuard(setData);
+
+  // The message body posted to /contact is assembled from the property fields.
+  // It has to live in the form state itself - Inertia submits the useForm data,
+  // so anything composed only inside the submit handler never reaches the server.
+  const messageBody = [
+    `Property Address: ${data.address}, ${data.city}, ${data.state} ${data.zipCode}`,
+    `Property Type: ${data.propertyType || 'Not specified'}`,
+    `Estimated Value: ${data.estimatedValue || 'Not specified'}`,
+    `Selling Timeframe: ${data.timeframe || 'Not specified'}`,
+    data.notes ? `\nAdditional Notes:\n${data.notes}` : '',
+  ].filter(Boolean).join('\n');
+
+  useEffect(() => {
+    setData('message', messageBody);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messageBody]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Build the message body with structured property info
-    const messageBody = [
-      `Property Address: ${data.address}, ${data.city}, ${data.state} ${data.zipCode}`,
-      `Property Type: ${data.propertyType || 'Not specified'}`,
-      `Estimated Value: ${data.estimatedValue || 'Not specified'}`,
-      `Selling Timeframe: ${data.timeframe || 'Not specified'}`,
-      data.message ? `\nAdditional Notes:\n${data.message}` : '',
-    ].filter(Boolean).join('\n');
-
     post('/contact', {
-      data: {
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        subject: 'Seller Consultation Request',
-        message: messageBody,
-      },
       preserveScroll: true,
       onSuccess: () => {
         setShowSuccess(true);
         reset();
       },
+      // reCAPTCHA tokens are single-use, so a failed attempt needs a fresh one.
+      onError: () => guard.reset(),
     });
   };
 
@@ -333,8 +339,8 @@ function ListProperty() {
                           Additional Notes
                         </label>
                         <textarea
-                          value={data.message}
-                          onChange={(e) => setData('message', e.target.value)}
+                          value={data.notes}
+                          onChange={(e) => setData('notes', e.target.value)}
                           rows={4}
                           className="w-full px-4 py-3 bg-[#EEEDEA] border-0 rounded-xl text-[#111] placeholder-[#999] focus:ring-2 focus:ring-[#2BBBAD] transition-all resize-none"
                           placeholder="Tell us anything else about your property or selling goals..."
@@ -344,10 +350,18 @@ function ListProperty() {
                     </div>
                   </div>
 
+                  <SpamGuardFields
+                    guard={guard}
+                    data={data}
+                    setData={setData}
+                    errors={errors}
+                    idPrefix="listproperty"
+                  />
+
                   {/* Submit */}
                   <button
                     type="submit"
-                    disabled={processing}
+                    disabled={processing || !guard.solved(data)}
                     className="w-full inline-flex items-center justify-center gap-2 bg-[#2BBBAD] text-white rounded-full px-6 py-4 font-medium transition-all duration-300 hover:bg-[#249E93] disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                   >

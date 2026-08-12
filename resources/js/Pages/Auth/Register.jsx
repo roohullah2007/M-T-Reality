@@ -1,104 +1,31 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Eye, EyeOff, Home, Search } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
+import SpamGuardFields, { spamGuardDefaults, useSpamGuard } from '@/Components/SpamGuardFields';
 
-const RECAPTCHA_SCRIPT_ID = 'recaptcha-api-script';
-const RECAPTCHA_ONLOAD_CALLBACK = 'onMtRecaptchaLoad';
-
-function Register({ form_token, recaptcha_site_key }) {
+function Register() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    // 'disabled' when no site key is configured (local dev), otherwise
-    // 'loading' -> 'ready' | 'failed'.
-    const [captchaState, setCaptchaState] = useState(recaptcha_site_key ? 'loading' : 'disabled');
-    const captchaRef = useRef(null);
-    const widgetIdRef = useRef(null);
 
     const { data, setData, post, processing, errors, reset } = useForm({
+        ...spamGuardDefaults,
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
         user_type: 'buyer',
-        website: '', // Honeypot - hidden from real users, bots fill it
-        form_token: form_token || '',
-        'g-recaptcha-response': '',
     });
-
-    // Load Google's reCAPTCHA v2 API asynchronously and render the checkbox
-    // explicitly, so we control exactly where it lands and can reset it.
-    useEffect(() => {
-        if (!recaptcha_site_key) return undefined;
-
-        let cancelled = false;
-        let timeoutId;
-
-        const renderWidget = () => {
-            if (cancelled || widgetIdRef.current !== null) return;
-            if (!window.grecaptcha?.render || !captchaRef.current) return;
-
-            try {
-                widgetIdRef.current = window.grecaptcha.render(captchaRef.current, {
-                    sitekey: recaptcha_site_key,
-                    callback: (token) => setData('g-recaptcha-response', token || ''),
-                    'expired-callback': () => setData('g-recaptcha-response', ''),
-                    'error-callback': () => setData('g-recaptcha-response', ''),
-                });
-                setCaptchaState('ready');
-            } catch {
-                setCaptchaState('failed');
-            }
-        };
-
-        window[RECAPTCHA_ONLOAD_CALLBACK] = renderWidget;
-
-        if (window.grecaptcha?.render) {
-            renderWidget();
-        } else if (!document.getElementById(RECAPTCHA_SCRIPT_ID)) {
-            const script = document.createElement('script');
-            script.id = RECAPTCHA_SCRIPT_ID;
-            script.src = `https://www.google.com/recaptcha/api.js?onload=${RECAPTCHA_ONLOAD_CALLBACK}&render=explicit`;
-            script.async = true;
-            script.defer = true;
-            script.onerror = () => !cancelled && setCaptchaState('failed');
-            document.head.appendChild(script);
-        }
-
-        // If the script is blocked by an extension/network it may never fire.
-        timeoutId = window.setTimeout(() => {
-            if (!cancelled && widgetIdRef.current === null) setCaptchaState('failed');
-        }, 15000);
-
-        return () => {
-            cancelled = true;
-            window.clearTimeout(timeoutId);
-            delete window[RECAPTCHA_ONLOAD_CALLBACK];
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [recaptcha_site_key]);
-
-    const resetCaptcha = () => {
-        setData('g-recaptcha-response', '');
-        if (widgetIdRef.current !== null && window.grecaptcha?.reset) {
-            try {
-                window.grecaptcha.reset(widgetIdRef.current);
-            } catch {
-                /* widget already gone - nothing to reset */
-            }
-        }
-    };
+    const guard = useSpamGuard(setData);
 
     const submit = (e) => {
         e.preventDefault();
         post(route('register'), {
             // The token is single-use: without a reset every retry after a
             // failed submit would be rejected by Google.
-            onError: () => resetCaptcha(),
+            onError: () => guard.reset(),
             onFinish: () => reset('password', 'password_confirmation'),
         });
     };
-
-    const captchaSolved = captchaState === 'disabled' || Boolean(data['g-recaptcha-response']);
 
     // Password strength indicator
     const getPasswordStrength = (password) => {
@@ -171,23 +98,6 @@ function Register({ form_token, recaptcha_site_key }) {
                         </div>
 
                         <form onSubmit={submit} className="space-y-4">
-                            {/* Honeypot field - visually hidden, real users never fill it */}
-                            <div
-                                aria-hidden="true"
-                                style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap', border: 0 }}
-                            >
-                                <label htmlFor="register_website">Website</label>
-                                <input
-                                    id="register_website"
-                                    type="text"
-                                    name="website"
-                                    tabIndex={-1}
-                                    autoComplete="off"
-                                    value={data.website}
-                                    onChange={(e) => setData('website', e.target.value)}
-                                />
-                            </div>
-
                             {/* User Type Selection */}
                             <div>
                                 <label className="block text-sm font-bold text-[#111111] mb-3">
@@ -391,44 +301,19 @@ function Register({ form_token, recaptcha_site_key }) {
                                 )}
                             </div>
 
-                            {/* reCAPTCHA v2 checkbox */}
-                            {captchaState !== 'disabled' && (
-                                <div>
-                                    <div ref={captchaRef} className="flex justify-center" />
-
-                                    {captchaState === 'loading' && (
-                                        <p className="mt-2 text-sm text-gray-500 text-center">
-                                            Loading verification&hellip;
-                                        </p>
-                                    )}
-
-                                    {captchaState === 'failed' && (
-                                        <p className="mt-2 text-sm text-red-600 text-center">
-                                            The verification checkbox could not be loaded. Please disable any
-                                            ad/script blocker for this page and{' '}
-                                            <button
-                                                type="button"
-                                                onClick={() => window.location.reload()}
-                                                className="underline font-medium"
-                                            >
-                                                reload
-                                            </button>
-                                            .
-                                        </p>
-                                    )}
-
-                                    {errors['g-recaptcha-response'] && (
-                                        <p className="mt-2 text-sm text-red-600 text-center">
-                                            {errors['g-recaptcha-response']}
-                                        </p>
-                                    )}
-                                </div>
-                            )}
+                            {/* Honeypot + reCAPTCHA v2 checkbox */}
+                            <SpamGuardFields
+                                guard={guard}
+                                data={data}
+                                setData={setData}
+                                errors={errors}
+                                idPrefix="register"
+                            />
 
                             {/* Submit Button */}
                             <button
                                 type="submit"
-                                disabled={processing || !captchaSolved}
+                                disabled={processing || !guard.solved(data)}
                                 className="w-full py-3 px-4 bg-[#111111] text-white rounded-full text-sm font-semibold hover:bg-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                             >
                                 {processing ? 'Creating Account...' : 'Create Account'}

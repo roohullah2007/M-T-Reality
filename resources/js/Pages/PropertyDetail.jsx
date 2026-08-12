@@ -3,6 +3,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { MapPin, BedDouble, Bath, Maximize2, Calendar, Home, Heart, Share2, ArrowLeft, Phone, Mail, CheckCircle2, ChevronLeft, ChevronRight, Copy, Check, BadgeCheck, Calculator, DollarSign, Printer, Video, ExternalLink, X } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
 import SinglePropertyMap from '@/Components/Properties/SinglePropertyMap';
+import SpamGuardFields, { spamGuardDefaults, useSpamGuard } from '@/Components/SpamGuardFields';
 
 const getAgentImage = (name) => {
   const lowered = (name || '').toLowerCase();
@@ -40,6 +41,7 @@ function PropertyDetail({ property, openHouses = [] }) {
   }, []);
 
   const { data, setData, post, processing, errors, reset } = useForm({
+    ...spamGuardDefaults,
     name: '',
     email: '',
     phone: '',
@@ -47,6 +49,7 @@ function PropertyDetail({ property, openHouses = [] }) {
     message: `I'm interested in this property at ${property.address}, ${property.city}.`,
     property_id: property.id,
   });
+  const guard = useSpamGuard(setData);
 
   const photos = property.photos && property.photos.length > 0
     ? property.photos
@@ -258,14 +261,17 @@ function PropertyDetail({ property, openHouses = [] }) {
       preserveState: true,
       onSuccess: () => {
         setMessageSent(true);
-        reset();
-        setData('message', `I'm interested in this property at ${property.address}, ${property.city}.`);
-        setData('property_id', property.id);
+        // Reset only the user-entered fields: a blanket reset() would also wipe
+        // the spam-guard token this page still needs for a second inquiry.
+        reset('name', 'email', 'phone', 'question', 'message');
+        guard.reset();
         setTimeout(() => {
           setMessageSent(false);
           setShowContactForm(false);
         }, 8000);
       },
+      // reCAPTCHA tokens are single-use, so a failed attempt needs a fresh one.
+      onError: () => guard.reset(),
     });
   };
 
@@ -1187,9 +1193,16 @@ function PropertyDetail({ property, openHouses = [] }) {
                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#2BBBAD] resize-none"
                       />
                     </div>
+                    <SpamGuardFields
+                      guard={guard}
+                      data={data}
+                      setData={setData}
+                      errors={errors}
+                      idPrefix="inquiry"
+                    />
                     <button
                       type="submit"
-                      disabled={processing}
+                      disabled={processing || !guard.solved(data)}
                       className="w-full bg-[#111] text-white py-3 rounded-xl font-medium hover:bg-[#333] transition-colors disabled:opacity-50"
                       style={{ fontFamily: 'Instrument Sans, sans-serif' }}
                     >

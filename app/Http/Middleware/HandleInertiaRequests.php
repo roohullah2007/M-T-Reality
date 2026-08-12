@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\CompanyLogo;
+use App\Services\SpamGuard;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -41,6 +42,12 @@ class HandleInertiaRequests extends Middleware
             ],
             'googleMapsApiKey' => config('services.google.maps_api_key'),
             'companyLogos' => fn () => CompanyLogo::getActive(),
+            // Everything the <SpamGuardFields /> component needs, shared with
+            // every page so a public form can never be shipped without it.
+            'spamGuard' => fn () => [
+                'token' => SpamGuard::token(),
+                'recaptchaSiteKey' => SpamGuard::recaptchaSiteKey(),
+            ],
         ];
     }
 }
