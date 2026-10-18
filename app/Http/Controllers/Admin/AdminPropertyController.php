@@ -547,18 +547,47 @@ class AdminPropertyController extends Controller
         }
 
         // Create ZIP file
-        $zipPath = ImageService::createPhotosZip($photos, $property->property_title);
+        $zipPath = ImageService::createPhotosZip($photos, $property->property_title ?? 'property');
 
         if (!$zipPath || !file_exists($zipPath)) {
-            return back()->with('error', 'Failed to create ZIP file.');
+            return back()->with('error', 'Failed to create ZIP file. None of the photos could be read; see the log for details.');
         }
 
         // Log the action
         ActivityLog::log('photos_downloaded', $property, null, ['photo_count' => count($photos)], "Downloaded photos for property: {$property->property_title}");
 
         // Return the file as a download and delete after sending
-        $filename = basename($zipPath);
-        return response()->download($zipPath, $filename)->deleteFileAfterSend(true);
+        $filename = 'photos-' . (\Illuminate\Support\Str::slug($property->property_title ?? '') ?: 'property-' . $property->id) . '.zip';
+        return response()->download($zipPath, $filename, ['Content-Type' => 'application/zip'])
+            ->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Reorder a property's photos. The first photo is the main photo.
+     * Accepts `photos` (ordered list of paths) or legacy `photo_order` (indices).
+     */
+    public function reorderPhotos(Request $request, Property $property)
+    {
+        $request->validate([
+            'photos' => 'required_without:photo_order|array',
+            'photos.*' => 'string',
+            'photo_order' => 'required_without:photos|array',
+            'photo_order.*' => 'integer|min:0',
+        ]);
+
+        $reordered = $request->has('photos')
+            ? ImageService::reorderPhotos($property->photos ?? [], $request->input('photos'))
+            : ImageService::reorderPhotos($property->photos ?? [], $request->input('photo_order'), true);
+
+        if ($reordered === null) {
+            return back()->with('error', 'Photo order is out of date. Please refresh the page and try again.');
+        }
+
+        $property->update(['photos' => $reordered]);
+
+        ActivityLog::log('photos_reordered', $property, null, null, "Reordered photos for property: {$property->property_title}");
+
+        return back()->with('success', 'Photo order saved.');
     }
 
     /**
@@ -605,13 +634,17 @@ class AdminPropertyController extends Controller
     public function removePhoto(Request $request, Property $property)
     {
         $request->validate([
-            'photo_index' => 'required|integer|min:0',
+            'photo_index' => 'required_without:photo_path|integer|min:0',
+            'photo_path' => 'required_without:photo_index|string',
         ]);
 
-        $photos = $property->photos ?? [];
-        $photoIndex = $request->photo_index;
+        $photos = array_values($property->photos ?? []);
+        // Prefer the path: an index can be stale after a reorder.
+        $photoIndex = $request->filled('photo_path')
+            ? array_search($request->photo_path, $photos, true)
+            : (int) $request->photo_index;
 
-        if (!isset($photos[$photoIndex])) {
+        if ($photoIndex === false || !isset($photos[$photoIndex])) {
             return back()->with('error', 'Photo not found.');
         }
 

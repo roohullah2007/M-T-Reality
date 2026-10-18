@@ -1,9 +1,10 @@
 import { Head, Link, useForm, router } from '@inertiajs/react';
 import UserDashboardLayout from '@/Layouts/UserDashboardLayout';
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import axios from 'axios';
 import LocationMapPicker from '@/Components/Properties/LocationMapPicker';
 import OpenHouseManager from '@/Components/OpenHouseManager';
+import SortablePhotoGrid from '@/Components/Properties/SortablePhotoGrid';
 import {
     ArrowLeft,
     Save,
@@ -23,9 +24,9 @@ import {
     Upload,
     X,
     Trash2,
-    Star,
     Loader2,
-    CheckCircle
+    CheckCircle,
+    Download
 } from 'lucide-react';
 
 export default function EditListing({ property }) {
@@ -104,7 +105,14 @@ export default function EditListing({ property }) {
     const [newPhotoPreviews, setNewPhotoPreviews] = useState([]); // Photos being uploaded
     const [isUploading, setIsUploading] = useState(false);
 
-    const photos = property.photos || [];
+    // Saved photos in display order (first = main photo). Kept locally so a
+    // drag shows instantly; synced back whenever the server sends new props.
+    const serverPhotosKey = JSON.stringify(property.photos || []);
+    const [photos, setPhotos] = useState(property.photos || []);
+    const [savingOrder, setSavingOrder] = useState(false);
+    useEffect(() => {
+        setPhotos(property.photos || []);
+    }, [serverPhotosKey]);
     const maxPhotos = 50;
 
     // Calculate total photos (existing + successfully uploaded new ones)
@@ -258,7 +266,7 @@ export default function EditListing({ property }) {
             return;
         }
 
-        router.post(route('dashboard.listings.photos.add', property.id), {
+        router.post(route('dashboard.listings.add-photos', property.id), {
             photo_paths: successfulPaths
         }, {
             preserveScroll: true,
@@ -271,8 +279,9 @@ export default function EditListing({ property }) {
         });
     };
 
-    const handleDeletePhoto = (index) => {
-        setPhotoToDelete(index);
+    // Takes the photo path: indexes go stale once photos are reordered
+    const handleDeletePhoto = (photoPath) => {
+        setPhotoToDelete(photoPath);
         setShowDeleteModal(true);
     };
 
@@ -280,8 +289,8 @@ export default function EditListing({ property }) {
         if (photoToDelete === null) return;
 
         setDeleting(true);
-        router.post(route('dashboard.listings.photos.remove', property.id), {
-            photo_index: photoToDelete,
+        router.post(route('dashboard.listings.remove-photo', property.id), {
+            photo_path: photoToDelete,
         }, {
             preserveScroll: true,
             onFinish: () => {
@@ -292,19 +301,21 @@ export default function EditListing({ property }) {
         });
     };
 
-    const setAsMainPhoto = (index) => {
-        if (index === 0) return; // Already main
-
-        // Reorder to put this photo first
-        const newOrder = [index];
-        for (let i = 0; i < photos.length; i++) {
-            if (i !== index) newOrder.push(i);
-        }
-
-        router.post(route('dashboard.listings.photos.reorder', property.id), {
-            photo_order: newOrder,
+    // Persist a new order of the saved photos (also used by "Set as Main")
+    const handleReorderSavedPhotos = (newPhotos) => {
+        const previous = photos;
+        setPhotos(newPhotos);
+        setSavingOrder(true);
+        router.post(route('dashboard.listings.reorder-photos', property.id), {
+            photos: newPhotos,
         }, {
             preserveScroll: true,
+            preserveState: true,
+            onError: () => {
+                setPhotos(previous);
+                setUploadError('Could not save the new photo order. Please try again.');
+            },
+            onFinish: () => setSavingOrder(false),
         });
     };
 
@@ -392,7 +403,7 @@ export default function EditListing({ property }) {
             setSavingPhotos(true);
             try {
                 await new Promise((resolve, reject) => {
-                    router.post(route('dashboard.listings.photos.add', property.id), {
+                    router.post(route('dashboard.listings.add-photos', property.id), {
                         photo_paths: successfulPaths
                     }, {
                         preserveScroll: true,
@@ -1209,10 +1220,19 @@ export default function EditListing({ property }) {
                     {/* New Photos Grid (uploads in progress) */}
                     {newPhotoPreviews.length > 0 && (
                         <div className="mb-4">
-                            <h3 className="text-sm font-medium text-gray-700 mb-2">New Photos (not yet saved)</h3>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                                {newPhotoPreviews.map((preview) => (
-                                    <div key={preview.id} className={`relative aspect-video rounded-xl overflow-hidden bg-gray-100 group ${preview.error ? 'ring-2 ring-red-500' : ''}`}>
+                            <h3 className="text-sm font-medium text-gray-700 mb-1">New Photos (not yet saved)</h3>
+                            <p className="text-xs text-gray-500 mb-2">
+                                {photos.length > 0
+                                    ? 'These are added after your saved photos, in this order. Drag or use the arrows to reorder.'
+                                    : 'Drag or use the arrows to reorder. The first photo will be your main photo.'}
+                            </p>
+                            <SortablePhotoGrid
+                                items={newPhotoPreviews}
+                                getKey={(preview) => preview.id}
+                                onReorder={setNewPhotoPreviews}
+                                showMain={photos.length === 0}
+                                renderItem={(preview) => (
+                                    <div className={`absolute inset-0 ${preview.error ? 'ring-2 ring-inset ring-red-500' : ''}`}>
                                         {preview.isHeic ? (
                                             <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-2">
                                                 <div className="bg-white p-2 rounded-full shadow-sm mb-2">
@@ -1225,6 +1245,7 @@ export default function EditListing({ property }) {
                                             <img
                                                 src={preview.url}
                                                 alt={preview.name}
+                                                draggable={false}
                                                 className="w-full h-full object-cover object-center"
                                             />
                                         )}
@@ -1279,8 +1300,8 @@ export default function EditListing({ property }) {
                                             </div>
                                         )}
                                     </div>
-                                ))}
-                            </div>
+                                )}
+                            />
 
                             {/* Save Photos Button - Prominent */}
                             {successfulNewPhotos.length > 0 && !newPhotoPreviews.some(p => p.uploading) && (
@@ -1316,46 +1337,47 @@ export default function EditListing({ property }) {
                     {/* Existing Photos Grid */}
                     {photos.length > 0 ? (
                         <div>
-                            <h3 className="text-sm font-medium text-gray-700 mb-2">Saved Photos</h3>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                                {photos.map((photo, index) => (
-                                    <div key={index} className="relative aspect-video rounded-xl overflow-hidden bg-gray-100 group">
+                            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                                <div>
+                                    <h3 className="text-sm font-medium text-gray-700">
+                                        Saved Photos
+                                        {savingOrder && <Loader2 className="inline w-3.5 h-3.5 ml-2 animate-spin text-gray-400" />}
+                                    </h3>
+                                    <p className="text-xs text-gray-500">Drag photos or use the arrows to reorder. The first photo is your main photo.</p>
+                                </div>
+                                <a
+                                    href={route('dashboard.listings.download-photos', property.id)}
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-sm font-medium hover:bg-green-100 transition-colors"
+                                >
+                                    <Download className="w-4 h-4" />
+                                    Download All (ZIP)
+                                </a>
+                            </div>
+                            <SortablePhotoGrid
+                                items={photos}
+                                getKey={(photo) => photo}
+                                onReorder={handleReorderSavedPhotos}
+                                renderItem={(photo, index) => (
+                                    <>
                                         <img
                                             src={photo}
                                             alt={`Property photo ${index + 1}`}
+                                            draggable={false}
                                             className="w-full h-full object-cover object-center"
                                             onError={(e) => e.target.src = '/images/property-placeholder.svg'}
                                         />
-                                        {/* Main Photo Badge */}
-                                        {index === 0 && (
-                                            <span className="absolute top-2 left-2 bg-[#2BBBAD] text-white text-xs px-2 py-1 rounded-full font-medium">
-                                                Main Photo
-                                            </span>
-                                        )}
-                                        {/* Action Buttons - visible on hover */}
-                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                            {index !== 0 && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setAsMainPhoto(index)}
-                                                    className="bg-white hover:bg-yellow-50 text-gray-700 p-2 rounded-full transition-colors"
-                                                    title="Set as main photo"
-                                                >
-                                                    <Star className="w-4 h-4" />
-                                                </button>
-                                            )}
-                                            <button
-                                                type="button"
-                                                onClick={() => handleDeletePhoto(index)}
-                                                className="bg-white hover:bg-red-50 text-red-600 p-2 rounded-full transition-colors"
-                                                title="Delete photo"
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleDeletePhoto(photo)}
+                                            className="absolute top-2 right-2 z-10 bg-white/90 hover:bg-red-50 text-red-600 p-1.5 rounded-full shadow transition-colors"
+                                            title="Delete photo"
+                                            aria-label={`Delete photo ${index + 1}`}
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                    </>
+                                )}
+                            />
                         </div>
                     ) : newPhotoPreviews.length === 0 && (
                         <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center">
@@ -1428,10 +1450,10 @@ export default function EditListing({ property }) {
                         <p className="text-gray-600 mb-6">
                             Are you sure you want to delete this photo? This action cannot be undone.
                         </p>
-                        {photoToDelete !== null && photos[photoToDelete] && (
+                        {photoToDelete !== null && (
                             <div className="mb-6 rounded-lg overflow-hidden">
                                 <img
-                                    src={photos[photoToDelete]}
+                                    src={photoToDelete}
                                     alt="Photo to delete"
                                     className="w-full h-40 object-cover object-center"
                                 />

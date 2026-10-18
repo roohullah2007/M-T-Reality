@@ -207,6 +207,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard')-
     Route::post('/listings/{property}/photos', [UserDashboardController::class, 'addPhotos'])->name('.listings.add-photos');
     Route::post('/listings/{property}/remove-photo', [UserDashboardController::class, 'removePhoto'])->name('.listings.remove-photo');
     Route::post('/listings/{property}/reorder-photos', [UserDashboardController::class, 'reorderPhotos'])->name('.listings.reorder-photos');
+    Route::get('/listings/{property}/download-photos', [UserDashboardController::class, 'downloadPhotos'])->name('.listings.download-photos');
     Route::get('/messages', [UserDashboardController::class, 'messages'])->name('.messages');
     Route::post('/messages/{inquiry}/read', [UserDashboardController::class, 'markMessageRead'])->name('.messages.read');
     Route::post('/messages/{inquiry}/responded', [UserDashboardController::class, 'markMessageResponded'])->name('.messages.responded');
@@ -274,6 +275,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin']
     Route::get('/properties/{property}/download-photos', [AdminPropertyController::class, 'downloadPhotos'])->name('properties.download-photos');
     Route::post('/properties/{property}/add-photos', [AdminPropertyController::class, 'addPhotos'])->name('properties.add-photos');
     Route::post('/properties/{property}/remove-photo', [AdminPropertyController::class, 'removePhoto'])->name('properties.remove-photo');
+    Route::post('/properties/{property}/reorder-photos', [AdminPropertyController::class, 'reorderPhotos'])->name('properties.reorder-photos');
     Route::post('/properties/{property}/toggle-showcase', [AdminPropertyController::class, 'toggleShowcase'])->name('properties.toggle-showcase');
     Route::post('/properties/{property}/testimonial', [AdminPropertyController::class, 'updateTestimonial'])->name('properties.update-testimonial');
     Route::post('/properties/{property}/convert-showcase', [AdminPropertyController::class, 'convertToShowcase'])->name('properties.convert-showcase');

@@ -4,11 +4,8 @@
 /public/storage
 /storage/*.key
 /vendor
-.env
-.env.*
 !.env.example
 .env.backup
-.env.production
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -17,7 +14,6 @@ npm-debug.log
 yarn-error.log
 /.fleet
 /.idea
-/.vscode
 nul
 env live.txt
 *.env.live*
