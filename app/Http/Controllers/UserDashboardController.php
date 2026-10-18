@@ -706,13 +706,17 @@ class UserDashboardController extends Controller
         }
 
         $request->validate([
-            'photo_index' => 'required|integer|min:0',
+            'photo_index' => 'required_without:photo_path|integer|min:0',
+            'photo_path' => 'required_without:photo_index|string',
         ]);
 
-        $photos = $property->photos ?? [];
-        $photoIndex = $request->photo_index;
+        $photos = array_values($property->photos ?? []);
+        // Prefer the path: an index can be stale after a reorder.
+        $photoIndex = $request->filled('photo_path')
+            ? array_search($request->photo_path, $photos, true)
+            : (int) $request->photo_index;
 
-        if (!isset($photos[$photoIndex])) {
+        if ($photoIndex === false || !isset($photos[$photoIndex])) {
             return back()->with('error', 'Photo not found.');
         }
 
@@ -728,7 +732,11 @@ class UserDashboardController extends Controller
     }
 
     /**
-     * Reorder photos (set main photo)
+     * Reorder photos. The first photo is the main photo everywhere
+     * (cards, detail gallery, dashboard), so "Set as Main" is a reorder too.
+     *
+     * Accepts `photos` (ordered list of the listing's photo paths, preferred)
+     * or the legacy `photo_order` (list of indices).
      */
     public function reorderPhotos(Request $request, Property $property)
     {
@@ -738,29 +746,48 @@ class UserDashboardController extends Controller
         }
 
         $request->validate([
-            'photo_order' => 'required|array',
+            'photos' => 'required_without:photo_order|array',
+            'photos.*' => 'string',
+            'photo_order' => 'required_without:photos|array',
             'photo_order.*' => 'integer|min:0',
         ]);
 
-        $currentPhotos = $property->photos ?? [];
-        $newOrder = $request->photo_order;
+        $reordered = $request->has('photos')
+            ? ImageService::reorderPhotos($property->photos ?? [], $request->input('photos'))
+            : ImageService::reorderPhotos($property->photos ?? [], $request->input('photo_order'), true);
 
-        // Validate that all indices are valid
-        foreach ($newOrder as $index) {
-            if (!isset($currentPhotos[$index])) {
-                return back()->with('error', 'Invalid photo order.');
-            }
+        if ($reordered === null) {
+            return back()->with('error', 'Photo order is out of date. Please refresh the page and try again.');
         }
 
-        // Reorder the photos
-        $reorderedPhotos = [];
-        foreach ($newOrder as $index) {
-            $reorderedPhotos[] = $currentPhotos[$index];
+        $property->update(['photos' => $reordered]);
+
+        return back()->with('success', 'Photo order saved.');
+    }
+
+    /**
+     * Download all of a listing's photos as a ZIP (owner only)
+     */
+    public function downloadPhotos(Property $property)
+    {
+        if ($property->user_id !== Auth::id()) {
+            abort(403, 'You do not own this property.');
         }
 
-        $property->update(['photos' => $reorderedPhotos]);
+        $photos = $property->photos ?? [];
+        if (empty($photos)) {
+            return back()->with('error', 'No photos available for download.');
+        }
 
-        return back()->with('success', 'Photos reordered successfully.');
+        $zipPath = ImageService::createPhotosZip($photos, $property->property_title ?? 'listing');
+        if (!$zipPath) {
+            return back()->with('error', 'Could not create the ZIP file. Please try again or contact support.');
+        }
+
+        $filename = 'photos-' . (\Illuminate\Support\Str::slug($property->property_title ?? '') ?: 'listing-' . $property->id) . '.zip';
+
+        return response()->download($zipPath, $filename, ['Content-Type' => 'application/zip'])
+            ->deleteFileAfterSend(true);
     }
 
     /**
