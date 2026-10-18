@@ -3,6 +3,7 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import { useState, useRef, useCallback } from 'react';
 import axios from 'axios';
 import LocationMapPicker from '@/Components/Properties/LocationMapPicker';
+import SortablePhotoGrid from '@/Components/Properties/SortablePhotoGrid';
 import {
     ArrowLeft,
     Save,
@@ -776,12 +777,20 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                         </div>
                     )}
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-4">
-                        {/* New Photo Previews */}
-                        {newPhotoPreviews.map((preview) => (
-                            <div key={preview.id} className="relative group aspect-square rounded-lg overflow-hidden bg-gray-100">
+                    {newPhotoPreviews.length > 1 && (
+                        <p className="text-xs text-gray-500 mb-3">Drag photos or use the arrows to reorder. The first photo is the main photo.</p>
+                    )}
+
+                    <SortablePhotoGrid
+                        items={newPhotoPreviews}
+                        getKey={(preview) => preview.id}
+                        onReorder={setNewPhotoPreviews}
+                        className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-4"
+                        tileClassName="aspect-square rounded-lg"
+                        renderItem={(preview) => (
+                            <>
                                 {preview.url ? (
-                                    <img src={preview.url} alt={preview.name} className="w-full h-full object-cover object-center" />
+                                    <img src={preview.url} alt={preview.name} draggable={false} className="w-full h-full object-cover object-center" />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-400">
                                         <Image className="w-8 h-8" />
@@ -801,7 +810,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                     </div>
                                 )}
                                 {preview.serverPath && (
-                                    <div className="absolute top-2 left-2">
+                                    <div className="absolute top-2 right-9 z-10">
                                         <CheckCircle className="w-5 h-5 text-green-500" />
                                     </div>
                                 )}
@@ -809,16 +818,14 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                     <button
                                         type="button"
                                         onClick={() => handleRemoveNewPhoto(preview)}
-                                        className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                        className="absolute top-2 right-2 z-10 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                                     >
                                         <X className="w-3 h-3" />
                                     </button>
                                 )}
-                            </div>
-                        ))}
-
-                        {/* Upload Button */}
-                        {totalPhotos < maxPhotos && (
+                            </>
+                        )}
+                        trailing={totalPhotos < maxPhotos && (
                             <label className="aspect-square rounded-lg border-2 border-dashed border-gray-300 hover:border-[#2BBBAD] cursor-pointer flex flex-col items-center justify-center text-gray-400 hover:text-[#2BBBAD] transition-colors">
                                 <Upload className="w-6 h-6 mb-1" />
                                 <span className="text-xs">Add Photos</span>
@@ -833,7 +840,7 @@ export default function CreateProperty({ users = [], listingStatuses = {} }) {
                                 />
                             </label>
                         )}
-                    </div>
+                    />
                 </div>
 
                 {/* Submit */}

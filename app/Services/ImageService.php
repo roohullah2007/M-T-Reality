@@ -414,7 +414,60 @@ class ImageService
     }
 
     /**
-     * Create a ZIP file containing all property photos
+     * Validate a requested photo order against the stored photos.
+     *
+     * Accepts either an ordered list of photo paths or a list of indices into
+     * $current. The result must contain exactly the same photos (a permutation),
+     * so a stale or tampered request can neither drop nor inject photos.
+     * The first photo in the returned array is the main photo.
+     *
+     * @return array|null The reordered photos, or null if the request is invalid
+     */
+    public static function reorderPhotos(array $current, array $requested, bool $byIndex = false): ?array
+    {
+        $current = array_values($current);
+
+        if ($byIndex) {
+            $ordered = [];
+            foreach ($requested as $index) {
+                if (!is_numeric($index) || !array_key_exists((int) $index, $current)) {
+                    return null;
+                }
+                $ordered[] = $current[(int) $index];
+            }
+            // Legacy callers may send only the moved indices; keep the rest in place.
+            $usedIndices = array_map('intval', $requested);
+            if (count(array_unique($usedIndices)) !== count($usedIndices)) {
+                return null;
+            }
+            foreach ($current as $i => $photo) {
+                if (!in_array($i, $usedIndices, true)) {
+                    $ordered[] = $photo;
+                }
+            }
+            return $ordered;
+        }
+
+        $requested = array_values($requested);
+        $a = $current;
+        $b = $requested;
+        sort($a);
+        sort($b);
+
+        return $a === $b ? $requested : null;
+    }
+
+    /**
+     * Create a ZIP file containing all property photos, in their display order
+     * (photo-01 is the main photo).
+     *
+     * Photos can be stored three ways, and all three must work:
+     *  - local paths ("/storage/properties/x.webp", or a full URL on this site)
+     *  - Bunny CDN URLs
+     *  - external URLs (e.g. Zillow-imported listings)
+     * The old version only handled the first two and silently skipped the rest;
+     * when nothing was added, ZipArchive never wrote the file and the download
+     * failed with "Failed to create ZIP file".
      *
      * @param array $photos Array of photo paths/URLs
      * @param string $propertyTitle Property title for the ZIP filename
@@ -422,64 +475,209 @@ class ImageService
      */
     public static function createPhotosZip(array $photos, string $propertyTitle): ?string
     {
+        $photos = array_values(array_filter($photos, fn ($p) => is_string($p) && trim($p) !== ''));
         if (empty($photos)) {
             return null;
         }
 
+        if (!class_exists(ZipArchive::class)) {
+            Log::error('Photos ZIP: the PHP zip extension is not installed.');
+            return null;
+        }
+
+        @set_time_limit(300);
+
+        $tempDir = storage_path('app/temp');
+        if (!is_dir($tempDir) && !@mkdir($tempDir, 0755, true) && !is_dir($tempDir)) {
+            Log::error('Photos ZIP: could not create temp directory ' . $tempDir);
+            return null;
+        }
+
+        $safeName = Str::slug($propertyTitle) ?: 'property';
+        $zipPath = $tempDir . '/property-photos-' . $safeName . '-' . Str::random(8) . '.zip';
+        $downloaded = [];
+
         try {
-            // Create a unique filename for the ZIP
-            $safeName = Str::slug($propertyTitle);
-            $zipFilename = "property-photos-{$safeName}-" . time() . '.zip';
-            $zipPath = storage_path('app/temp/' . $zipFilename);
-
-            // Ensure temp directory exists
-            if (!file_exists(storage_path('app/temp'))) {
-                mkdir(storage_path('app/temp'), 0755, true);
-            }
-
             $zip = new ZipArchive();
             if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-                Log::error('Failed to create ZIP file: ' . $zipPath);
+                Log::error('Photos ZIP: failed to open ' . $zipPath);
                 return null;
             }
 
             $counter = 1;
             foreach ($photos as $photo) {
-                $fullPath = null;
+                $file = self::resolvePhotoForZip($photo, $tempDir);
 
-                // Check if it's a CDN URL
-                $pullZone = config('services.bunnycdn.pull_zone');
-                if ($pullZone && str_contains($photo, $pullZone)) {
-                    // Download from CDN
-                    $tempFile = tempnam(sys_get_temp_dir(), 'photo_');
-                    $content = @file_get_contents($photo);
-                    if ($content !== false) {
-                        file_put_contents($tempFile, $content);
-                        $fullPath = $tempFile;
-                    }
-                } else {
-                    // Local file
-                    $storagePath = str_replace('/storage/', '', $photo);
-                    $fullPath = storage_path('app/public/' . $storagePath);
+                if (!$file) {
+                    Log::warning('Photos ZIP: could not read photo ' . $photo);
+                    continue;
                 }
 
-                if ($fullPath && file_exists($fullPath)) {
-                    $extension = pathinfo($fullPath, PATHINFO_EXTENSION) ?: 'webp';
-                    $zipEntryName = sprintf('photo-%02d.%s', $counter, $extension);
-                    $zip->addFile($fullPath, $zipEntryName);
-                    $counter++;
-                } else {
-                    Log::warning('Photo file not found for ZIP: ' . $photo);
+                if ($file['temp']) {
+                    $downloaded[] = $file['path'];
                 }
+
+                $zip->addFile($file['path'], sprintf('photo-%02d.%s', $counter, $file['ext']));
+                $counter++;
             }
 
-            $zip->close();
+            $added = $zip->numFiles;
+            // An empty archive is never written to disk, so bail out explicitly.
+            if ($added === 0) {
+                $zip->close();
+                Log::error('Photos ZIP: none of the ' . count($photos) . ' photos could be read.');
+                return null;
+            }
+
+            if ($zip->close() !== true || !file_exists($zipPath)) {
+                Log::error('Photos ZIP: failed to write ' . $zipPath);
+                return null;
+            }
 
             return $zipPath;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('Failed to create photos ZIP: ' . $e->getMessage());
+            @unlink($zipPath);
+            return null;
+        } finally {
+            // addFile() reads the files at close(), so temp downloads go only now.
+            foreach ($downloaded as $tmp) {
+                @unlink($tmp);
+            }
+        }
+    }
+
+    /**
+     * Turn a stored photo reference into a readable file on disk.
+     *
+     * @return array{path: string, ext: string, temp: bool}|null
+     */
+    protected static function resolvePhotoForZip(string $photo, string $tempDir): ?array
+    {
+        $photo = trim($photo);
+        $isUrl = (bool) preg_match('#^https?://#i', $photo);
+
+        // A full URL that points at this site's own /storage is a local file.
+        if ($isUrl) {
+            $appHost = parse_url((string) config('app.url'), PHP_URL_HOST);
+            $host = parse_url($photo, PHP_URL_HOST);
+            $urlPath = (string) parse_url($photo, PHP_URL_PATH);
+            if ($host && ($host === $appHost || $host === request()->getHost()) && str_starts_with($urlPath, '/storage/')) {
+                $photo = rawurldecode($urlPath);
+                $isUrl = false;
+            }
+        }
+
+        if (!$isUrl) {
+            $local = self::localPublicPath($photo);
+            if ($local) {
+                return ['path' => $local, 'ext' => self::zipExtension($local), 'temp' => false];
+            }
+
+            // Not on local disk: it may have been synced to the CDN only.
+            if (!BunnyCDNService::isConfigured()) {
+                return null;
+            }
+            $photo = BunnyCDNService::getUrl($photo);
+        }
+
+        return self::downloadPhotoForZip($photo, $tempDir);
+    }
+
+    /**
+     * Map a stored local path to an absolute file inside the public disk,
+     * refusing anything that escapes it (e.g. "../../.env").
+     */
+    protected static function localPublicPath(string $path): ?string
+    {
+        $relative = ltrim(str_replace('\\', '/', $path), '/');
+        if (str_starts_with($relative, 'storage/')) {
+            $relative = substr($relative, 8);
+        }
+        if ($relative === '' || str_contains($relative, '..')) {
             return null;
         }
+
+        $root = realpath(Storage::disk('public')->path(''));
+        $full = realpath(Storage::disk('public')->path($relative));
+
+        if (!$root || !$full || !is_file($full) || !str_starts_with($full, $root . DIRECTORY_SEPARATOR)) {
+            return null;
+        }
+
+        return $full;
+    }
+
+    /**
+     * Download a remote photo (CDN or external) to a temp file.
+     * Only public http(s) hosts are fetched, so a stored "photo" cannot be
+     * used to reach internal addresses.
+     *
+     * @return array{path: string, ext: string, temp: bool}|null
+     */
+    protected static function downloadPhotoForZip(string $url, string $tempDir): ?array
+    {
+        $host = parse_url($url, PHP_URL_HOST);
+        if (!$host || !preg_match('#^https?://#i', $url)) {
+            return null;
+        }
+
+        $ips = @gethostbynamel($host) ?: [];
+        if (empty($ips)) {
+            return null;
+        }
+        foreach ($ips as $ip) {
+            if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                Log::warning('Photos ZIP: refusing to fetch non-public host ' . $host);
+                return null;
+            }
+        }
+
+        try {
+            $response = \Illuminate\Support\Facades\Http::timeout(30)
+                ->withHeaders(['User-Agent' => 'Mozilla/5.0 (compatible; ' . config('app.name', 'Laravel') . ' photo export)'])
+                ->withOptions(['allow_redirects' => false])
+                ->get($url);
+        } catch (\Throwable $e) {
+            Log::warning('Photos ZIP: download failed for ' . $url . ': ' . $e->getMessage());
+            return null;
+        }
+
+        $contentType = strtolower((string) $response->header('Content-Type'));
+        if (!$response->successful() || $response->body() === '' || !str_starts_with($contentType, 'image/')) {
+            return null;
+        }
+
+        $ext = self::zipExtension((string) parse_url($url, PHP_URL_PATH), $contentType);
+        $tmp = $tempDir . '/photo-' . Str::random(16) . '.' . $ext;
+        if (file_put_contents($tmp, $response->body()) === false) {
+            return null;
+        }
+
+        return ['path' => $tmp, 'ext' => $ext, 'temp' => true];
+    }
+
+    /**
+     * Pick a sensible file extension for a ZIP entry.
+     */
+    protected static function zipExtension(string $path, ?string $contentType = null): string
+    {
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif', 'avif'], true)) {
+            return $ext;
+        }
+
+        $map = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/gif' => 'gif',
+            'image/webp' => 'webp',
+            'image/avif' => 'avif',
+            'image/heic' => 'heic',
+        ];
+        $type = $contentType ? trim(explode(';', $contentType)[0]) : '';
+
+        return $map[$type] ?? 'jpg';
     }
 
     /**

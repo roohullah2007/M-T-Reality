@@ -1,9 +1,10 @@
 import { Head, Link, useForm, router, usePage } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import axios from 'axios';
 import LocationMapPicker from '@/Components/Properties/LocationMapPicker';
 import OpenHouseManager from '@/Components/OpenHouseManager';
+import SortablePhotoGrid from '@/Components/Properties/SortablePhotoGrid';
 import {
     ArrowLeft,
     Save,
@@ -25,6 +26,7 @@ import {
     Trash2,
     Loader2,
     CheckCircle,
+    Download,
     Eye,
     Video,
     Globe,
@@ -106,7 +108,14 @@ export default function EditProperty({ property, users = [], listingStatuses = {
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef(null);
 
-    const photos = property.photos || [];
+    // Saved photos in display order (first = main photo). Kept locally so a
+    // drag shows instantly; synced back whenever the server sends new props.
+    const serverPhotosKey = JSON.stringify(property.photos || []);
+    const [photos, setPhotos] = useState(property.photos || []);
+    const [savingOrder, setSavingOrder] = useState(false);
+    useEffect(() => {
+        setPhotos(property.photos || []);
+    }, [serverPhotosKey]);
     const maxPhotos = 50;
     const successfulNewPhotos = newPhotoPreviews.filter(p => p.serverPath && !p.error);
     const totalPhotos = photos.length + successfulNewPhotos.length;
@@ -218,8 +227,27 @@ export default function EditProperty({ property, users = [], listingStatuses = {
         setNewPhotoPreviews(prev => prev.filter(p => p.id !== preview.id));
     };
 
-    const handleDeleteExistingPhoto = (index) => {
-        setPhotoToDelete(index);
+    // Persist a new order of the saved photos (also used by "Set as Main")
+    const handleReorderSavedPhotos = (newPhotos) => {
+        const previous = photos;
+        setPhotos(newPhotos);
+        setSavingOrder(true);
+        router.post(route('admin.properties.reorder-photos', property.id), {
+            photos: newPhotos,
+        }, {
+            preserveScroll: true,
+            preserveState: true,
+            onError: () => {
+                setPhotos(previous);
+                setUploadError('Could not save the new photo order. Please try again.');
+            },
+            onFinish: () => setSavingOrder(false),
+        });
+    };
+
+    // Takes the photo path: indexes go stale once photos are reordered
+    const handleDeleteExistingPhoto = (photoPath) => {
+        setPhotoToDelete(photoPath);
         setShowDeleteModal(true);
     };
 
@@ -229,9 +257,10 @@ export default function EditProperty({ property, users = [], listingStatuses = {
 
         try {
             await router.post(route('admin.properties.remove-photo', property.id), {
-                photo_index: photoToDelete
+                photo_path: photoToDelete
             }, {
                 preserveScroll: true,
+                preserveState: true,
                 onSuccess: () => {
                     setShowDeleteModal(false);
                     setPhotoToDelete(null);
@@ -242,6 +271,22 @@ export default function EditProperty({ property, users = [], listingStatuses = {
             setDeleting(false);
         }
     };
+
+    const uploadButton = (
+        <label className="aspect-square rounded-lg border-2 border-dashed border-gray-300 hover:border-[#2BBBAD] cursor-pointer flex flex-col items-center justify-center text-gray-400 hover:text-[#2BBBAD] transition-colors">
+            <Upload className="w-6 h-6 mb-1" />
+            <span className="text-xs">Add Photos</span>
+            <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept="image/*,.heic,.heif"
+                onChange={handlePhotoUpload}
+                className="hidden"
+                disabled={isUploading}
+            />
+        </label>
+    );
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -931,81 +976,99 @@ export default function EditProperty({ property, users = [], listingStatuses = {
                         </div>
                     )}
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-4">
-                        {/* Existing Photos */}
-                        {photos.map((photo, index) => (
-                            <div key={`existing-${index}`} className="relative group aspect-square rounded-lg overflow-hidden bg-gray-100">
-                                <img src={photo} alt={`Photo ${index + 1}`} className="w-full h-full object-cover object-center" />
+                    <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <p className="text-xs text-gray-500">
+                            Drag photos or use the arrows to reorder. The first photo is the main photo.
+                            {savingOrder && <Loader2 className="inline w-3.5 h-3.5 ml-2 animate-spin text-gray-400" />}
+                        </p>
+                        {photos.length > 0 && (
+                            <a
+                                href={route('admin.properties.download-photos', property.id)}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-sm font-medium hover:bg-green-100 transition-colors"
+                            >
+                                <Download className="w-4 h-4" />
+                                Download All (ZIP)
+                            </a>
+                        )}
+                    </div>
+
+                    {/* Saved Photos (order saved immediately) */}
+                    <SortablePhotoGrid
+                        items={photos}
+                        getKey={(photo) => photo}
+                        onReorder={handleReorderSavedPhotos}
+                        className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-4"
+                        tileClassName="aspect-square rounded-lg"
+                        renderItem={(photo, index) => (
+                            <>
+                                <img src={photo} alt={`Photo ${index + 1}`} draggable={false} className="w-full h-full object-cover object-center" />
                                 <button
                                     type="button"
-                                    onClick={() => handleDeleteExistingPhoto(index)}
-                                    className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                    onClick={() => handleDeleteExistingPhoto(photo)}
+                                    className="absolute top-2 right-2 z-10 p-1.5 bg-red-500 text-white rounded-full shadow"
+                                    title="Delete photo"
+                                    aria-label={`Delete photo ${index + 1}`}
                                 >
                                     <Trash2 className="w-3 h-3" />
                                 </button>
-                                {index === 0 && (
-                                    <span className="absolute bottom-2 left-2 px-2 py-0.5 bg-[#2BBBAD] text-white text-xs rounded">Primary</span>
-                                )}
-                            </div>
-                        ))}
-
-                        {/* New Photo Previews */}
-                        {newPhotoPreviews.map((preview) => (
-                            <div key={preview.id} className="relative group aspect-square rounded-lg overflow-hidden bg-gray-100">
-                                {preview.url ? (
-                                    <img src={preview.url} alt={preview.name} className="w-full h-full object-cover object-center" />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-gray-400">
-                                        <Image className="w-8 h-8" />
-                                    </div>
-                                )}
-                                {preview.uploading && (
-                                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                                        <div className="text-center text-white">
-                                            <Loader2 className="w-6 h-6 animate-spin mx-auto mb-1" />
-                                            <span className="text-xs">{preview.progress}%</span>
-                                        </div>
-                                    </div>
-                                )}
-                                {preview.error && (
-                                    <div className="absolute inset-0 bg-red-500/80 flex items-center justify-center">
-                                        <AlertCircle className="w-6 h-6 text-white" />
-                                    </div>
-                                )}
-                                {preview.serverPath && (
-                                    <div className="absolute top-2 left-2">
-                                        <CheckCircle className="w-5 h-5 text-green-500" />
-                                    </div>
-                                )}
-                                {!preview.uploading && (
-                                    <button
-                                        type="button"
-                                        onClick={() => handleRemoveNewPhoto(preview)}
-                                        className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                                    >
-                                        <X className="w-3 h-3" />
-                                    </button>
-                                )}
-                            </div>
-                        ))}
-
-                        {/* Upload Button */}
-                        {totalPhotos < maxPhotos && (
-                            <label className="aspect-square rounded-lg border-2 border-dashed border-gray-300 hover:border-[#2BBBAD] cursor-pointer flex flex-col items-center justify-center text-gray-400 hover:text-[#2BBBAD] transition-colors">
-                                <Upload className="w-6 h-6 mb-1" />
-                                <span className="text-xs">Add Photos</span>
-                                <input
-                                    ref={fileInputRef}
-                                    type="file"
-                                    multiple
-                                    accept="image/*,.heic,.heif"
-                                    onChange={handlePhotoUpload}
-                                    className="hidden"
-                                    disabled={isUploading}
-                                />
-                            </label>
+                            </>
                         )}
-                    </div>
+                        trailing={newPhotoPreviews.length === 0 && totalPhotos < maxPhotos ? uploadButton : null}
+                    />
+
+                    {/* New Photo Previews (saved with "Save Changes", after the saved photos) */}
+                    {newPhotoPreviews.length > 0 && (
+                        <>
+                            <p className="text-xs font-medium text-gray-600 mb-2">New photos (added after the saved ones when you click Save Changes)</p>
+                            <SortablePhotoGrid
+                                items={newPhotoPreviews}
+                                getKey={(preview) => preview.id}
+                                onReorder={setNewPhotoPreviews}
+                                showMain={photos.length === 0}
+                                className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-4"
+                                tileClassName="aspect-square rounded-lg"
+                                renderItem={(preview) => (
+                                        <>
+                                            {preview.url ? (
+                                                <img src={preview.url} alt={preview.name} draggable={false} className="w-full h-full object-cover object-center" />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-gray-400">
+                                                    <Image className="w-8 h-8" />
+                                                </div>
+                                            )}
+                                            {preview.uploading && (
+                                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                                                    <div className="text-center text-white">
+                                                        <Loader2 className="w-6 h-6 animate-spin mx-auto mb-1" />
+                                                        <span className="text-xs">{preview.progress}%</span>
+                                                    </div>
+                                                </div>
+                                            )}
+                                            {preview.error && (
+                                                <div className="absolute inset-0 bg-red-500/80 flex items-center justify-center">
+                                                    <AlertCircle className="w-6 h-6 text-white" />
+                                                </div>
+                                            )}
+                                            {preview.serverPath && (
+                                                <div className="absolute top-2 right-9 z-10">
+                                                    <CheckCircle className="w-5 h-5 text-green-500" />
+                                                </div>
+                                            )}
+                                            {!preview.uploading && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemoveNewPhoto(preview)}
+                                                    className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                                                >
+                                                    <X className="w-3 h-3" />
+                                                </button>
+                                            )}
+                                        </>
+                                )}
+                                trailing={totalPhotos < maxPhotos ? uploadButton : null}
+                            />
+                        </>
+                    )}
                 </div>
 
                 {/* Submit */}
@@ -1033,8 +1096,8 @@ export default function EditProperty({ property, users = [], listingStatuses = {
                     <div className="bg-white rounded-xl max-w-md w-full p-6">
                         <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete Photo</h3>
                         <p className="text-gray-600 mb-4">Are you sure you want to delete this photo?</p>
-                        {photoToDelete !== null && photos[photoToDelete] && (
-                            <img src={photos[photoToDelete]} alt="Photo to delete" className="w-full h-32 object-cover object-center rounded-lg mb-4" />
+                        {photoToDelete !== null && (
+                            <img src={photoToDelete} alt="Photo to delete" className="w-full h-32 object-cover object-center rounded-lg mb-4" />
                         )}
                         <div className="flex justify-end gap-3">
                             <button
